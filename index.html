@@ -1433,9 +1433,10 @@
   <!-- Student Submissions Sheet Modal -->
   <div id="sheetModal" class="modal-backdrop hidden">
     <div class="modal-card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h2 style="color:var(--gold-bright);">📊 내 추상화 기록장 제출 내역 (Google Sheets 연동)</h2>
-        <div style="display:flex; gap:8px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <h2 style="color:var(--gold-bright); font-size:17px; margin:0;">📊 내 추상화 기록장 제출 내역 (Google Sheets 클라우드 연동)</h2>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <a href="https://docs.google.com/spreadsheets/d/1Ti6XHwnI2QKeRwgT7w3Q2p41OX-JwgqWTCXgOyHKCfQ/edit#gid=1432851441" target="_blank" class="btn btn-gold" style="text-decoration:none; display:inline-flex; align-items:center; gap:5px; font-weight:bold; font-size:12px;" title="교사용 실시간 형성평가 대시보드로 이동">🌐 실시간 구글 시트 대시보드 ↗</a>
           <button class="btn btn-cyan" onclick="downloadCsv()">📥 엑셀(.csv) 다운로드</button>
           <button class="btn" onclick="closeSheetModal()">닫기 ✕</button>
         </div>
@@ -1510,8 +1511,14 @@
 
 
   <script>
-    var DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbxhLpLQT7R1SFw_e5aCjCfgiyH4iKbJNubpRHIrkvCwua3mohET_TiUEhDSWcrp-sUb/exec';
-    var GAS_EXEC_URL = localStorage.getItem('custom_gas_url') || DEFAULT_GAS_URL;
+    var DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbzUO6xku7VjM5dlCHsEpC2_UUE635RsUfWtPbiSCUWhO-rYIyTA8pTj8uxBvg0NehcIVw/exec';
+    var savedGasUrl = localStorage.getItem('custom_gas_url');
+    if (savedGasUrl && savedGasUrl.indexOf('AKfycbxhLpLQT7R1SFw') !== -1) {
+      localStorage.removeItem('custom_gas_url');
+      savedGasUrl = null;
+    }
+    var GAS_EXEC_URL = savedGasUrl || DEFAULT_GAS_URL;
+    var LIVE_GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1Ti6XHwnI2QKeRwgT7w3Q2p41OX-JwgqWTCXgOyHKCfQ/edit#gid=1432851441';
 
     function configureGoogleSheetUrl() {
       var cur = localStorage.getItem('custom_gas_url') || DEFAULT_GAS_URL;
@@ -4632,7 +4639,7 @@
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify(payload)
         }).then(function() {
-          msgEl.textContent = '✅ 구글 시트 [제출] 탭 연동 및 로컬 백업 저장이 완료되었습니다! (' + nowStr + ')';
+          msgEl.textContent = '✅ 구글 시트 [고성탈출_형성평가] 탭에 성공적으로 기록되었습니다! (' + nowStr + ')';
         }).catch(function() {
           msgEl.textContent = '✅ 내 전용 기록장에 안전하게 저장되었습니다! ([내 구글 시트 기록]에서 엑셀 다운로드 가능)';
         });
