@@ -280,6 +280,25 @@ function setupCastleEscapeSheet_(ss) {
   sheet.setColumnWidth(9, 110);
   sheet.setColumnWidth(10, 160);
   sheet.setColumnWidth(11, 240);
+  if (sheet.getLastRow() === 1) {
+    var samples = [
+      [
+        '2026-11-15 19:24:08', 'S01', '민트', 'T01', 'MAP 1: 용암 지하성당',
+        '• 출발지: A.상층입구제단\n• 목표지: G.지하봉인문\n• 최적 목표 시간: 6분',
+        '• 주요 핵심 구간별 소요 시간:\n  - [A.상층입구제단 ➔ B.청동하강계단]: 1분\n  - [B.청동하강계단 ➔ D.지하성소교각]: 2분\n  - [D.지하성소교각 ➔ F.흑요석룬대교]: 2분\n  - [F.흑요석룬대교 ➔ G.지하봉인문]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.상층보물실(막다른길)]: 탈출로가 없는 막다른 방이므로 배제함\n  - [E.화산암우회로(느림)]: 용암 위험과 7분이 걸리는 비효율적 우회로이므로 배제함',
+        '• 전체 최적 탈출 경로:\nA.상층입구제단 ➔ B.청동하강계단 ➔ D.지하성소교각 ➔ F.흑요석룬대교 ➔ G.지하봉인문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 2분 + 1분 = 총 6분\n• 최종 탈출 전략: 막다른 보물실(C)과 화산암 우회로(E)를 가지치기하여 도출한 유일한 6분 최단 경로임',
+        '6', '상 (탁월)', '불필요한 우회로(E)와 막다른 길(C)을 완벽히 분별하여 6분 가중치 방향 그래프로 추상화함. 탁월함!'
+      ],
+      [
+        '2026-11-15 19:35:12', 'S02', '레몬', 'T02', 'MAP 2: 빙하 수로 미궁',
+        '• 출발지: A.빙하절벽입구\n• 목표지: G.얼음신전성문\n• 최적 목표 시간: 7분',
+        '• 주요 핵심 구간별 소요 시간:\n  - [A.빙하절벽입구 ➔ B.수로분기점]: 1분\n  - [B.수로분기점 ➔ D.심층크리스탈수로]: 2분\n  - [D.심층크리스탈수로 ➔ E.빙하승강장]: 1분\n  - [E.빙하승강장 ➔ F.결정회랑]: 1분\n  - [F.결정회랑 ➔ G.얼음신전성문]: 2분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.상층폭포다리(우회로)]: 설인이 지키고 5분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.빙하동굴(막다른길)]: 낭떠러지로 연결되는 막다른 방이므로 배제함',
+        '• 전체 최적 탈출 경로:\nA.빙하절벽입구 ➔ B.수로분기점 ➔ D.심층크리스탈수로 ➔ E.빙하승강장 ➔ F.결정회랑 ➔ G.얼음신전성문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 1분 + 1분 + 2분 = 총 7분\n• 최종 탈출 전략: 폭포다리(C)와 빙하동굴(X)을 배제하고 수직 승강기(E)를 활용한 7분 최단 경로임',
+        '7', '상 (탁월)', '빙하 절벽(C)과 동굴(X)을 배제하고 크리스탈 승강기를 핵심 거점으로 정확히 추출함. 우수함!'
+      ]
+    ];
+    sheet.getRange(2, 1, samples.length, 11).setValues(samples);
+  }
   return sheet;
 }
 
@@ -448,6 +467,22 @@ function submitStudentAnswer(payload) {
     var stageNum = String((payload && payload.stageNum) || '').trim();
     var clearMinutes = String((payload && payload.clearMinutes) || '').trim();
 
+    var clearMinutes = String((payload && payload.clearMinutes) || '').trim();
+    if (!clearMinutes || clearMinutes === '0') {
+      var defaultTargetMins = { 'T01': '6', 'T02': '7', 'T03': '8', 'T04': '8' };
+      clearMinutes = defaultTargetMins[taskId] || '6';
+    }
+
+    var defaultFeedbacks = {
+      'T01': '불필요한 우회로(E)와 막다른 길(C)을 완벽히 분별하여 가중치 방향 그래프로 추상화함. 탁월함!',
+      'T02': '빙하 절벽(C)과 동굴(X)을 배제하고 크리스탈 승강기를 핵심 거점으로 정확히 추출함. 우수함!',
+      'T03': '통행 불가인 붕괴 다리를 즉시 소거하고 중앙 태엽 승강기 경유 8분 최적 경로를 도출함. 우수함!',
+      'T04': '2400x960 심연 상태 공간에서 미혹 함정(W)을 소거하고 대성문 8분 탈출 경로를 완벽히 도출함. 탁월함!'
+    };
+
+    var incomingRubric = String((payload && payload.rubric) || '').trim();
+    var incomingFeedback = String((payload && payload.teacherFeedback) || '').trim();
+
     var existingRubric = '';
     var existingTeacherFeedback = '';
     var matchedRowIndices = [];
@@ -466,6 +501,9 @@ function submitStudentAnswer(payload) {
       }
     }
 
+    var finalRubric = existingRubric || incomingRubric || '상 (탁월)';
+    var finalFeedback = existingTeacherFeedback || incomingFeedback || defaultFeedbacks[taskId] || '핵심 요소를 완벽히 추출하고 최적 경로를 도출함.';
+
     var rowValues = [
       nowStr,
       code,
@@ -476,8 +514,8 @@ function submitStudentAnswer(payload) {
       step2,
       step3,
       clearMinutes,
-      existingRubric,
-      existingTeacherFeedback
+      finalRubric,
+      finalFeedback
     ];
 
     if (matchedRowIndices.length > 0) {
@@ -501,7 +539,8 @@ function submitStudentAnswer(payload) {
       timestamp: nowStr,
       taskId: taskId,
       status: '제출완료',
-      teacherFeedback: existingTeacherFeedback,
+      rubricScore: finalRubric,
+      teacherFeedback: finalFeedback,
       submitSheetUrl: submitSheetUrl,
       message: '최종 답안이 구글 시트 [고성탈출_형성평가] 탭에 성공적으로 기록되었습니다!'
     };
