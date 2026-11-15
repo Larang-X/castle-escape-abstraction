@@ -1,0 +1,4621 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>맵 탈출 게임으로 추상화 배워보기</title>
+  <script src="assets/assets_bundle.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap');
+
+    :root {
+      /* Bloodborne Dark Gothic Victorian Palette */
+      --bg-deep: #0a0c0f;          /* Deep Obsidian Void */
+      --bg-panel: #12151b;         /* Weathered Dark Slate Panel */
+      --bg-card: #181c24;          /* Chiseled Stone Card */
+      --gold: #a88438;             /* Antique Aged Brass / Tarnished Gold */
+      --gold-bright: #e2c481;      /* Shimmering Gilded Inlay */
+      --gold-dim: #5c471f;         /* Deep Aged Bronze */
+      --crimson: #731b1b;          /* Dried Gothic Blood Maroon */
+      --crimson-bright: #9e2828;   /* Muted Blood Red */
+      --cyan: #4a6374;             /* Cold Cathedral Slate */
+      --cyan-bright: #8da4b8;      /* Pale Moonlit Iron */
+      --text-main: #dcd6cd;        /* Aged Parchment / Weathered Bone */
+      --text-muted: #9c9588;       /* Cathedral Ash Sepia */
+      --border-gothic: #3a3225;    /* Antique Dark Iron Rim */
+      --border-metal: #4a4030;     /* Wrought Iron Border */
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, button, input, select, textarea, .btn, .key-pill, .step-textarea, .brand-title, .brand-sub, .hud-badge, .stat-chip, .login-intro-box {
+      font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif !important;
+    }
+    body {
+      background: radial-gradient(circle at 50% 0%, #1c1815 0%, #0a0c0f 72%);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .hidden { display: none !important; }
+
+    /* Dedicated Full-Screen Login Page (#loginPageView) */
+    .login-page-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(168, 132, 56, 0.12) 0%, transparent 55%),
+        radial-gradient(circle at 50% 80%, rgba(115, 27, 27, 0.18) 0%, #08090c 75%);
+    }
+    .login-page-card {
+      background: linear-gradient(180deg, #181c24 0%, #0e1015 100%);
+      border: 2px solid var(--gold);
+      border-radius: 12px;
+      max-width: 680px;
+      width: 100%;
+      padding: 32px 28px;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(168, 132, 56, 0.22);
+      text-align: center;
+    }
+    .login-emblem {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 12px;
+      border: 2px solid var(--gold);
+      background: radial-gradient(circle, #451414 0%, #15181f 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      color: var(--gold-bright);
+      font-size: 24px;
+      box-shadow: 0 0 16px rgba(168, 132, 56, 0.4);
+    }
+    .login-title {
+      font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif;
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--gold-bright);
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+    .login-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .prologue-card {
+      background: rgba(14, 16, 22, 0.94);
+      border: 1px solid var(--border-metal);
+      border-left: 4px solid var(--gold);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      text-align: left;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.7);
+    }
+    .prologue-title {
+      font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif;
+      font-size: 13.5px;
+      font-weight: 900;
+      color: var(--gold-bright);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.03em;
+    }
+    .prologue-desc {
+      font-size: 12.5px;
+      color: #cfc8be;
+      line-height: 1.65;
+    }
+
+    /* Top Header */
+    .top-bar {
+      background: linear-gradient(180deg, #171b23 0%, #0b0d11 100%);
+      border-bottom: 2px solid var(--gold);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.85);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-crest {
+      width: 38px;
+      height: 38px;
+      border: 2px solid var(--gold);
+      background: radial-gradient(circle, #451414 0%, #15181f 100%);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cinzel', serif;
+      font-weight: 800;
+      color: var(--gold-bright);
+      font-size: 16px;
+      box-shadow: 0 0 10px rgba(168, 132, 56, 0.35);
+    }
+    .brand-title {
+      font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif;
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--gold-bright);
+      letter-spacing: 0.03em;
+    }
+    .brand-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .student-badge {
+      background: rgba(168, 132, 56, 0.16);
+      border: 1px solid var(--gold);
+      color: var(--gold-bright);
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    /* Bloodborne Gothic Victorian Buttons */
+    .btn {
+      background: linear-gradient(180deg, #222731 0%, #13161c 100%);
+      color: var(--text-main);
+      border: 1px solid var(--border-metal);
+      padding: 7px 14px;
+      border-radius: 4px;
+      font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif;
+      font-size: 12.5px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: all 0.14s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 2px 4px rgba(0,0,0,0.6);
+      user-select: none;
+    }
+    .btn:hover {
+      border-color: var(--gold);
+      color: #f7eee1;
+      background: linear-gradient(180deg, #2b313e 0%, #1a1e27 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 0 10px rgba(168, 132, 56, 0.25);
+      transform: translateY(-1px);
+    }
+    .btn:active {
+      transform: translateY(1px);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+    }
+    .btn-gold {
+      background: linear-gradient(180deg, #382c16 0%, #1f180a 100%);
+      border-color: var(--gold);
+      color: #f5e8cc;
+    }
+    .btn-gold:hover {
+      border-color: var(--gold-bright);
+      color: #ffffff;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 0 12px rgba(226, 196, 129, 0.4);
+    }
+    .btn-cyan {
+      background: linear-gradient(180deg, #1e2630 0%, #10151c 100%);
+      border-color: #556677;
+      color: #d8e2eb;
+    }
+    .btn-cyan:hover {
+      border-color: var(--gold);
+      color: #ffffff;
+      box-shadow: 0 0 10px rgba(168, 132, 56, 0.3);
+    }
+    .btn-crimson {
+      background: linear-gradient(180deg, #3d1616 0%, #200a0a 100%);
+      border-color: var(--crimson);
+      color: #eed6d6;
+    }
+    .btn-crimson:hover {
+      border-color: var(--crimson-bright);
+      color: #ffffff;
+      box-shadow: 0 0 10px rgba(158, 40, 40, 0.4);
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 12px 16px;
+    }
+
+    /* Core Pedagogical Banner */
+    .concept-banner {
+      background: linear-gradient(90deg, rgba(65, 18, 18, 0.6) 0%, rgba(18, 22, 29, 0.94) 50%, rgba(30, 38, 48, 0.6) 100%);
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 12px 18px;
+      margin-bottom: 12px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.7);
+    }
+    .concept-box {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .concept-tag {
+      display: inline-block;
+      font-size: 12.5px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      width: fit-content;
+      letter-spacing: 0.02em;
+    }
+    .tag-wrong { background: rgba(115, 27, 27, 0.35); color: #e89999; border: 1px solid var(--crimson); }
+    .tag-right { background: rgba(168, 132, 56, 0.25); color: var(--gold-bright); border: 1px solid var(--gold); }
+    .concept-vs {
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--gold-bright);
+      padding: 0 8px;
+    }
+
+    /* Stage Selector Tabs (4 Maps with Sequential Lock) */
+    .stage-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .stage-tab {
+      background: linear-gradient(180deg, #181c25 0%, #0d0f14 100%);
+      border: 2px solid var(--border-gothic);
+      border-radius: 6px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 2px 6px rgba(0,0,0,0.6);
+    }
+    .stage-tab:hover:not(.locked) {
+      border-color: #6d5835;
+      background: linear-gradient(180deg, #202532 0%, #11141b 100%);
+    }
+    .stage-tab.active {
+      border-color: var(--gold-bright);
+      background: linear-gradient(180deg, #2e2414 0%, #161209 100%);
+      box-shadow: 0 0 16px rgba(168, 132, 56, 0.38), inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    .stage-tab.locked {
+      opacity: 0.45;
+      background: #090a0d;
+      border-color: #20242c;
+      cursor: not-allowed;
+    }
+    .stage-tab-num {
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      color: var(--gold);
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      letter-spacing: 0.05em;
+    }
+    .stage-tab-title {
+      font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif;
+      font-size: 14.5px;
+      font-weight: 900;
+      color: #f0e9dd;
+      margin: 4px 0 2px;
+    }
+    .stage-tab-desc, .stage-tab-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.35;
+      margin-top: 2px;
+    }
+
+    /* Horizontally Elongated Main Canvas (1320 x 480) */
+    .game-layout-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .screen-panel {
+      background: #0f1217;
+      border: 1px solid var(--border-gothic);
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.85);
+    }
+    .screen-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 4px 8px;
+      border-left: 3px solid var(--gold);
+      font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif;
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--gold-bright);
+      letter-spacing: 0.03em;
+    }
+    .canvas-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1320 / 480;
+      background: #050608;
+      border: 1px solid var(--border-metal);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    canvas#gameCanvas, canvas#graphCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      image-rendering: pixelated;
+    }
+
+    /* Platform Texture Legend Bar */
+    .texture-legend-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 6px 12px;
+      background: #0d0f14;
+      border: 1px solid var(--border-gothic);
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+    .tex-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 700;
+    }
+    .tex-swatch {
+      width: 16px;
+      height: 10px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    /* Distinct Bloodborne Separated Controls Bar */
+    .bloodborne-controls {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 14px;
+      padding: 8px 12px;
+      background: #0d0f14;
+      border: 1px solid var(--border-metal);
+      border-radius: 6px;
+      margin-top: 8px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 3px 8px rgba(0,0,0,0.6);
+    }
+    @media (max-width: 960px) {
+      .bloodborne-controls { grid-template-columns: 1fr; }
+    }
+    .ctrl-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .ctrl-group-label {
+      font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif;
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .ctrl-group-buttons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .ctrl-group-divider {
+      width: 1px;
+      height: 38px;
+      background: var(--border-metal);
+    }
+
+    .key-pill {
+      background: linear-gradient(180deg, #222630 0%, #13161c 100%);
+      border: 1px solid var(--border-metal);
+      color: var(--text-main);
+      padding: 7px 13px;
+      border-radius: 4px;
+      font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 2px 4px rgba(0,0,0,0.5);
+      transition: all 0.12s ease;
+    }
+    .key-pill:hover {
+      border-color: var(--gold);
+      color: #f7eee1;
+      background: linear-gradient(180deg, #2a303d 0%, #181c24 100%);
+    }
+    .key-pill:active {
+      transform: translateY(1px);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.8);
+    }
+    .key-pill-crimson {
+      background: linear-gradient(180deg, #3d1717 0%, #200a0a 100%);
+      border-color: var(--crimson);
+      color: #eed4d4;
+    }
+    .key-pill-crimson:hover {
+      border-color: var(--crimson-bright);
+      color: #ffffff;
+      box-shadow: 0 0 10px rgba(158, 40, 40, 0.4);
+    }
+    .key-pill-gold {
+      background: linear-gradient(180deg, #382c16 0%, #1f180a 100%);
+      border-color: var(--gold);
+      color: #f5e8cc;
+    }
+    .key-pill-gold:hover {
+      border-color: var(--gold-bright);
+      color: #ffffff;
+      box-shadow: 0 0 10px rgba(226, 196, 129, 0.4);
+    }
+    .key-pill-slate {
+      background: linear-gradient(180deg, #1d222b 0%, #0f1217 100%);
+      border-color: #444f60;
+      color: #ccd5e2;
+    }
+    .key-pill-reset {
+      background: linear-gradient(180deg, #25201a 0%, #14110d 100%);
+      border-color: #5a4b37;
+      color: #e4d8c6;
+    }
+
+    /* Sub-Screen Wide Graph + Route Optimal Analyzer */
+    .subscreen-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 12px;
+      align-items: stretch;
+    }
+    @media (max-width: 1150px) {
+      .subscreen-grid { grid-template-columns: 1fr; }
+      .concept-banner { grid-template-columns: 1fr; }
+      .stage-tabs { grid-template-columns: repeat(2, 1fr); }
+    }
+    .graph-canvas-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 900 / 250;
+      background: #07090c;
+      border: 1px solid var(--border-metal);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .route-analyzer-card {
+      background: #0e1116;
+      border: 1px solid var(--border-gothic);
+      border-radius: 6px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    /* Grimoire (Worksheet + AI Tutor) */
+    .grimoire-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 14px;
+    }
+    @media (max-width: 1080px) {
+      .grimoire-grid { grid-template-columns: 1fr; }
+    }
+    .grimoire-panel {
+      background: linear-gradient(180deg, #141720 0%, #0b0d11 100%);
+      border: 2px solid var(--border-gothic);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+    }
+    .grimoire-title {
+      font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif;
+      font-size: 15.5px;
+      font-weight: 800;
+      color: var(--gold-bright);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      letter-spacing: 0.03em;
+    }
+    .step-card {
+      background: rgba(9, 11, 15, 0.85);
+      border: 1px solid var(--border-metal);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+    .step-label {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--gold-bright);
+      margin-bottom: 5px;
+      display: block;
+    }
+    .step-textarea {
+      width: 100%;
+      height: 140px;
+      min-height: 120px;
+      background: #07090c;
+      border: 1px solid #303744;
+      border-radius: 4px;
+      color: #f0e9dd;
+      padding: 10px 12px;
+      font-size: 13.5px;
+      font-family: inherit;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+      scrollbar-width: thin;
+      scrollbar-color: #ffd740 #141721;
+    }
+    .step-textarea:focus { border-color: var(--gold); }
+    #ansStep2 {
+      height: 220px;
+      min-height: 190px;
+    }
+    #ansStep3 {
+      height: 160px;
+      min-height: 140px;
+    }
+    .step-textarea::-webkit-scrollbar {
+      width: 8px;
+    }
+    .step-textarea::-webkit-scrollbar-track {
+      background: #10131a;
+      border-radius: 4px;
+    }
+    .step-textarea::-webkit-scrollbar-thumb {
+      background: #ffd740;
+      border-radius: 4px;
+    }
+
+    /* AI Tutor Chat */
+    .chat-log {
+      height: 220px;
+      overflow-y: auto;
+      background: #08090c;
+      border: 1px solid #282f3a;
+      border-radius: 4px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .chat-bubble {
+      padding: 8px 11px;
+      border-radius: 6px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .chat-user {
+      background: #242b38;
+      border: 1px solid #3d495c;
+      align-self: flex-end;
+      max-width: 88%;
+      color: #f0e9dd;
+    }
+    .chat-ai {
+      background: #151a22;
+      border: 1px solid #2a3442;
+      color: #cfd8e3;
+      align-self: flex-start;
+      max-width: 94%;
+      white-space: pre-wrap;
+    }
+
+    /* Modal Backdrop */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 6, 8, 0.88);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 16px;
+    }
+    .modal-card {
+      background: linear-gradient(180deg, #181c25 0%, #0d0f14 100%);
+      border: 2px solid var(--gold);
+      border-radius: 10px;
+      max-width: 820px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 0 50px rgba(0,0,0,0.95), 0 0 20px rgba(168, 132, 56, 0.25);
+    }
+
+    /* Golden Stage Clear Modal (#stageClearModal) */
+    @keyframes goldPulse {
+      0% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(226, 196, 129, 0.4)); }
+      50% { transform: scale(1.08); filter: drop-shadow(0 0 18px rgba(226, 196, 129, 0.85)); }
+      100% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(226, 196, 129, 0.4)); }
+    }
+    .bloodborne-gold-card {
+      background: linear-gradient(180deg, #1a150e 0%, #0c0a07 100%);
+      border: 2px solid var(--gold-bright);
+      border-radius: 10px;
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.98), 0 0 35px rgba(226, 196, 129, 0.45);
+      padding: 30px 24px;
+    }
+    .bloodborne-ornament-header {
+      border-bottom: 1px solid var(--gold-dim);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+    .bloodborne-sub-tag {
+      font-family: 'Cinzel', serif;
+      font-size: 12.5px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+    .golden-result-box {
+      background: rgba(12, 10, 7, 0.90);
+      border: 1px solid #4a3e26;
+      border-radius: 6px;
+      padding: 16px;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8);
+    }
+    .golden-stat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 8px 0;
+    }
+    .golden-stat-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+    }
+    .stat-lbl {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .stat-val {
+      font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif;
+      font-size: 16px;
+      font-weight: 900;
+    }
+    .golden-stat-divider {
+      width: 1px;
+      height: 36px;
+      background: #382e1c;
+    }
+
+  
+    /* Korean Typography: Prevent unnatural word breaks */
+    body, .brand-box, .brand-sub, .concept-card, .concept-title, .concept-body,
+    .guide-box, .step-card, .header-banner, #mainScreenTitle, .hud-badge,
+    .step-textarea, .modal-content, .sub-panel, .dialog-box, .tutorial-box {
+      word-break: keep-all !important;
+      overflow-wrap: break-word !important;
+    }
+
+  
+    /* Castle Gate Opening Screen Transition Overlay */
+    .gate-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 999999;
+      pointer-events: none;
+      display: flex;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.4);
+    }
+    .gate-door {
+      position: absolute;
+      top: 0;
+      width: 50.5vw;
+      height: 100vh;
+      background: linear-gradient(135deg, #160c18 0%, #0a040e 50%, #1a0f20 100%);
+      box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.95);
+      border: 3px solid #3d2345;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.95s cubic-bezier(0.77, 0, 0.175, 1);
+      will-change: transform;
+    }
+    .gate-door-left {
+      left: 0;
+      border-right: 5px solid #d4af37;
+      transform: translateX(0);
+    }
+    .gate-door-right {
+      right: 0;
+      border-left: 5px solid #d4af37;
+      transform: translateX(0);
+    }
+    .gate-overlay.opening .gate-door-left {
+      transform: translateX(-102%);
+    }
+    .gate-overlay.opening .gate-door-right {
+      transform: translateX(102%);
+    }
+    .gate-door::before {
+      content: '';
+      position: absolute;
+      inset: 20px;
+      border: 2px solid rgba(212, 175, 55, 0.35);
+      background-image: repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.04) 0px, rgba(212, 175, 55, 0.04) 15px, transparent 15px, transparent 30px),
+                        repeating-linear-gradient(-45deg, rgba(212, 175, 55, 0.04) 0px, rgba(212, 175, 55, 0.04) 15px, transparent 15px, transparent 30px);
+      pointer-events: none;
+    }
+    .gate-ornament {
+      font-size: 54px;
+      filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.7));
+      z-index: 2;
+    }
+    .gate-center-emblem {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.6s ease;
+    }
+    .gate-overlay.opening .gate-center-emblem {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+    .gate-crest-circle {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #5b1313 0%, #150606 100%);
+      border: 3px solid #ffd740;
+      box-shadow: 0 0 35px rgba(255, 215, 64, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      margin-bottom: 12px;
+      animation: gatePulse 1.2s infinite alternate ease-in-out;
+    }
+    @keyframes gatePulse {
+      0% { transform: scale(0.96); box-shadow: 0 0 25px rgba(255, 215, 64, 0.4); }
+      100% { transform: scale(1.04); box-shadow: 0 0 45px rgba(255, 215, 64, 0.8); }
+    }
+    .gate-title-text {
+      font-family: 'Cinzel', 'Noto Serif KR', serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: #ffe07d;
+      text-shadow: 0 0 20px rgba(0,0,0,0.9), 0 0 10px rgba(255,215,64,0.6);
+      letter-spacing: 0.1em;
+    }
+    .gate-sub-text {
+      font-family: 'Cinzel', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #ff8a80;
+      letter-spacing: 0.25em;
+      margin-top: 4px;
+    }
+
+  </style>
+</head>
+<body>
+
+  
+  <!-- CASTLE GATE OPENING TRANSITION OVERLAY -->
+    <!-- Copyright & Educational Non-profit Modal -->
+  <div id="copyrightModal" class="modal-backdrop hidden">
+    <div class="modal-card" style="max-width:620px;">
+      <div style="font-size:19px; font-weight:900; color:#ffd54f; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+        <span>📜</span> <span>교육용 비영리 연구 저작권 고지문</span>
+      </div>
+      <div style="font-size:13.5px; line-height:1.7; color:#e0d6f5; background:rgba(18,12,28,0.7); padding:16px; border-radius:8px; border:1px solid #4a3b68;">
+        <p style="margin-bottom:10px;">
+          <strong>1. 비영리 교육 연구 목적의 활용:</strong><br>
+          본 프로그램은 2022 개정 교육과정 중학교 『정보』 교과의 핵심 영역인 <strong>『추상화(Abstraction) 기반 문제 해결력 신장』</strong>을 위해 제작된 비영리 교육용 연구 소프트웨어입니다.
+        </p>
+        <p style="margin-bottom:10px;">
+          <strong>2. 지식재산권 및 출처 표기:</strong><br>
+          게임 내 사용된 2D 도트 스프라이트 및 배경음악은 교육적 알고리즘 탐구의 몰입도를 높이기 위한 학술·교육 목적 인용으로 활용되었으며, 일체의 상업적 영리 목적이 배제되어 있습니다. 모든 게임 에셋 및 상표의 권리는 각 원작 저작권자(KONAMI 등)에게 귀속됩니다.
+        </p>
+        <p style="margin-bottom:0;">
+          <strong>3. 독자적 창작 영역:</strong><br>
+          3단계 교육용 추상화 노선도 시각화 알고리즘, 학생별 활동 기록 및 구글 스프레드시트 실시간 데이터 연동 파이프라인, 단계별 자동 피드백 시스템은 순수 자체 기술로 개발되었습니다.
+        </p>
+      </div>
+      <div style="margin-top:16px; text-align:center;">
+        <button class="btn btn-gold" onclick="closeCopyrightModal()" style="padding:10px 24px; font-size:14px;">확인 및 닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="gateTransitionOverlay" class="gate-overlay hidden">
+    <div class="gate-door gate-door-left">
+      <div class="gate-ornament">🦇</div>
+    </div>
+    <div class="gate-door gate-door-right">
+      <div class="gate-ornament">⚔️</div>
+    </div>
+    <div class="gate-center-emblem">
+      <div class="gate-crest-circle">🏰</div>
+      <div class="gate-title-text">고성 미궁의 거대 성문이 열립니다...</div>
+      <div class="gate-sub-text">ENTER THE ANCIENT CITADEL</div>
+    </div>
+  </div>
+
+  <!-- 1. DEDICATED LOGIN PAGE VIEW (#loginPageView) -->
+  <section id="loginPageView" class="login-page-wrap">
+    <div class="login-page-card">
+      <div class="login-emblem">AT</div>
+      <h1 class="login-title">맵 탈출 게임으로 추상화 배워보기</h1>
+      <p class="login-subtitle">
+        중학교 『정보』 III. 알고리즘과 프로그래밍 — 추상화(Abstraction)와 최적 핵심 경로 탐색
+      </p>
+
+      <!-- Prologue Narrative Card -->
+      <div class="prologue-card">
+        <div class="prologue-title">
+          <span>🌕 PROLOGUE — 붉은 달과 고성 미궁</span>
+        </div>
+        <p class="prologue-desc">
+          서기 1999년, 붉은 달이 떠오른 날 밤 홀연히 나타난 고대 성채 미궁이 탈출로를 가로막았다.<br/>
+          그곳에 갇혀버린 학생 탐험가! 과연 무사히 고성 미궁을 탈출할 수 있을까?<br/>
+          눈앞을 어지럽히는 현란한 장식과 위험한 미끼 함정(방해물)을 걷어내고, 오직 탈출에 꼭 필요한 핵심 경로만 찾아내는 정보 교과의 <strong>'추상화(Abstraction)'</strong> 개념을 무기 삼아 고성 미궁을 탈출해보자!
+        </p>
+      </div>
+
+      <!-- Compact Code Selector & Mode Chooser -->
+      <div style="display:flex; flex-direction:column; gap:12px; max-width:480px; margin:0 auto;">
+        <div style="text-align:left;">
+          <label style="display:block; font-size:12.5px; font-weight:800; color:var(--gold-bright); margin-bottom:5px;">
+            📋 학급 코드 선택 (S01 ~ S20)
+          </label>
+          <select id="studentCodeSelect" onchange="playButtonClickSfx();" onclick="playButtonClickSfx();" style="width:100%; background:#0e0918; border:2px solid var(--gold); color:#fff; padding:10px 14px; border-radius:8px; font-size:15px; font-weight:800; cursor:pointer; outline:none;">
+          </select>
+        </div>
+
+        <div style="text-align:left;">
+          <label style="display:block; font-size:12.5px; font-weight:800; color:var(--cyan-bright); margin-bottom:5px;">
+            🎮 조작 모드 선택
+          </label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <label style="cursor:pointer; display:flex; align-items:flex-start; gap:8px; background:#181126; border:2px solid #5e35b1; padding:10px; border-radius:8px; font-size:12px; font-weight:700;">
+              <input type="radio" name="loginControlMode" value="wasd" checked style="margin-top:2px;" onclick="playButtonClickSfx();" />
+              <span>
+                <strong style="color:#ffe07d; display:block;">WASD 액션 모드</strong>
+                <span style="color:#b0a8c2; font-size:12.5px;">(정통 컨트롤 도전 / 마우스 클릭 편법 차단)</span>
+              </span>
+            </label>
+            <label style="cursor:pointer; display:flex; align-items:flex-start; gap:8px; background:#181126; border:2px solid #00838f; padding:10px; border-radius:8px; font-size:12px; font-weight:700;">
+              <input type="radio" name="loginControlMode" value="click" style="margin-top:2px;" onclick="playButtonClickSfx();" />
+              <span>
+                <strong style="color:#80deea; display:block;">클릭 탐험 모드</strong>
+                <span style="color:#b0a8c2; font-size:12.5px;">(초보자 / 마우스 클릭 이동 & 원격 소거 허용)</span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <button class="btn btn-gold" style="font-size:16px; padding:12px 24px; justify-content:center; margin-top:8px; font-weight:900;" onpointerdown="playButtonClickSfx();" onclick="confirmStudentLogin()">
+          🏰 고성 미궁 탈출 시작하기 ▸
+        </button>
+        <button type="button" class="btn" onclick="playButtonClickSfx(); resetSelectedStudentData()" style="font-size:12px; margin-top:8px; padding:6px 14px; justify-content:center; border:1px dashed #7986cb; color:#c5cae9; background:rgba(26,35,126,0.25);" title="선택한 학생의 진행 기록을 초기화하여 1단계부터 새로 시작합니다">
+          ↻ 선택한 학생 진행 기록 초기화 (1단계부터 새로 시작)
+        </button>
+              <!-- Educational Non-profit Copyright & Fair Use Disclaimer -->
+        <div style="margin-top:16px; padding:12px 14px; background:rgba(10,8,16,0.65); border:1px solid #4a3b68; border-radius:6px; font-size:11.5px; line-height:1.6; color:#b0bec5; text-align:left;">
+          <div style="font-weight:bold; color:#ffd54f; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+            <span>[교육용 비영리 연구 저작권 고지 (Fair Use Disclaimer)]</span>
+          </div>
+          <div>
+            본 소프트웨어는 중학교 정보 교과의 핵심 알고리즘 개념인 <strong>[추상화(Abstraction)와 문제 해결]</strong> 단원 학습 효과 검증을 위한 비영리 교육 연구용 공모 출품작입니다.
+            게임 내 활용된 시각 및 음향 리소스는 비영리 학술·교육 목적 인용으로 활용되었으며, 모든 상표 및 원작 리소스의 저작권은 각 원권리자(KONAMI 등)에게 있습니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. MAIN GAME APPLICATION VIEW (#gameAppView) -->
+  <div id="gameAppView" class="hidden">
+    <!-- Top Navigation Bar -->
+    <header class="top-bar">
+      <div class="brand-box">
+        <div class="brand-crest">AT</div>
+        <div>
+          <div class="brand-title">맵 탈출 게임으로 추상화 배워보기</div>
+          <div class="brand-sub">중학교 『정보』 — 불필요한 우회로와 함정을 제거(가지치기)하고, 최적 핵심 경로를 추출하여 탈출하라!</div>
+        </div>
+      </div>
+      <div class="header-controls">
+        <span id="studentBadge" class="student-badge">학생코드: S01 (민트)</span>
+        <button class="btn btn-gold" onclick="toggleControlMode()" id="controlModeBtn">🎮 모드: WASD 액션 (클릭 불가)</button>
+        <button class="btn btn-gold" onclick="toggleAudioBgm()" id="bgmToggleBtn">배경음악 정지</button>
+        <button class="btn btn-cyan" onclick="toggleAbstractSight()" id="sightBtn">👁️ 맵 힌트 (Tab): OFF</button>
+        <button class="btn" onclick="toggleCameraOverview()" id="camModeBtn">🔍 시점: 전체 긴 맵 한눈에 보기</button>
+        <button class="btn" onclick="playButtonClickSfx(); openSheetModal()">📊 내 구글 시트 기록</button>
+        <button class="btn btn-red" onclick="playButtonClickSfx(); restartEntireGameFromScratch()" style="background:rgba(211,47,47,0.3); border-color:#e53935; color:#ffcdd2; font-weight:bold;" title="현재 학생의 진행 기록을 초기화하고 1단계부터 새로 시작">🔄 처음부터 재시작</button>
+        <button class="btn" onclick="openCopyrightModal()" style="font-size:12px; opacity:0.9;">저작권 고지</button>
+        <button class="btn" onclick="playButtonClickSfx(); goToLoginPage()">🚪 로그인 페이지로 이동</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Core Pedagogical Banner -->
+      <section class="concept-banner">
+        <div class="concept-box">
+          <span class="concept-tag tag-wrong">❌ 일상생활에서의 오해: "추상적이다 (Vague)"</span>
+          <div style="font-size:13px; color:#e0d6f5;">
+            "내용이 희미하고 모호해서 무슨 말인지 잘 모르겠다"는 뜻으로 쓰이지만, <strong>정보 교과의 추상화는 정반대이다.</strong>
+          </div>
+        </div>
+        <div class="concept-vs">VS</div>
+        <div class="concept-box">
+          <span class="concept-tag tag-right">⭕ 정보 교과의 추상화: "복잡한 세부사항을 걷어내고 핵심 요소만 추출하기"</span>
+          <div style="font-size:13px; color:#e0f7fa;">
+            복잡한 맵에서 <strong>막다른 미끼·우회로·장식 함정(탈출 방해물)을 직접 헤매지 않고 먼저 가지치기(제거)</strong>하여, 탈출에 꼭 필요한 <strong>주요 장소(방)와 이동 시간(길)만 명확히 추출</strong>하는 문제 해결 기술입니다.
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 Maps Selector (Sequential Unlocking: Must clear Map 1 -> Map 2 -> Map 3 -> Map 4) -->
+      <section class="stage-tabs" id="stageTabs"></section>
+
+      <!-- Horizontally Elongated Widescreen Game Area + Sub-Screen Abstraction Graph -->
+      <section class="game-layout-stack">
+        <!-- Top Wide Screen: 1320x480 Horizontally Elongated Side-Scrolling Map -->
+        <div class="screen-panel">
+          <div class="screen-header">
+            <span id="mainScreenTitle">⚔️ MAIN MAP — MAP 1: 용암 지하성당</span>
+            <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap;">
+              <span id="routeLiveBadge" style="color:#80deea;">🧭 현재 이동 경로: A (누적 0분)</span>
+              <span id="statusHudText" style="color:var(--gold-bright);">가지치기한 탈출 방해물: 0 / 6개</span>
+            </div>
+          </div>
+
+          <div class="canvas-wrap">
+            <canvas id="gameCanvas" width="1320" height="480"></canvas>
+          </div>
+
+          <!-- Visual Platform Texture Legend -->
+          <div class="texture-legend-bar">
+            <strong style="color:var(--gold-bright);">🧱 지형·계단 텍스처 구분:</strong>
+            <span class="tex-badge"><span class="tex-swatch" style="background:#d4af37; border:1px solid #fff;"></span>황금 룬 석조 = 출발·성문 제단</span>
+            <span class="tex-badge"><span class="tex-swatch" style="background:#00e5ff; border:1px solid #fff;"></span>청록 문양 대교 = 최적 핵심 경로(안전·최단)</span>
+            <span class="tex-badge"><span class="tex-swatch" style="background:#90a4ae; border:1px solid #cfd8dc;"></span>계단식 벽돌 층계 = 상·하층 이동 계단</span>
+            <span class="tex-badge"><span class="tex-swatch" style="background:#ffd740; border:1px solid #ff9100;"></span>기어·크리스탈 승강대 / 엘리베이터</span>
+            <span class="tex-badge"><span class="tex-swatch" style="background:#7c4dff; border:1px solid #e040fb;"></span>순간이동 마법진 발판 (Warp Pad)</span>
+            <span class="tex-badge"><span class="tex-swatch" style="background:#ff7043; border:1px solid #d84315;"></span>균열 용암·가시암 = 느린 우회로(비최적)</span>
+            <span class="tex-badge"><span class="tex-swatch" style="background:#ab47bc; border:1px solid #ff4081;"></span>진홍 저주 석판 = 막다른 미끼 함정(진입 금지!)</span>
+            <span class="tex-badge"><span class="tex-swatch" style="background:#d50000; border:1px solid #fff;"></span>💀 즉사 구역 (HP 100% 즉사!)</span>
+          </div>
+
+          <div class="bloodborne-controls">
+            <!-- Group 1: 캐릭터 방향키 및 액션 조작 -->
+            <div class="ctrl-group ctrl-group-dpad">
+              <span class="ctrl-group-label">⚔️ 캐릭터 조작 (WASD)</span>
+              <div class="ctrl-group-buttons">
+                <button class="key-pill" onmousedown="setKey('ArrowLeft',true)" onmouseup="setKey('ArrowLeft',false)" ontouchstart="setKey('ArrowLeft',true)" ontouchend="setKey('ArrowLeft',false)">◀ 좌 (A)</button>
+                <button class="key-pill" onclick="triggerJump()">▲ 점프 (W)</button>
+                <button class="key-pill" onmousedown="setKey('ArrowRight',true)" onmouseup="setKey('ArrowRight',false)" ontouchstart="setKey('ArrowRight',true)" ontouchend="setKey('ArrowRight',false)">▶ 우 (D)</button>
+                <button class="key-pill key-pill-crimson" onclick="triggerAttack()">🗡️ 무기 공격 (Space / Z)</button>
+              </div>
+            </div>
+
+            <!-- Group 2: 추상화 분석 & 맵 힌트 -->
+            <div class="ctrl-group ctrl-group-hint">
+              <span class="ctrl-group-label">👁️ 추상화 분석 & 탐색</span>
+              <div class="ctrl-group-buttons">
+                <button class="key-pill key-pill-gold" onclick="toggleAbstractSight()" id="sightKeyPill">👁️ 맵 힌트 (Tab)</button>
+                <button class="key-pill key-pill-slate" id="pruneBtn" onclick="pruneAllDecoyNoises()">🧹 탈출 방해물 일괄 가지치기 (C)</button>
+              </div>
+            </div>
+
+            <!-- Group 3: 스테이지 제어 -->
+            <div class="ctrl-group ctrl-group-stage">
+              <span class="ctrl-group-label">↻ 스테이지 제어</span>
+              <div class="ctrl-group-buttons">
+                <button class="key-pill key-pill-reset" onclick="resetCurrentStage()">↺ 현재 맵 처음부터</button>
+                <button class="key-pill key-pill-gold" id="nextStageQuickBtn" style="display:none;" onclick="goToNextUnlockedStage()">🚪 다음 해금 맵 ▸</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Sub-Screen: Wide Real-time Abstraction Graph + Optimal Route Verifier -->
+        <div class="screen-panel">
+          <div class="screen-header" style="border-left-color:var(--cyan);">
+            <span>📡 SUB-SCREEN — 실시간 추상화(Abstraction) 노선도 & 최적 경로 검증기</span>
+            <span id="graphStateBadge" style="color:var(--cyan-bright);">[추상화 진행률 0%]</span>
+          </div>
+          <div class="subscreen-grid">
+            <div class="graph-canvas-wrap">
+              <canvas id="graphCanvas" width="900" height="250"></canvas>
+            </div>
+            <div class="route-analyzer-card">
+              <div>
+                <div style="font-weight:900; color:var(--gold-bright); font-size:13.5px; margin-bottom:6px;">
+                  🎯 왜 '탈출 방해물 가지치기(추상화)'가 '최적 탈출 경로 탐색'으로 이어질까요?
+                </div>
+                <p style="color:#d7cde8; line-height:1.5; font-size:12px;">
+                  우회로나 막다른 방에 있는 미끼 상자·장식 함정(Noise)을 먹으려고 <strong>직접 캐릭터가 걸어가면 시간이 낭비되어 최적 경로가 깨집니다!</strong><br/>
+                  불필요한 갈림길과 함정을 <strong>원격 가지치기</strong>하거나 <strong>[맵 힌트 (Tab)]</strong>로 확인한 뒤, 추출된 <strong>청록색 최단 루트</strong>로만 이동해 탈출하세요!
+                </p>
+              </div>
+              <div style="background:#0a0712; border:1px solid #2d2246; border-radius:6px; padding:8px 10px;">
+                <div id="analyzerRouteTarget" style="color:#80deea; font-weight:800; font-size:12px; margin-bottom:3px;">
+                  • 목표 최단 시간: 계산 중...
+                </div>
+                <div id="analyzerCurrentStatus" style="color:#ffe07d; font-weight:700; font-size:12px;">
+                  • 내 이동 기록: 출발 대기 중
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom Section: Worksheet & AI Tutor -->
+      <section class="grimoire-grid">
+        <!-- Left: 1~3 Step Abstraction Worksheet -->
+        <div class="grimoire-panel">
+          <div class="grimoire-title">
+            <span id="grimoireHeaderTitle">📜 추상화 학습 기록장 — 스테이지 탐구 답안</span>
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-cyan" onclick="autoFillFromGameplay()">✨ 방금 플레이한 추상화 결과로 1·2·3단계 자동 채우기</button>
+              <button class="btn btn-gold" onclick="submitGrimoireAnswer()">💾 최종 답안 제출 (구글 시트 저장)</button>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <label class="step-label" id="qStep1Label">1단계 질문</label>
+            <div style="font-size:12.5px; color:#e0c98b; background:rgba(18, 14, 26, 0.85); border:1px solid #5c471f; border-left:3px solid var(--gold); padding:8px 12px; border-radius:4px; margin-bottom:8px; line-height:1.6;">
+              <strong>💡 1단계 작성 팁 (탈출 방해물 분류 형식):</strong><br>
+              • <strong>가지치기할 불필요한 장소(방):</strong> 탈출과 무관한 막다른 방, 비최적 우회로<br>
+              • <strong>원격 제거할 함정 및 장애물:</strong> 스페이스/클릭으로 소거 가능한 불필요한 미끼 상자·차단벽<br>
+              • <strong>반드시 회피해야 할 즉사 지형/함정:</strong> 원격 제거 불가! 밟거나 접촉 시 탈출 실패/시간 낭비<br>
+              • <strong>방해 몬스터:</strong> 최단 경로 길목을 막거나 플레이어를 추적하는 적
+            </div>
+            <textarea id="ansStep1" class="step-textarea" placeholder="위의 3대 탈출 방해물(불필요한 장소 / 함정 / 몬스터) 분류에 맞춰 SUB-SCREEN의 명칭 그대로 적어 보세요."></textarea>
+          </div>
+          <div class="step-card">
+            <label class="step-label" id="qStep2Label">2단계 질문</label>
+            <div style="font-size:12.5px; color:#e0c98b; background:rgba(18, 14, 26, 0.85); border:1px solid #5c471f; border-left:3px solid var(--gold); padding:8px 12px; border-radius:4px; margin-bottom:8px; line-height:1.6;">
+              <strong>💡 2단계 작성 팁 &amp; 표준 예시 규격:</strong><br>
+              • <strong>꼭 지나야 할 주요 장소(방):</strong> A.출발방 ➔ B.복도 ➔ C.승강도크 ➔ ... ➔ 목표방<br>
+              • <strong>장소 사이의 구간별 소요 시간:</strong> [A➔B: 1분] + [B➔C: 2분] + ... ➔ 총 소요 시간 합계: O분<br>
+              • <strong>특수 조건 및 주의 사항:</strong> 통행 불가 조건, 역송/지연 함정 주의
+            </div>
+            <textarea id="ansStep2" class="step-textarea" placeholder="위의 표준 형식처럼 꼭 남겨야 할 '주요 장소(방)'와 '각 통로별 소요 시간 및 총합'을 적어 보세요."></textarea>
+          </div>
+          <div class="step-card">
+            <label class="step-label" id="qStep3Label">3단계 질문</label>
+            <div style="font-size:12.5px; color:#e0c98b; background:rgba(18, 14, 26, 0.85); border:1px solid #5c471f; border-left:3px solid var(--gold); padding:8px 12px; border-radius:4px; margin-bottom:8px; line-height:1.6;">
+              <strong>💡 3단계 작성 팁 &amp; 표준 예시 규격:</strong><br>
+              • <strong>구간별 이동 경로 및 소요 시간:</strong> [출발방 ➔ 중간방]: O분, ...<br>
+              • <strong>전체 최적 경로 순서:</strong> 출발방(A) ➔ 중간방(B) ➔ ... ➔ 목표방(Z)<br>
+              • <strong>총 최단 탈출 시간:</strong> 각 구간 소요 시간의 합 = 총 O분
+            </div>
+            <textarea id="ansStep3" class="step-textarea" placeholder="추상화 노선도를 통해 확정한 '최적 핵심 탈출 경로'와 '총 최단 탈출 시간(분)'을 적어 보세요."></textarea>
+          </div>
+          <div id="submitStatusMsg" style="font-size:13px; font-weight:700; color:#80deea; margin-top:4px;"></div>
+        </div>
+
+        <!-- Right: AI Coaching Tutor -->
+        <div class="grimoire-panel">
+          <div class="grimoire-title">
+            <span>🔮 대도서관 사서 AI 코칭 튜터</span>
+            <span style="font-size:12px; color:var(--text-muted);">소크라테스식 힌트 제공</span>
+          </div>
+          <div class="chat-log" id="chatLog">
+            <div class="chat-bubble chat-ai">환영합니다, 학생 탐험가여!
+각 스테이지는 이전 맵을 탈출해야 다음 맵이 열립니다.
+주의하세요: 막다른 방이나 느린 우회로에 놓인 보물상자·함정(Noise)을 직접 몸으로 가서 부수면 시간이 낭비되어 '최적 경로'가 아니게 됩니다!
+탈출 방해물은 [Space 검기]나 [맵 힌트]를 활용해 파악하고, 캐릭터는 추출된 '최적 핵심 발판'으로만 이동해 탈출하세요!</div>
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+            <button class="btn" style="font-size:12.5px; padding:5px 9px;" onclick="askPresetQuestion('1단계에서 왜 방해물을 직접 가지 않고 가지치기(제거)하나요?')">💡 1단계 탈출 방해물 가지치기 힌트</button>
+            <button class="btn" style="font-size:12.5px; padding:5px 9px;" onclick="askPresetQuestion('2단계에서 꼭 남겨야 할 핵심 정보는 무엇인가요?')">💡 2단계 핵심추출 힌트</button>
+            <button class="btn" style="font-size:12.5px; padding:5px 9px;" onclick="askPresetQuestion('3단계 최적 탈출 경로와 시간은 어떻게 구하나요?')">💡 3단계 최적경로 힌트</button>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <input id="tutorInput" type="text" placeholder="사서 AI에게 질문 입력..." style="flex:1; background:#0a0711; border:1px solid #433466; border-radius:6px; color:#fff; padding:8px 10px; font-size:13px;" onkeydown="if(event.key==='Enter') sendTutorQuestion()" />
+            <button class="btn btn-gold" onclick="sendTutorQuestion()">질문 ▸</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Student Submissions Sheet Modal -->
+  <div id="sheetModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h2 style="color:var(--gold-bright);">📊 내 추상화 기록장 제출 내역 (Google Sheets 연동)</h2>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-cyan" onclick="downloadCsv()">📥 엑셀(.csv) 다운로드</button>
+          <button class="btn" onclick="closeSheetModal()">닫기 ✕</button>
+        </div>
+      </div>
+      <div id="sheetTableContainer" style="max-height:360px; overflow-y:auto; font-size:12.5px;"></div>
+    </div>
+  </div>
+
+  <!-- Golden Stage Clear Modal (#stageClearModal) -->
+  <div id="stageClearModal" class="modal-backdrop hidden">
+    <div class="modal-card bloodborne-gold-card" style="max-width:680px; text-align:center; position:relative;">
+      <div style="font-size:46px; margin-bottom:6px; animation: goldPulse 2s infinite ease-in-out;">🏆</div>
+      <div class="bloodborne-ornament-header">
+        <span class="bloodborne-sub-tag">STAGE ESCAPED — CASTLE ABSTRACTION</span>
+        <h2 id="modalStageTitle" style="color:var(--gold-bright); font-size:25px; font-weight:900; letter-spacing:0.04em; margin:6px 0 8px;">
+          STAGE CLEARED!
+        </h2>
+      </div>
+
+      <!-- Golden Result Container -->
+      <div class="golden-result-box">
+        <div class="golden-stat-row">
+          <div class="golden-stat-col">
+            <span class="stat-lbl">내 탈출 시간</span>
+            <span id="modalPlayerTime" class="stat-val" style="color:#ffe07d;">6분</span>
+          </div>
+          <div class="golden-stat-divider"></div>
+          <div class="golden-stat-col">
+            <span class="stat-lbl">최적 목표 시간</span>
+            <span id="modalTargetTime" class="stat-val" style="color:#80deea;">6분</span>
+          </div>
+          <div class="golden-stat-divider"></div>
+          <div class="golden-stat-col">
+            <span class="stat-lbl">추상화 판정</span>
+            <span id="modalOptVerdict" class="stat-val" style="color:#a7ffeb;">🌟 최적 핵심 경로 직행!</span>
+          </div>
+        </div>
+
+        <p id="modalFeedbackText" style="font-size:13px; line-height:1.6; color:#e0d8cc; margin:14px 0 6px;">
+          훌륭합니다! 불필요한 미끼와 위험한 함정을 모두 걷어내고 최단 경로로 탈출했습니다.
+        </p>
+
+        <!-- Valmanway Legendary Weapon Reward Container (Shown if Map 4 cleared) -->
+        <div id="modalValmanwayReward" style="display:none; margin-top:14px; background:linear-gradient(180deg, rgba(62,49,20,0.85) 0%, rgba(20,16,6,0.95) 100%); border:2px solid #ffd740; border-radius:8px; padding:12px; box-shadow:0 0 18px rgba(255,215,64,0.4);">
+          <div style="font-size:15px; font-weight:900; color:#ffd740; display:flex; align-items:center; justify-content:center; gap:8px;">
+            ⚔️ [전설의 비검 획득] 질풍의 비검 (Secret Gale Blade)
+          </div>
+          <p style="font-size:12px; color:#f0ead6; margin-top:6px; line-height:1.5;">
+            고성 미궁의 모든 시련을 돌파한 탐험가에게 주어지는 질풍의 명검!<br/>
+            초당 수십 회의 진공 칼날이 캐릭터 주위를 회전하며 모든 몬스터를 순식간에 궤멸시킵니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:20px;">
+        <button class="btn btn-gold" onclick="replayStageWithRespawn()" style="font-size:13.5px; padding:10px 18px;">
+          ↻ 스테이지 다시 도전 (몬스터 & 함정 리스폰)
+        </button>
+        <button id="modalNextStageBtn" class="btn btn-cyan" onclick="goToNextUnlockedStage()" style="font-size:13.5px; padding:10px 18px;">
+          다음 해금 스테이지로 진입 ➔
+        </button>
+        <button class="btn btn-red" onclick="playButtonClickSfx(); restartEntireGameFromScratch()" style="font-size:13.5px; padding:10px 18px; background:rgba(211,47,47,0.3); border-color:#e53935; color:#ffcdd2;">
+          🔄 처음부터 전체 재도전
+        </button>
+        <button class="btn" onclick="closeStageClearModal()" style="font-size:13px; padding:10px 14px;">
+          닫기 ✕
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    var GAS_EXEC_URL = 'https://script.google.com/macros/s/AKfycbxhLpLQT7R1SFw_e5aCjCfgiyH4iKbJNubpRHIrkvCwua3mohET_TiUEhDSWcrp-sUb/exec';
+
+    var ASSETS = window.NDS_ASSETS || {};
+    var loadedImages = {};
+    var loadedAudios = {};
+
+        // [Web Audio API] 즉각적인 반응성의 고딕 선택 효과음 & 거대 성문 개방 합성기
+    function getAudioCtx() {
+      try {
+        var AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return null;
+        if (!window._sharedAudioCtx) {
+          window._sharedAudioCtx = new AudioCtx();
+        }
+        if (window._sharedAudioCtx.state === 'suspended') {
+          window._sharedAudioCtx.resume();
+        }
+        return window._sharedAudioCtx;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // 1차: 고딕 글리프 선택/버튼 클릭 효과음 (선명한 어택 + 신비로운 공명 벨)
+    function playSynthGothicClick() {
+      try {
+        var ctx = getAudioCtx();
+        if (!ctx) return;
+        var now = ctx.currentTime;
+
+        // 귀에 편안하고 은은한 고딕 룬 클릭 어택 (640Hz -> 280Hz 사인파)
+        var osc1 = ctx.createOscillator();
+        var gain1 = ctx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(640, now);
+        osc1.frequency.exponentialRampToValueAtTime(280, now + 0.08);
+        gain1.gain.setValueAtTime(0.18, now); // 편안하고 부드러운 낮은 볼륨
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.08);
+
+        // 은은한 공명 잔향 (960Hz -> 480Hz)
+        var osc2 = ctx.createOscillator();
+        var gain2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(960, now);
+        osc2.frequency.exponentialRampToValueAtTime(480, now + 0.18);
+        gain2.gain.setValueAtTime(0.10, now);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.start(now);
+        osc2.stop(now + 0.18);
+      } catch (e) {}
+    }
+
+    // 2차: 거대 고성 성문 개방 묵직한 중저음 & 쇠사슬 래치 효과음 (절제된 웅장함)
+    function playGateOpeningSfx() {
+      try {
+        var ctx = getAudioCtx();
+        if (ctx) {
+          var now = ctx.currentTime;
+
+          // 거대 석조 성문 마찰 중저음 (60Hz -> 32Hz)
+          var rumbleOsc = ctx.createOscillator();
+          var rumbleGain = ctx.createGain();
+          rumbleOsc.type = 'triangle';
+          rumbleOsc.frequency.setValueAtTime(60, now);
+          rumbleOsc.frequency.exponentialRampToValueAtTime(32, now + 0.9);
+
+          var filter = ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(130, now);
+          filter.frequency.linearRampToValueAtTime(65, now + 0.9);
+
+          rumbleGain.gain.setValueAtTime(0.20, now); // 부드럽고 묵직한 볼륨
+          rumbleGain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+
+          rumbleOsc.connect(filter);
+          filter.connect(rumbleGain);
+          rumbleGain.connect(ctx.destination);
+          rumbleOsc.start(now);
+          rumbleOsc.stop(now + 0.9);
+
+          // 부드러운 래치 쇳소리
+          var latchOsc = ctx.createOscillator();
+          var latchGain = ctx.createGain();
+          latchOsc.type = 'sine';
+          latchOsc.frequency.setValueAtTime(420, now);
+          latchGain.gain.setValueAtTime(0.10, now);
+          latchGain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+          latchOsc.connect(latchGain);
+          latchGain.connect(ctx.destination);
+          latchOsc.start(now);
+          latchOsc.stop(now + 0.14);
+        }
+      } catch (e) {}
+
+      // 오디오 에셋 절제된 음량으로 재생
+      var doorAudio = loadedAudios['aud_door'] || loadedAudios['aud_sfx_door'];
+      if (doorAudio) {
+        try {
+          doorAudio.currentTime = 0;
+          doorAudio.volume = 0.30; // 0.95 -> 0.30로 편안하게 조정
+          doorAudio.play().catch(function(){});
+        } catch (e) {}
+      }
+    }
+
+    function playButtonClickSfx() {
+      playSynthGothicClick();
+      var a = loadedAudios['aud_glyph'] || loadedAudios['aud_sfx_glyph'];
+      if (a) {
+        try {
+          a.currentTime = 0;
+          a.volume = 0.22; // 0.95 -> 0.22로 편안하게 조정
+          a.play().catch(function(){});
+        } catch(e){}
+      }
+    }
+
+    function initAssets() {
+      Object.keys(ASSETS).forEach(function(k) {
+        if (k.indexOf('spr_') === 0 || k.indexOf('tile_') === 0) {
+          var img = new Image();
+          img.src = ASSETS[k];
+          loadedImages[k] = img;
+        } else if (k.indexOf('aud_') === 0) {
+          var aud = new Audio(ASSETS[k]);
+          loadedAudios[k] = aud;
+        }
+      });
+      ['sfx_wpn_dagger', 'sfx_wpn_rapier', 'sfx_wpn_lance', 'sfx_wpn_greatsword', 'sfx_wpn_valmanway'].forEach(function(name) {
+        if (!loadedAudios['aud_' + name]) {
+          loadedAudios['aud_' + name] = new Audio('assets/audio/' + name + '.wav');
+        }
+      });
+      if (!loadedAudios['aud_bgm_main_theme']) {
+        loadedAudios['aud_bgm_main_theme'] = new Audio('assets/audio/bgm_main_theme.mp3');
+      }
+      if (!loadedAudios['aud_bgm_map2']) {
+        loadedAudios['aud_bgm_map2'] = new Audio('assets/audio/bgm_map2.mp3');
+      }
+      if (!loadedAudios['aud_bgm_map3']) {
+        loadedAudios['aud_bgm_map3'] = new Audio('assets/audio/bgm_map3.mp3');
+      }
+      if (!loadedAudios['aud_bgm_map4']) {
+        loadedAudios['aud_bgm_map4'] = new Audio('assets/audio/bgm_map4.mp3');
+      }
+      if (!loadedAudios['aud_bgm_login']) {
+        loadedAudios['aud_bgm_login'] = new Audio('assets/audio/bgm_login.mp3');
+      }
+      if (!loadedAudios['aud_door']) {
+        loadedAudios['aud_door'] = loadedAudios['aud_sfx_door'] || new Audio('assets/audio/sfx_door.wav');
+      }
+      if (!loadedAudios['aud_sfx_door']) {
+        loadedAudios['aud_sfx_door'] = loadedAudios['aud_door'];
+      }
+      if (!loadedAudios['aud_glyph']) {
+        loadedAudios['aud_glyph'] = loadedAudios['aud_sfx_glyph'] || new Audio('assets/audio/sfx_glyph.wav');
+      }
+      if (!loadedAudios['aud_sfx_glyph']) {
+        loadedAudios['aud_sfx_glyph'] = loadedAudios['aud_glyph'];
+      }
+    }
+    initAssets();
+
+    var currentBgmAudio = null;
+    var gameOverAudio = null;
+    var bgmEnabled = true; // Auto-play enabled by default
+
+    function updateBgmButtonUI() {
+      var btn = document.getElementById('bgmToggleBtn');
+      if (!btn) return;
+      btn.textContent = bgmEnabled ? '배경음악 정지' : '배경음악 재생';
+    }
+
+    function playSfx(name, vol) {
+      if (name === 'glyph' || name === 'click') {
+        playSynthGothicClick();
+      }
+      var a = loadedAudios['aud_' + name] || loadedAudios['aud_sfx_' + name];
+      if (!a) return;
+      try {
+        a.currentTime = 0;
+        a.volume = vol !== undefined ? vol : 0.70;
+        var p = a.play();
+        if (p !== undefined) {
+          p.catch(function() {
+            try {
+              var clone = a.cloneNode();
+              clone.volume = vol !== undefined ? vol : 0.70;
+              clone.play().catch(function(){});
+            } catch(e){}
+          });
+        }
+      } catch (e) {}
+    }
+
+    function playWeaponAttackSfx(wpnKey) {
+      try {
+        var a = null;
+        if (wpnKey === 'valmanway' || state.unlockedValmanway) {
+          // Valmanway 클리어 특전: 4연타 진공 회오리 칼바람 폭풍음 (Castlevania SWAR[0])
+          a = loadedAudios['aud_sfx_wpn_valmanway'] || loadedAudios['aud_sfx_sword'];
+        } else {
+          // [사용자 요청 반영] MAP 4의 묵직한 대검 베기 사운드를 MAP 1~3까지 전 맵에 동일하게 통일 적용!
+          a = loadedAudios['aud_sfx_wpn_greatsword'] || loadedAudios['aud_sfx_sword'] || loadedAudios['aud_sfx_slash'];
+        }
+        if (a) {
+          var c = a.cloneNode();
+          c.volume = 0.68;
+          c.play().catch(function(){});
+        }
+      } catch (e) {
+        playSfx('sfx_slash', 0.55);
+      }
+    }
+
+    function stopAllMusic() {
+      try {
+        Object.keys(loadedAudios).forEach(function(k) {
+          if (k.indexOf('aud_bgm') === 0 && loadedAudios[k] && typeof loadedAudios[k].pause === 'function') {
+            loadedAudios[k].pause();
+            loadedAudios[k].currentTime = 0;
+          }
+        });
+      } catch (e) {}
+      if (currentBgmAudio) {
+        try { currentBgmAudio.pause(); currentBgmAudio.currentTime = 0; } catch (e) {}
+        currentBgmAudio = null;
+      }
+      if (gameOverAudio) {
+        try { gameOverAudio.pause(); gameOverAudio.currentTime = 0; } catch (e) {}
+        gameOverAudio = null;
+      }
+    }
+
+    function playLoginBgm() {
+      stopAllMusic();
+      var a = loadedAudios['aud_bgm_login'];
+      if (!a) {
+        a = new Audio('assets/audio/bgm_login.mp3');
+        loadedAudios['aud_bgm_login'] = a;
+      }
+      if (a) {
+        currentBgmAudio = a;
+        currentBgmAudio.loop = true;
+        currentBgmAudio.volume = 0.50;
+        currentBgmAudio.onended = function() {
+          var loginView = document.getElementById('loginPageView');
+          if (loginView && !loginView.classList.contains('hidden')) {
+            this.currentTime = 0;
+            this.play().catch(function(){});
+          }
+        };
+        var p = currentBgmAudio.play();
+        if (p !== undefined) {
+          p.catch(function() {
+            function resumeLoginOnGesture() {
+              var loginView = document.getElementById('loginPageView');
+              if (loginView && !loginView.classList.contains('hidden') && currentBgmAudio) {
+                currentBgmAudio.play().catch(function(){});
+              }
+              window.removeEventListener('pointerdown', resumeLoginOnGesture);
+              window.removeEventListener('keydown', resumeLoginOnGesture);
+            }
+            window.addEventListener('pointerdown', resumeLoginOnGesture, { once: true });
+            window.addEventListener('keydown', resumeLoginOnGesture, { once: true });
+          });
+        }
+      }
+    }
+
+    function playStageBgm() {
+      stopAllMusic();
+      var loginView = document.getElementById('loginPageView');
+      if (loginView && !loginView.classList.contains('hidden')) return;
+      if (!bgmEnabled || state.gameOver) return;
+      var a = null;
+      if (state.currentStageIdx === 3) {
+        // [MAP 4 전용 BGM: 심연 탈출 테마 (무한 루프)]
+        a = loadedAudios['aud_bgm_map4'] || loadedAudios['aud_bgm_main_theme'];
+      } else if (state.currentStageIdx === 2) {
+        // [MAP 3 전용 BGM: Gears of Fortune (기계 시계탑)]
+        a = loadedAudios['aud_bgm_map3'] || loadedAudios['aud_bgm_clock'] || loadedAudios['aud_bgm_main_theme'];
+      } else if (state.currentStageIdx === 1) {
+        // [MAP 2 전용 BGM: Emerald Mist (빙하 수로 미궁)]
+        a = loadedAudios['aud_bgm_map2'] || loadedAudios['aud_bgm_glacier'] || loadedAudios['aud_bgm_main_theme'];
+      } else {
+        // [MAP 1 전용 BGM: 메인 테마]
+        a = loadedAudios['aud_bgm_main_theme'] || loadedAudios['aud_bgm_castle'] || loadedAudios['aud_bgm_lava'];
+      }
+      if (a) {
+        currentBgmAudio = a;
+        currentBgmAudio.loop = true;
+        currentBgmAudio.volume = 0.45;
+        currentBgmAudio.onended = function() {
+          if (bgmEnabled && !state.gameOver) {
+            this.currentTime = 0;
+            this.play().catch(function(){});
+          }
+        };
+        var playPromise = currentBgmAudio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(function() {
+            function resumeOnGesture() {
+              if (bgmEnabled && !state.gameOver && currentBgmAudio) {
+                currentBgmAudio.play().catch(function(){});
+              }
+              window.removeEventListener('pointerdown', resumeOnGesture);
+              window.removeEventListener('keydown', resumeOnGesture);
+            }
+            window.addEventListener('pointerdown', resumeOnGesture, { once: true });
+            window.addEventListener('keydown', resumeOnGesture, { once: true });
+          });
+        }
+      }
+      updateBgmButtonUI();
+    }
+
+    function playGameOverTragicMusic() {
+      stopAllMusic();
+      var a = loadedAudios['aud_bgm_gameover'];
+      if (a) {
+        gameOverAudio = a;
+        gameOverAudio.loop = false;
+        gameOverAudio.volume = 0.65;
+        gameOverAudio.currentTime = 0;
+        gameOverAudio.play().catch(function(){});
+      }
+    }
+
+    function toggleAudioBgm() {
+      bgmEnabled = !bgmEnabled;
+      updateBgmButtonUI();
+      if (bgmEnabled) {
+        playStageBgm();
+        playSfx('sfx_glyph', 0.45);
+      } else {
+        stopAllMusic();
+      }
+    }
+
+    /*
+     * 4 STAGES:
+     * - MAP 1: Lava Catacombs (Top-Left -> Bottom-Right)
+     * - MAP 2: Frozen Aqueduct (V-Shape Subterranean Canal & Crystal Lift)
+     * - MAP 3: Mechanical Clock Tower (Multi-tier Climb + Central Broken Bridge)
+     * - MAP 4: Final Escape [HARD MODE] (2x Deep Abyssal Labyrinth: 2400 x 960! Vertical Elevator + Teleporters + Instant Death Pit/Guillotine + Immortal Death!)
+     */
+    var STAGES = [
+      // ==================== MAP 1: LAVA CATACOMBS ====================
+      {
+        id: 'T03',
+        mapNum: 'MAP 1',
+        worldW: 1850,
+        worldH: 480,
+        title: '용암 지하성당',
+        hint: '불필요한 [C.상층보물실(막다른길)]과 느린 [E.화산암우회로(느림)]를 가지치기하면, [D.지하성소교각]과 [F.흑요석룬대교]를 통과하는 6분 최적 탈출 경로가 완성됩니다.',
+        bgm: 'bgm_lava',
+        weaponSprite: 'spr_sword_glyph',
+        weaponName: '단검 글리프 (Confodere)',
+        tileSheet0: 'tile_lava_sheet0',
+        tileSheet1: 'tile_lava_sheet1',
+        platTex: 'tile_plat_lava',
+        themeBg: ['#1a0608', '#380b0e', '#ff3d00'],
+        hazardName: '용암 마그마 지대 (-25 HP)',
+        targetMinutes: 6,
+        optimalNodeSeq: ['A', 'B', 'D', 'F', 'G'],
+        optimalSummary: '• 전체 최적 탈출 경로: A.상층입구제단 ➔ B.청동하강계단 ➔ D.지하성소교각 ➔ F.흑요석룬대교 ➔ G.지하봉인문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 2분 + 1분 = 총 6분\n• 최종 탈출 전략: 막다른 보물실(C)과 화산암 우회로(E)를 가지치기하여 도출한 유일한 6분 최단 경로임',
+        step1Question: '[1단계: 탈출 방해물 가지치기 (불필요한 정보 제거)] 상층 입구(A)에서 지하 봉인문(G)으로 이동할 때, 시간을 낭비하게 만드는 불필요한 장소(방), 함정, 방해 몬스터 요소를 각각 분류하여 적어 보세요.',
+        step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 탈출에 꼭 필요한 핵심 장소 간 \'구간별 소요 시간\'과, 가지치기하여 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
+        step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 출발지부터 탈출구까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
+        autoStep1: '• 가지치기할 불필요한 장소(방): C.상층보물실(막다른길), E.화산암우회로(느림)\n• 원격 제거할 함정 및 장애물: ⚠️폭발 화염 촛대 함정, ⚠️가짜 유인 미믹 보물상자\n• 반드시 회피해야 할 위험 지형: 🔥용암 마그마 지대(-25 HP, 원격 제거 불가 지형)\n• 방해 몬스터: 화염 임프, 적색 해골, 우회로 지하 좀비, 지하 순찰 인화차',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.상층입구제단 ➔ B.청동하강계단]: 1분\n  - [B.청동하강계단 ➔ D.지하성소교각]: 2분\n  - [D.지하성소교각 ➔ F.흑요석룬대교]: 2분\n  - [F.흑요석룬대교 ➔ G.지하봉인문]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.상층보물실]: 탈출로가 없는 막다른 방이므로 배제함\n  - [E.화산암우회로]: 용암 위험과 7분이 걸리는 비효율적 우회로이므로 배제함',
+        nodes: [
+          { id: 'A', label: 'A.상층입구제단[출발]', x: 110, y: 125 },
+          { id: 'B', label: 'B.청동하강계단', x: 410, y: 215 },
+          { id: 'C', label: 'C.상층보물실(막다른길)', x: 760, y: 120 },
+          { id: 'D', label: 'D.지하성소교각', x: 760, y: 310 },
+          { id: 'E', label: 'E.화산암우회로(느림)', x: 1140, y: 405 },
+          { id: 'F', label: 'F.흑요석룬대교', x: 1240, y: 295 },
+          { id: 'G', label: 'G.지하봉인문[탈출구]', x: 1690, y: 335 }
+        ],
+        edges: [
+          { from: 'A', to: 'B', cost: '1분', minutes: 1, optimal: true, labelDy: -16 },
+          { from: 'B', to: 'C', cost: '3분(막다른길)', minutes: 3, optimal: false, deadEnd: true, labelDy: -16 },
+          { from: 'B', to: 'D', cost: '2분', minutes: 2, optimal: true, labelDy: 16 },
+          { from: 'D', to: 'E', cost: '4분(용암우회)', minutes: 4, optimal: false, labelDy: 16 },
+          { from: 'E', to: 'G', cost: '3분(위험)', minutes: 3, optimal: false, labelDy: 16 },
+          { from: 'D', to: 'F', cost: '2분', minutes: 2, optimal: true, labelDy: -16 },
+          { from: 'F', to: 'G', cost: '1분', minutes: 1, optimal: true, labelDy: -16 }
+        ],
+        platforms: [
+          { x: 30, y: 155, w: 190, h: 26, core: true, style: 'altar', nodeId: 'A', tag: '출발 성소' },
+          { x: 245, y: 195, w: 105, h: 22, core: true, style: 'stair', tag: '1단 하강계단' },
+          { x: 355, y: 245, w: 160, h: 24, core: true, style: 'stair', nodeId: 'B', tag: '2단 청동층계' },
+          { x: 530, y: 185, w: 110, h: 20, core: false, style: 'deadend', tag: '유인 통로' },
+          { x: 665, y: 150, w: 195, h: 22, core: false, style: 'deadend', nodeId: 'C', tag: '🚫막다른 보물방' },
+          { x: 540, y: 295, w: 115, h: 22, core: true, style: 'stair', tag: '3단 심층계단' },
+          { x: 675, y: 340, w: 195, h: 24, core: true, style: 'core', nodeId: 'D', tag: '지하 성소 교각' },
+          { x: 895, y: 400, w: 130, h: 20, core: false, style: 'detour', tag: '가시 화산암' },
+          { x: 1045, y: 432, w: 205, h: 20, core: false, style: 'detour', nodeId: 'E', tag: '⚠️용암 우회로(느림)' },
+          { x: 1280, y: 410, w: 145, h: 20, core: false, style: 'detour', tag: '화산암 오르막' },
+          { x: 910, y: 325, w: 175, h: 24, core: true, style: 'core', tag: '룬 문자 중앙교' },
+          { x: 1125, y: 325, w: 230, h: 24, core: true, style: 'core', nodeId: 'F', tag: '흑요석 룬 대교' },
+          { x: 1395, y: 345, w: 145, h: 22, core: true, style: 'stair', tag: '성문 진입 계단' },
+          { x: 1575, y: 365, w: 235, h: 28, core: true, style: 'altar', nodeId: 'G', tag: '지하 봉인문 테라스' },
+          { x: 50, y: 390, w: 160, h: 22, core: false, style: 'detour', tag: '폐쇄된 하층 석실' },
+          { x: 235, y: 415, w: 145, h: 22, core: false, style: 'detour', tag: '하층 용암 제방' }
+        ],
+        wallHazards: [
+          { type: 'flame_skull_wheel', x: 200, y: 395, minX: 80, maxX: 330, spd: 1.4, vx: 1.4, r: 24, name: '벽면 순찰 인화차' }
+        ],
+        pendulums: [
+          { x: 615, y: 36, len: 92, amp: 0.38, spd: 0.045, phase: 0.0, dmg: 25 },
+          { x: 1030, y: 36, len: 96, amp: 0.42, spd: 0.05, phase: 1.5, dmg: 25 },
+          { x: 1465, y: 36, len: 92, amp: 0.38, spd: 0.045, phase: 3.0, dmg: 25 }
+        ],
+        noises: [
+          { id: 'n1', name: '⚠️ 폭발 화염 촛대 함정', shortTag: '⚠️화염함정', type: 'trap', dmg: 20, sprite: 'spr_candle_f1', sprite2: 'spr_candle_f2', x: 175, y: 123, w: 28, h: 32, hit: false },
+          { id: 'n2', name: '블러드 스켈레톤', shortTag: '💀적색해골', type: 'monster', dmg: 25, sprite: 'spr_rskl_f1', sprite2: 'spr_rskl_f2', x: 410, y: 197, w: 24, h: 48, moveMode: 'patrol', minX: 365, maxX: 485, vx: 1.25, hit: false },
+          { id: 'n3', name: '⚠️ 가짜 미믹 유인상자 함정', shortTag: '⚠️유인미믹', type: 'trap', dmg: 25, sprite: 'spr_mimi_f1', sprite2: 'spr_mimi_f2', x: 755, y: 120, w: 32, h: 30, hit: false },
+          { id: 'n4', name: '화염 임프', shortTag: '👹화염임프', type: 'monster', dmg: 25, sprite: 'spr_imp_f1', sprite2: 'spr_imp_f2', x: 960, y: 255, w: 28, h: 28, moveMode: 'sine', minX: 880, maxX: 1120, baseY: 255, ampY: 22, vx: 1.6, hit: false },
+          { id: 'n5', name: '우회로 지하 좀비', shortTag: '🧟우회로좀비', type: 'monster', dmg: 20, sprite: 'spr_zbs_f1', sprite2: 'spr_zbs_f2', x: 1120, y: 384, w: 26, h: 48, moveMode: 'patrol', minX: 1055, maxX: 1215, vx: 1.0, hit: false },
+          { id: 'n6', name: '⚠️ 독침 분출 고딕석관 함정', shortTag: '⚠️독침석관', type: 'trap', dmg: 20, sprite: 'spr_dest_vase', sprite2: 'spr_dest_vase', x: 1295, y: 277, w: 20, h: 48, hit: false },
+          { id: 'n7', name: '지하 순찰 인화차 (Flame Wheel)', shortTag: '🔥순찰인화차', type: 'monster', dmg: 25, sprite: 'spr_flame_skull_wheel', sprite2: 'spr_flame_skull_wheel', x: 130, y: 346, w: 44, h: 44, moveMode: 'patrol', minX: 70, maxX: 190, vx: 1.4, hit: false }
+        ]
+      },
+
+      // ==================== MAP 2: FROZEN AQUEDUCT ====================
+      {
+        id: 'T01',
+        mapNum: 'MAP 2',
+        worldW: 1980,
+        worldH: 480,
+        title: '빙하 수로 미궁',
+        hint: '우회로인 [C.상층폭포다리(우회로)]와 [X.빙하동굴(막다른길)]을 가지치기하고, [D.심층크리스탈수로]에서 [E.빙하승강장]을 타면 7분 만에 탈출할 수 있습니다.',
+        bgm: 'bgm_glacier',
+        weaponSprite: 'spr_rapier_glyph',
+        weaponName: '레이피어 글리프 (Vol Confodere)',
+        tileSheet0: 'tile_glacier_sheet0',
+        tileSheet1: 'tile_glacier_sheet1',
+        platTex: 'tile_plat_glacier',
+        themeBg: ['#061529', '#0d2f52', '#00e5ff'],
+        hazardName: '극저온 빙하 가시 급류 (-25 HP)',
+        targetMinutes: 7,
+        optimalNodeSeq: ['A', 'B', 'D', 'E', 'F', 'G'],
+        optimalSummary: '• 전체 최적 탈출 경로: A.빙하절벽입구 ➔ B.수로분기점 ➔ D.심층크리스탈수로 ➔ E.빙하승강장 ➔ F.결정회랑 ➔ G.얼음신전성문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 1분 + 1분 + 2분 = 총 7분\n• 최종 탈출 전략: 설인 폭포다리(C)와 얼음방(X)을 피하고 수직 승강기(E)를 활용한 7분 최단 경로임',
+        step1Question: '[1단계: 탈출 방해물 가지치기 (불필요한 정보 제거)] 빙하 절벽(A)에서 얼음 신전 성문(G)으로 이동할 때, 길찾기를 방해하는 불필요한 장소(방), 함정, 방해 몬스터 요소를 각각 분류하여 적어 보세요.',
+        step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] V자 수로를 통과하기 위한 핵심 장소 간 \'구간별 소요 시간\'과, 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
+        step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 [A.빙하절벽입구]에서 [G.얼음신전성문]까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
+        autoStep1: '• 가지치기할 불필요한 장소(방): C.상층폭포다리(예티·우회), X.막다른얼음방(Dead)\n• 원격 제거할 함정 및 장애물: ⚠️독침 분출 고딕석관 함정, ⚠️낙하 얼음가시 샹들리에 함정, ⚠️막다른 얼음 미끼상자 함정\n• 반드시 회피해야 할 위험 지형: ❄️극저온 빙하 가시 급류(-25 HP, 원격 제거 불가 지형)\n• 방해 몬스터: 상층 설인 예티, 설원 화이트 울프, 수로 불가사리 데카라비아, 빙하 원령 벤시',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.빙하절벽입구 ➔ B.수로분기점]: 1분\n  - [B.수로분기점 ➔ D.심층크리스탈수로]: 2분\n  - [D.심층크리스탈수로 ➔ E.빙하승강장]: 1분 (수직 승강대)\n  - [E.빙하승강장 ➔ F.결정회랑]: 1분\n  - [F.결정회랑 ➔ G.얼음신전성문]: 2분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.상층폭포다리]: 설인이 지키고 5분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.막다른얼음방]: 낭떠러지로 연결되는 막다른 방이므로 배제함',
+        nodes: [
+          { id: 'A', label: 'A.빙하절벽입구', x: 105, y: 185 },
+          { id: 'B', label: 'B.수로분기점', x: 390, y: 255 },
+          { id: 'C', label: 'C.상층폭포다리(우회로)', x: 820, y: 135 },
+          { id: 'D', label: 'D.심층크리스탈수로', x: 740, y: 380 },
+          { id: 'X', label: 'X.빙하동굴(막다른길)', x: 1090, y: 420 },
+          { id: 'E', label: 'E.빙하승강장', x: 1120, y: 310 },
+          { id: 'F', label: 'F.결정회랑', x: 1480, y: 235 },
+          { id: 'G', label: 'G.얼음신전성문[탈출구]', x: 1820, y: 165 }
+        ],
+        edges: [
+          { from: 'A', to: 'B', cost: '1분', minutes: 1, optimal: true, labelDy: -16 },
+          { from: 'B', to: 'C', cost: '5분(예티우회)', minutes: 5, optimal: false, labelDy: -16 },
+          { from: 'C', to: 'F', cost: '4분(강풍)', minutes: 4, optimal: false, labelDy: -16 },
+          { from: 'B', to: 'D', cost: '2분', minutes: 2, optimal: true, labelDy: 16 },
+          { from: 'D', to: 'X', cost: '3분(막다른길)', minutes: 3, optimal: false, deadEnd: true, labelDy: 16 },
+          { from: 'D', to: 'E', cost: '1분', minutes: 1, optimal: true, labelDy: -14 },
+          { from: 'E', to: 'F', cost: '1분(승강기)', minutes: 1, optimal: true, labelDy: -16 },
+          { from: 'F', to: 'G', cost: '2분', minutes: 2, optimal: true, labelDy: -16 }
+        ],
+        platforms: [
+          { x: 25, y: 215, w: 180, h: 26, core: true, style: 'altar', nodeId: 'A', tag: '빙하 절벽 입구' },
+          { x: 225, y: 250, w: 95, h: 22, core: true, style: 'stair', tag: '얼음 하강 계단' },
+          { x: 330, y: 285, w: 155, h: 24, core: true, style: 'core', nodeId: 'B', tag: '수로 분기 광장' },
+          { x: 500, y: 215, w: 130, h: 20, core: false, style: 'detour', tag: '상층 빙벽 오르막' },
+          { x: 660, y: 165, w: 310, h: 22, core: false, style: 'detour', nodeId: 'C', tag: '⚠️상층 폭포 다리(예티 우회로)' },
+          { x: 1010, y: 195, w: 155, h: 20, core: false, style: 'detour', tag: '상층 빙판길' },
+          { x: 505, y: 345, w: 125, h: 22, core: true, style: 'stair', tag: '심층 수로 계단' },
+          { x: 645, y: 408, w: 220, h: 24, core: true, style: 'core', nodeId: 'D', tag: '심층 크리스탈 수로' },
+          { x: 995, y: 440, w: 185, h: 20, core: false, style: 'deadend', nodeId: 'X', tag: '🚫막다른 얼음감옥' },
+          { x: 895, y: 365, w: 115, h: 22, core: true, style: 'stair', tag: '승강장 진입교' },
+          { x: 1040, y: 340, w: 165, h: 24, core: true, style: 'lift', nodeId: 'E', moveY: true, baseY: 335, ampY: 38, spd: 0.035, tag: '✨크리스탈 승강대' },
+          { x: 1240, y: 295, w: 135, h: 22, core: true, style: 'stair', tag: '빙결 아치 계단' },
+          { x: 1400, y: 265, w: 185, h: 24, core: true, style: 'core', nodeId: 'F', tag: '결정 회랑 대교' },
+          { x: 1610, y: 225, w: 110, h: 22, core: true, style: 'stair', tag: '신전 오르막' },
+          { x: 1735, y: 195, w: 210, h: 28, core: true, style: 'altar', nodeId: 'G', tag: '얼음 신전 성문' },
+          { x: 45, y: 410, w: 175, h: 22, core: false, style: 'detour', tag: '하층 영구동토벽' },
+          { x: 245, y: 430, w: 120, h: 22, core: false, style: 'detour', tag: '빙하 동굴 발판' }
+        ],
+        pendulums: [
+          { x: 575, y: 36, len: 92, amp: 0.4, spd: 0.045, phase: 0.5, dmg: 25 },
+          { x: 955, y: 36, len: 96, amp: 0.42, spd: 0.05, phase: 2.1, dmg: 25 },
+          { x: 1350, y: 36, len: 92, amp: 0.4, spd: 0.048, phase: 1.0, dmg: 25 }
+        ],
+        noises: [
+          { id: 'n1', name: '⚠️ 낙하 얼음가시 샹들리에 함정', shortTag: '⚠️가시샹들리에', type: 'trap', dmg: 25, sprite: 'spr_dest_chandelier', sprite2: 'spr_dest_chandelier', x: 355, y: 241, w: 24, h: 44, hit: false },
+          { id: 'n2', name: '상층 설인 예티', shortTag: '🦍설인예티(우회)', type: 'monster', dmg: 30, sprite: 'spr_yeti_f1', sprite2: 'spr_yeti_f2', x: 780, y: 109, w: 42, h: 56, moveMode: 'patrol', minX: 680, maxX: 910, vx: 1.25, hit: false },
+          { id: 'n3', name: '수로 불가사리 데카라비아', shortTag: '⭐데카라비아', type: 'monster', dmg: 20, sprite: 'spr_sfish_f1', sprite2: 'spr_sfish_f2', x: 720, y: 376, w: 32, h: 32, moveMode: 'patrol', minX: 655, maxX: 830, vx: 1.45, hit: false },
+          { id: 'n4', name: '⚠️ 막다른 얼음 미끼상자 함정', shortTag: '⚠️얼음미끼', type: 'trap', dmg: 20, sprite: 'spr_coffer_closed', sprite2: 'spr_coffer_open', x: 1080, y: 412, w: 32, h: 28, hit: false },
+          { id: 'n5', name: '빙하 원령 벤시', shortTag: '👻빙하원령', type: 'monster', dmg: 25, sprite: 'spr_gho_f1', sprite2: 'spr_gho_f2', x: 1320, y: 215, w: 25, h: 48, moveMode: 'sine', minX: 1220, maxX: 1520, baseY: 215, ampY: 26, vx: 1.45, hit: false },
+          { id: 'n6', name: '⚠️ 고드름 수호기사 석상 함정', shortTag: '⚠️수호석상', type: 'trap', dmg: 25, sprite: 'spr_statue_knight', sprite2: 'spr_statue_knight', x: 1755, y: 131, w: 30, h: 64, hit: false },
+          { id: 'n7', name: '설원 화이트 울프 (White Wolf)', shortTag: '🐺화이트울프', type: 'monster', dmg: 25, sprite: 'spr_wwolf_f1', sprite2: 'spr_wwolf_f2', x: 80, y: 366, w: 48, h: 44, moveMode: 'patrol', minX: 60, maxX: 200, vx: 1.4, hit: false }
+        ]
+      },
+
+      // ==================== MAP 3: MECHANICAL CLOCK TOWER ====================
+      {
+        id: 'T02',
+        mapNum: 'MAP 3',
+        worldW: 2220,
+        worldH: 480,
+        title: '기계 시계탑',
+        hint: '붕괴된 중앙 다리와 [C.서쪽종탑(우회로)], [X.폐쇄태엽고(막다른길)]를 피하고, [D.하부진자회랑]에서 [F.중앙태엽승강기]로 상승하여 8분 만에 정상에 도달하세요.',
+        bgm: 'bgm_clock',
+        weaponSprite: 'spr_lance_glyph',
+        weaponName: '빙창 글리프 (Grando)',
+        tileSheet0: 'tile_clock_sheet0',
+        tileSheet1: 'tile_clock_sheet1',
+        platTex: 'tile_plat_clock',
+        themeBg: ['#161224', '#2c233d', '#ffd740'],
+        hazardName: '시계탑 강철 스파이크·회전 기어 심연 (-25 HP)',
+        targetMinutes: 8,
+        optimalNodeSeq: ['A', 'B', 'D', 'F', 'G', 'H'],
+        optimalSummary: '• 전체 최적 탈출 경로: A.지하태엽실 ➔ B.제1기어교차로 ➔ D.하부진자회랑 ➔ F.중앙태엽승강기 ➔ G.상층시계문자판 ➔ H.시계탑정상종각\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 2분 + 2분 + 1분 = 총 8분\n• 최종 탈출 전략: 붕괴 다리(B-G)와 서쪽 종탑(C)을 피해 중앙 태엽 승강기(F)로 수직 상승하는 8분 최적 탈출로임',
+        step1Question: '[1단계: 탈출 방해물 가지치기 (불필요한 정보 제거)] 지하 태엽실(A)에서 정상 종각(H)으로 올라갈 때, 등반을 방해하는 불필요한 장소(방), 함정, 방해 몬스터 요소를 각각 분류하여 적어 보세요.',
+        step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 중앙 붕괴 조건을 반영하여 정상까지의 핵심 장소 간 \'구간별 소요 시간\'과, 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
+        step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 [A.지하태엽실]에서 [H.시계탑정상종각]까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
+        autoStep1: '• 가지치기할 불필요한 장소(방): C.서쪽종탑우회로(느림), X.막다른태엽고(Dead)\n• 원격 제거할 함정 및 장애물: ⚠️고드름 처형기사 석상 함정, ⚠️막다른 태엽 미끼상자 함정, ⚠️분쇄 기어 분쇄기 함정\n• 반드시 회피해야 할 위험 지형: ⚡태엽 고압 전송로(원격 제거 불가 지형)\n• 방해 몬스터: 파동 메두사 헤드, 시계탑 비행 악마 데빌, 종탑 우회로 도끼아머, 태엽 자동병기 틴맨, 감시자의 눈 피핑아이',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.지하태엽실 ➔ B.제1기어교차로]: 1분\n  - [B.제1기어교차로 ➔ D.하부진자회랑]: 2분\n  - [D.하부진자회랑 ➔ F.중앙태엽승강기]: 2분 (수직 상승 승강기)\n  - [F.중앙태엽승강기 ➔ G.상층시계문자판]: 2분\n  - [G.상층시계문자판 ➔ H.시계탑정상종각]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.서쪽종탑우회로]: 중기갑 기사가 순찰하며 4분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.막다른태엽고]: 통로가 막힌 위험 구역이므로 배제함\n  - [B➔G 중앙 구름다리]: 다리가 붕괴되어 진입 불가능하므로 배제함',
+        nodes: [
+          { id: 'A', label: 'A.지하태엽실[출발]', x: 100, y: 400 },
+          { id: 'B', label: 'B.제1기어교차로', x: 400, y: 310 },
+          { id: 'C', label: 'C.서쪽종탑(우회로)', x: 750, y: 155 },
+          { id: 'D', label: 'D.하부진자회랑', x: 780, y: 385 },
+          { id: 'X', label: 'X.폐쇄태엽고(막다른길)', x: 1120, y: 425 },
+          { id: 'F', label: 'F.중앙태엽승강기', x: 1160, y: 295 },
+          { id: 'G', label: 'G.상층시계문자판', x: 1620, y: 205 },
+          { id: 'H', label: 'H.시계탑정상종각[탈출구]', x: 2040, y: 130 }
+        ],
+        edges: [
+          { from: 'A', to: 'B', cost: '1분', minutes: 1, optimal: true, labelDy: -16 },
+          { from: 'B', to: 'G', cost: '❌중앙구름다리붕괴(통행불가)', minutes: 99, optimal: false, broken: true, labelDy: -14 },
+          { from: 'B', to: 'C', cost: '4분(종탑우회)', minutes: 4, optimal: false, labelDy: -16 },
+          { from: 'C', to: 'G', cost: '5분(강철가시)', minutes: 5, optimal: false, labelDy: -16 },
+          { from: 'B', to: 'D', cost: '2분', minutes: 2, optimal: true, labelDy: 16 },
+          { from: 'D', to: 'X', cost: '3분(막다른방)', minutes: 3, optimal: false, deadEnd: true, labelDy: 16 },
+          { from: 'D', to: 'F', cost: '2분', minutes: 2, optimal: true, labelDy: -14 },
+          { from: 'F', to: 'G', cost: '2분(태엽승강)', minutes: 2, optimal: true, labelDy: -16 },
+          { from: 'G', to: 'H', cost: '1분', minutes: 1, optimal: true, labelDy: -16 }
+        ],
+        platforms: [
+          { x: 20, y: 430, w: 175, h: 26, core: true, style: 'altar', nodeId: 'A', tag: '시계탑 지하 입구' },
+          { x: 215, y: 380, w: 105, h: 22, core: true, style: 'stair', tag: '1층 황동 계단' },
+          { x: 330, y: 338, w: 165, h: 24, core: true, style: 'core', nodeId: 'B', tag: '제1 기어 교차로' },
+          { x: 480, y: 255, w: 120, h: 20, core: false, style: 'detour', tag: '서쪽 종탑 계단' },
+          { x: 625, y: 185, w: 255, h: 22, core: false, style: 'detour', nodeId: 'C', tag: '⚠️서쪽 종탑 우회로(느림)' },
+          { x: 930, y: 175, w: 185, h: 20, core: false, style: 'detour', tag: '상부 녹슨 철교' },
+          { x: 1170, y: 180, w: 180, h: 20, core: false, style: 'detour', tag: '종탑 연결교' },
+          { x: 525, y: 375, w: 125, h: 22, core: true, style: 'stair', tag: '진자 회랑 진입단' },
+          { x: 675, y: 412, w: 220, h: 24, core: true, style: 'core', nodeId: 'D', tag: '하부 진자 회랑' },
+          { x: 1035, y: 442, w: 180, h: 20, core: false, style: 'deadend', nodeId: 'X', tag: '🚫막다른 태엽창고' },
+          { x: 925, y: 365, w: 120, h: 22, core: true, style: 'stair', tag: '중앙 기어 디딤판' },
+          { x: 1080, y: 325, w: 175, h: 24, core: true, style: 'lift', nodeId: 'F', moveY: true, baseY: 315, ampY: 46, spd: 0.04, tag: '⚙️중앙 태엽 엘리베이터' },
+          { x: 1300, y: 270, w: 145, h: 22, core: true, style: 'stair', tag: '3층 황동 층계' },
+          { x: 1485, y: 235, w: 245, h: 24, core: true, style: 'core', nodeId: 'G', tag: '상층 시계 문자판 대교' },
+          { x: 1765, y: 195, w: 145, h: 22, core: true, style: 'stair', tag: '종각 등반 계단' },
+          { x: 1940, y: 160, w: 235, h: 28, core: true, style: 'altar', nodeId: 'H', tag: '시계탑 정상 종각(GOAL)' },
+          { x: 55, y: 165, w: 190, h: 22, core: false, style: 'detour', tag: '시계탑 상부 첨탑' },
+          { x: 275, y: 205, w: 145, h: 22, core: false, style: 'detour', tag: '종루 감시 테라스' }
+        ],
+        wallHazards: [
+          { type: 'gear_large', x: 420, y: 160, r: 42, rotSpd: 0.04, name: '벽면 거대 기동 기어' },
+          { type: 'gear_large', x: 1250, y: 130, r: 42, rotSpd: -0.04, name: '벽면 태엽 연동 기어' }
+        ],
+        pendulums: [
+          { x: 465, y: 36, len: 95, amp: 0.44, spd: 0.05, phase: 0.0, dmg: 25 },
+          { x: 785, y: 36, len: 98, amp: 0.46, spd: 0.055, phase: 1.4, dmg: 25 },
+          { x: 1265, y: 36, len: 95, amp: 0.45, spd: 0.05, phase: 2.8, dmg: 25 },
+          { x: 1720, y: 36, len: 95, amp: 0.45, spd: 0.052, phase: 0.9, dmg: 25 }
+        ],
+        noises: [
+          { id: 'n1', name: '파동 메두사 헤드', shortTag: '🐍메두사헤드', type: 'monster', dmg: 25, sprite: 'spr_medusa_f1', sprite2: 'spr_medusa_f2', x: 380, y: 250, w: 26, h: 26, moveMode: 'sine', minX: 240, maxX: 580, baseY: 250, ampY: 32, vx: 1.8, hit: false },
+          { id: 'n2', name: '종탑 우회로 도끼아머', shortTag: '🪓도끼아머(우회)', type: 'monster', dmg: 30, sprite: 'spr_axarm_f1', sprite2: 'spr_axarm_f2', x: 735, y: 127, w: 36, h: 58, moveMode: 'patrol', minX: 640, maxX: 840, vx: 1.2, hit: false },
+          { id: 'n3', name: '태엽 자동병기 틴맨', shortTag: '🤖태엽틴맨', type: 'monster', dmg: 30, sprite: 'spr_tinman_f1', sprite2: 'spr_tinman_f2', x: 760, y: 357, w: 37, h: 55, moveMode: 'patrol', minX: 685, maxX: 860, vx: 1.7, hit: false },
+          { id: 'n4', name: '⚠️ 막다른 태엽 미끼상자 함정', shortTag: '⚠️태엽미끼', type: 'trap', dmg: 25, sprite: 'spr_mimi_f1', sprite2: 'spr_mimi_f2', x: 1110, y: 412, w: 32, h: 30, hit: false },
+          { id: 'n5', name: '감시자의 눈 피핑아이', shortTag: '👁️피핑아이', type: 'monster', dmg: 25, sprite: 'spr_eye_f1', sprite2: 'spr_eye_f2', x: 1420, y: 190, w: 26, h: 26, moveMode: 'sine', minX: 1280, maxX: 1680, baseY: 190, ampY: 28, vx: 1.65, hit: false },
+          { id: 'n6', name: '⚠️ 분쇄 기어 분쇄기 함정', shortTag: '⚠️분쇄기어', type: 'trap', dmg: 30, sprite: 'spr_gear_large', sprite2: 'spr_gear_large', x: 1810, y: 139, w: 54, h: 54, hit: false },
+          { id: 'n7', name: '시계탑 비행 악마 데빌 (Devil)', shortTag: '😈비행데빌', type: 'monster', dmg: 32, sprite: 'spr_devil_f1', sprite2: 'spr_devil_f2', x: 120, y: 71, origX: 120, origY: 71, w: 48, h: 94, moveMode: 'patrol', minX: 65, maxX: 230, vx: 1.25, hit: false }
+        ]
+      },
+
+      // ==================== MAP 4: FINAL ESCAPE [HARD MODE - 2X DEEP ABYSSAL LABYRINTH: 2400 x 960] ====================
+      {
+        id: 'T04',
+        mapNum: 'MAP 4',
+        worldW: 2400,
+        worldH: 960, // 2x Vertical Depth!
+        title: '심연 최종 탈출 [ 🩸 최고난도: 몬스터 무한 소환 & 불사신 데스 ]',
+        hint: '[X1.고문실(막다른길)], [X2.폐쇄철문(통행불가)], [W.미혹마법진(함정)]을 피하고, [B.서쪽회랑]에서 [C.승강도크]로 하강 후 [E.심연중앙수로]와 [G.심연대교]로 탈출하세요.',
+        bgm: 'bgm_castle',
+        weaponSprite: 'spr_great_glyph',
+        weaponName: '빛의 대검 글리프 (Melio Confodere)',
+        tileSheet0: 'tile_castle_sheet0',
+        tileSheet1: 'tile_castle_sheet1',
+        platTex: 'tile_plat_castle',
+        themeBg: ['#0a0410', '#180620', '#d50000'],
+        hazardName: '💀 심연 가시 즉사 구역 (HP 100% 즉사!)',
+        targetMinutes: 8,
+        optimalNodeSeq: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'Z'],
+        optimalSummary: '• 전체 최적 탈출 경로: A.첨탑옥좌 ➔ B.서쪽회랑 ➔ C.승강도크 ➔ D.고문실분기 ➔ E.심연중앙수로 ➔ F.대교진입로 ➔ G.심연대교 ➔ Z.심연대성문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 1분 + 1분 + 1분 + 1분 + 1분 = 총 8분\n• 최종 탈출 전략: 상층 폐쇄문(X2)과 역송 마법진(W)을 완벽히 가지치기하고 엘리베이터로 하강하여 심연 대교로 탈출하는 유일한 8분 최적 탈출로임',
+        step1Question: '[1단계: 탈출 방해물 가지치기 (불필요한 정보 제거)] 첨탑 옥좌(A)에서 심연 대성문(Z)으로 탈출할 때, 시간을 낭비하게 만드는 불필요한 장소(방), 함정, 방해 몬스터 요소를 각각 분류하여 적어 보세요.',
+        step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 심연 대성문까지의 핵심 장소 간 \'구간별 소요 시간\'과, 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
+        step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 [A.첨탑옥좌]에서 [Z.심연대성문]까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
+        autoStep1: '• 가지치기할 불필요한 장소(방): X1.고문실(Dead), U1.상층 성당 A, U2.상층 성당 B, X2.폐쇄철문(Dead), Y.지하감옥(Dead)\n• 원격 제거할 함정 및 장애물: ⚠️고문실 유인미믹 함정, ⚠️심연 감옥 철창 차단벽 함정, ⚠️상층 폐쇄 철문 차단 함정\n• 반드시 회피해야 할 즉사 지형/함정: 💀심연가시 즉사구역(원격 제거 불가! 밟으면 즉사), 💀거대 진자단두추 즉사 함정, W.미혹마법진(상층 서쪽회랑 강제 역송 +5분 지연 함정)\n• 방해 몬스터: 심연의 사신(불사신 추적자), 심연 수문장 파이널 나이트(5회 타격 격파), 심연 사령 레이스, 부유 강령술사 네크로맨서, 날개 마수 가고일, 마탄의 알버스, 화염 마녀 위치, 저주 영혼체 엑토플라즘, 심연 몽마 릴리스, 심연 세이렌 로렐라이',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.첨탑옥좌 ➔ B.서쪽회랑]: 1분\n  - [B.서쪽회랑 ➔ C.승강도크]: 2분 (수직 엘리베이터)\n  - [C.승강도크 ➔ D.고문실분기]: 1분\n  - [D.고문실분기 ➔ E.심연중앙수로]: 1분\n  - [E.심연중앙수로 ➔ F.대교진입로]: 1분\n  - [F.대교진입로 ➔ G.심연대교]: 1분\n  - [G.심연대교 ➔ Z.심연대성문]: 1분 (성문 개방)\n• 우회로 및 위험 요소 배제 이유:\n  - [X1.고문실, Y.지하감옥]: 막다른 방이므로 배제함\n  - [X2.폐쇄철문]: 통행이 완전 차단된 불통 구역이므로 배제함\n  - [W.미혹마법진]: 상층 B로 강제 역송시켜 +5분을 낭비하게 만드는 함정이므로 배제함',
+        nodes: [
+          { id: 'A', label: 'A.첨탑옥좌[출발]', x: 105, y: 140 },
+          { id: 'B', label: 'B.서쪽회랑', x: 420, y: 240 },
+          { id: 'X1', label: 'X1.고문실(막다른길)', x: 760, y: 130 },
+          { id: 'U1', label: 'U1.상층 성당 A', x: 860, y: 260 },
+          { id: 'U2', label: 'U2.상층 성당 B', x: 1320, y: 250 },
+          { id: 'X2', label: 'X2.폐쇄철문(통행불가)', x: 1840, y: 250 },
+          { id: 'C', label: 'C.승강도크', x: 460, y: 750 },
+          { id: 'Y', label: 'Y.지하감옥(막다른길)', x: 690, y: 875 },
+          { id: 'D', label: 'D.고문실분기', x: 880, y: 760 },
+          { id: 'W', label: 'W.미혹마법진(함정)', x: 1160, y: 440 },
+          { id: 'E', label: 'E.심연중앙수로', x: 1400, y: 820 },
+          { id: 'F', label: 'F.대교진입로', x: 1720, y: 820 },
+          { id: 'G', label: 'G.심연대교', x: 1980, y: 810 },
+          { id: 'Z', label: 'Z.심연대성문[탈출구]', x: 2260, y: 840 }
+        ],
+        edges: [
+          { from: 'A', to: 'B', cost: '1분', minutes: 1, optimal: true, labelDy: -16 },
+          { from: 'B', to: 'X1', cost: '3분(막다른고문실)', minutes: 3, optimal: false, deadEnd: true, labelDy: -16 },
+          { from: 'B', to: 'U1', cost: '3분(상층성당A)', minutes: 3, optimal: false, labelDy: -14 },
+          { from: 'U1', to: 'U2', cost: '3분(상층성당B)', minutes: 3, optimal: false, labelDy: -14 },
+          { from: 'U2', to: 'X2', cost: '4분(폐쇄철문통행불가)', minutes: 4, optimal: false, deadEnd: true, broken: true, labelDy: -16 },
+          { from: 'B', to: 'C', cost: '2분(수직엘리베이터)', minutes: 2, optimal: true, labelDy: 16 },
+          { from: 'C', to: 'Y', cost: '4분(지하감옥)', minutes: 4, optimal: false, deadEnd: true, labelDy: 26, labelDx: -18 },
+          { from: 'C', to: 'D', cost: '1분', minutes: 1, optimal: true, labelDy: -14 },
+          { from: 'D', to: 'W', cost: '3분(미혹마법진·상층역송함정)', minutes: 3, optimal: false, deadEnd: true, broken: true, labelDy: -16 },
+          { from: 'D', to: 'E', cost: '1분', minutes: 1, optimal: true, labelDy: 14 },
+          { from: 'E', to: 'F', cost: '1분', minutes: 1, optimal: true, labelDy: -14 },
+          { from: 'F', to: 'G', cost: '1분', minutes: 1, optimal: true, labelDy: -14 },
+          { from: 'G', to: 'Z', cost: '1분(성문개방)', minutes: 1, optimal: true, labelDy: -14 }
+        ],
+        platforms: [
+          // Upper Level (Y: 100~300)
+          { x: 25, y: 170, w: 185, h: 26, core: true, style: 'altar', nodeId: 'A', tag: '첨탑 옥좌실' },
+          { x: 235, y: 215, w: 110, h: 22, core: true, style: 'stair', tag: '첨탑 하강 계단' },
+          { x: 360, y: 275, w: 175, h: 24, core: true, style: 'core', nodeId: 'B', tag: '서쪽 회랑' },
+          { x: 550, y: 195, w: 110, h: 20, core: false, style: 'deadend', tag: '고문실 계단' },
+          { x: 685, y: 155, w: 180, h: 22, core: false, style: 'deadend', nodeId: 'X1', tag: '🚫막다른 고문실' },
+          { x: 775, y: 295, w: 185, h: 24, core: false, style: 'stair', nodeId: 'U1', tag: '상층 성당 A' },
+          { x: 1045, y: 290, w: 150, h: 22, core: false, style: 'detour', tag: '상층 아치교' },
+          { x: 1235, y: 285, w: 200, h: 24, core: false, style: 'detour', nodeId: 'U2', tag: '상층 성당 B' },
+          { x: 1765, y: 285, w: 195, h: 24, core: false, style: 'deadend', nodeId: 'X2', tag: '🚫상층 폐쇄 철문(Dead)' },
+
+          // Deep Abyss Vertical Elevator Shaft (Travels between Upper B and Deep C: Y: 290 to Y: 750!)
+          { x: 420, y: 340, w: 130, h: 26, core: true, style: 'lift', isShaftElevator: true, moveY: true, baseY: 520, ampY: 230, spd: 0.022, tag: '⚙️심연 수직 엘리베이터' },
+
+          // Deep Abyss Level (Y: 700~880)
+          { x: 380, y: 785, w: 175, h: 24, core: true, style: 'core', nodeId: 'C', tag: '심연 승강 도크' },
+          { x: 600, y: 885, w: 170, h: 24, core: false, style: 'deadend', nodeId: 'Y', tag: '🚫심연 지하감옥' },
+          { x: 730, y: 810, w: 120, h: 22, core: true, style: 'stair', tag: '심연 연결 층계' },
+          { x: 820, y: 795, w: 180, h: 24, core: true, style: 'core', nodeId: 'D', tag: '심연 고문실 분기' },
+          { x: 1060, y: 610, w: 120, h: 22, core: false, style: 'detour', tag: '중층 유인 계단' },
+          { x: 1100, y: 475, w: 200, h: 24, core: false, style: 'detour', nodeId: 'W', tag: '🌀미혹의 마법진 제단' },
+          { x: 1300, y: 855, w: 210, h: 24, core: true, style: 'core', nodeId: 'E', tag: '심연 중앙 수로' },
+          { x: 1530, y: 845, w: 120, h: 22, core: true, style: 'stair', tag: '심연 대교 비탈' },
+          { x: 1650, y: 845, w: 180, h: 24, core: true, style: 'core', nodeId: 'F', tag: '심연 대교 진입로' },
+          { x: 1890, y: 845, w: 190, h: 24, core: true, style: 'core', nodeId: 'G', tag: '심연 룬 대교' },
+          { x: 2060, y: 855, w: 150, h: 26, core: true, style: 'altar', tag: '⚔️대성문 수문장 교각' },
+          { x: 2170, y: 875, w: 220, h: 28, core: true, style: 'altar', nodeId: 'Z', tag: '심연 탈출 대성문(ESCAPE)' },
+          // Upper Level East Gatehouse Battlement (출구 중상단 감시 회랑 - Y: 320~360, X: 1980~2320)
+          { x: 1980, y: 340, w: 260, h: 26, core: false, style: 'altar', tag: '⚔️심연 수문장 감시 망루' },
+          { x: 1860, y: 375, w: 105, h: 22, core: false, style: 'stair', tag: '망루 연결 계단' },
+          { x: 2265, y: 320, w: 105, h: 22, core: false, style: 'detour', tag: '성문 상층 테라스' },
+          { x: 65, y: 520, w: 175, h: 22, core: false, style: 'detour', tag: '심연 단애 감시탑' },
+          { x: 265, y: 565, w: 135, h: 22, core: false, style: 'detour', tag: '중층 암흑 회랑' }
+        ],
+        wallHazards: [
+          { type: 'flame_skull_wheel', x: 1400, y: 440, minX: 1250, maxX: 1550, spd: 1.6, vx: 1.6, r: 24, name: '심연 마도 인화차' }
+        ],
+        teleporters: [
+          // Deceptive Warp Pad: traps the player and warps them backward to Upper B!
+          { x: 1160, y: 452, w: 50, h: 24, targetX: 420, targetY: 230, isTrap: true, label: '🌀미혹의 마법진 [상층 서쪽회랑 역송 함정]' }
+        ],
+        instantHazards: [
+          { x: 100, y: 915, w: 2200, h: 45, name: '💀 심연 가시 즉사 구역' },
+          { x: 1420, y: 230, r: 42, name: '💀 거대 진자단두추 즉사 함정' }
+        ],
+        pendulums: [
+          { x: 340, y: 36, len: 105, amp: 0.45, spd: 0.052, phase: 0.0, dmg: 30 },
+          { x: 670, y: 36, len: 110, amp: 0.48, spd: 0.056, phase: 1.2, dmg: 30 },
+          { x: 1120, y: 36, len: 105, amp: 0.46, spd: 0.054, phase: 2.4, dmg: 30 },
+          { x: 1420, y: 230, len: 125, amp: 0.52, spd: 0.060, phase: 0.5, dmg: 150, instantKill: true },
+          { x: 1980, y: 36, len: 105, amp: 0.46, spd: 0.054, phase: 1.9, dmg: 30 }
+        ],
+        noises: [
+          // [MAP 4 정예 몬스터 6종 + 비룡 배치]
+          // 데스만 유일하게 플레이어를 전역 추적! 비행 몬스터들은 각자 독립된 상공 구역에만 활동하여 경로 간섭 절대 없음!
+          // 1. 사신 데스 (Death) - 유일한 전역 공중 추적자 · 불사신
+          { id: 'n01', name: '심연의 사신 데스 (Death)', shortTag: '💀사신 DEATH [불사신]', type: 'monster', immortal: true, dmg: 40, sprite: 'spr_death_f1', sprite2: 'spr_death_f2', x: 960, y: 200, w: 76, h: 98, origX: 960, origY: 200, vx: -1.2, vy: 0.8, origVx: -1.2, origVy: 0.8, moveMode: 'stalker', hit: false },
+          
+          // 2. [정통 캐슬바니아 비행 사령] 심연 사령 레이스 (Wraith) - 상층 동쪽 폐쇄 구역 상공 전용 비행
+          { id: 'n02', name: '심연 사령 레이스 (Wraith)', shortTag: '👻심연레이스', type: 'monster', dmg: 35, sprite: 'spr_wraith_f1', sprite2: 'spr_wraith_f2', x: 1920, y: 160, w: 76, h: 76, origX: 1920, origY: 160, vx: 1.8, vy: -1.0, origVx: 1.8, origVy: -1.0, moveMode: 'territoryRoam', minX: 1780, maxX: 2180, minY: 110, maxY: 260, hit: false },
+
+          // 3. [정통 캐슬바니아 부유 마도사] 부유 강령술사 네크로맨서 (Necromancer) - 수직 승강 협곡 전용 부유
+          { id: 'n03', name: '부유 강령술사 네크로맨서 (Necromancer)', shortTag: '🔮네크로맨서', type: 'monster', dmg: 32, sprite: 'spr_necro_f1', sprite2: 'spr_necro_f2', x: 620, y: 460, w: 48, h: 56, origX: 620, origY: 460, vx: -1.4, vy: 1.2, origVx: -1.4, origVy: 1.2, moveMode: 'territoryRoam', minX: 530, maxX: 750, minY: 390, maxY: 580, hit: false },
+
+          // 4. 날개 마수 가고일 (Gargoyle) - 상층 성당 B 진자도끼 협곡 상공 전용 비행
+          { id: 'n04', name: '날개 마수 가고일 (Gargoyle)', shortTag: '🦇마수가고일', type: 'monster', dmg: 30, sprite: 'spr_garg_fly', sprite2: 'spr_garg_idle', x: 1560, y: 170, w: 48, h: 42, origX: 1560, origY: 170, vx: -1.8, vy: 1.1, origVx: -1.8, origVy: 1.1, moveMode: 'territoryRoam', minX: 1460, maxX: 1720, minY: 120, maxY: 250, hit: false },
+
+          // 5. 마탄의 알버스 (Albus) - 지상형 · 막다른 고문실(X1) 바닥 위에서만 좌우 순찰
+          { id: 'n05', name: '마탄의 알버스 (Albus)', shortTag: '🔫마탄알버스', type: 'monster', ground: true, dmg: 35, sprite: 'spr_albus_f1', sprite2: 'spr_albus_f2', x: 800, y: 101, w: 38, h: 54, origX: 800, origY: 101, vx: 1.4, vy: 0, origVx: 1.4, origVy: 0, moveMode: 'patrol', minX: 690, maxX: 822, hit: false },
+
+          // 6. [정통 캐슬바니아 화염 마녀] 화염 마녀 위치 (Witch) - 상층 성당 A 독립 구역 전용 비행
+          { id: 'n06', name: '화염 마녀 위치 (Witch)', shortTag: '🧙마녀 위치 [비행]', type: 'monster', dmg: 38, sprite: 'spr_witch_f1', sprite2: 'spr_witch_f2', x: 1120, y: 380, w: 54, h: 70, origX: 1120, origY: 380, vx: 1.5, vy: -0.8, origVx: 1.5, origVy: -0.8, moveMode: 'territoryRoam', minX: 1040, maxX: 1260, minY: 320, maxY: 440, hit: false },
+
+          // 8. [정통 캐슬바니아 저주 사령] 저주 영혼체 엑토플라즘 (Ectoplasm) - 심연 대교 진입로 하부 전용 부유
+          { id: 'n08', name: '저주 영혼체 엑토플라즘 (Ectoplasm)', shortTag: '👻엑토플라즘 [부유]', type: 'monster', dmg: 34, sprite: 'spr_ectoplasm_f1', sprite2: 'spr_ectoplasm_f2', x: 1720, y: 780, w: 50, h: 52, origX: 1720, origY: 780, vx: -1.2, vy: 0.9, origVx: -1.2, origVy: 0.9, moveMode: 'territoryRoam', minX: 1620, maxX: 1840, minY: 720, maxY: 850, hit: false },
+
+          // 7. 심연 몽마 리리스 (Lilith) - 비행형 · 심연 가시수로 상공 구역에서만 비행
+          { id: 'n07', name: '심연 몽마 리리스 (Lilith)', shortTag: '🦇몽마리리스', type: 'monster', dmg: 35, sprite: 'spr_lilith_f1', sprite2: 'spr_lilith_f2', x: 1430, y: 740, w: 46, h: 47, origX: 1430, origY: 740, vx: 1.6, vy: -1.0, origVx: 1.6, origVy: -1.0, moveMode: 'territoryRoam', minX: 1330, maxX: 1600, minY: 680, maxY: 840, hit: false },
+
+          // 막다른 길 함정 (Traps)
+          { id: 't01', name: '⚠️ 고문실 유인미믹 함정', shortTag: '⚠️고문미끼', type: 'trap', dmg: 25, sprite: 'spr_coffer_closed', sprite2: 'spr_coffer_open', x: 750, y: 126, w: 32, h: 28, hit: false },
+          { id: 't02', name: '⚠️ 심연 감옥 철창 차단벽 함정', shortTag: '⚠️철창함정', type: 'trap', dmg: 25, sprite: 'spr_shutter', sprite2: 'spr_shutter', x: 605, y: 829, w: 32, h: 56, hit: false },
+          { id: 't03', name: '⚠️ 상층 폐쇄 철문 차단 함정', shortTag: '⚠️폐쇄철문', type: 'trap', dmg: 25, sprite: 'spr_shutter', sprite2: 'spr_shutter', x: 1845, y: 230, w: 32, h: 56, hit: false },
+          { id: 'n09', name: '심연 세이렌 로렐라이 (Lorelei)', shortTag: '🧜심연로렐라이', type: 'monster', dmg: 32, sprite: 'spr_lorelei_f1', sprite2: 'spr_lorelei_f2', x: 140, y: 455, w: 58, h: 58, origX: 140, origY: 455, vx: 1.4, vy: -0.8, origVx: 1.4, origVy: -0.8, moveMode: 'territoryRoam', minX: 80, maxX: 225, minY: 430, maxY: 510, hit: false },
+          // 10. [심연 수문장] 파이널 나이트 (Final Knight) - 대성문 앞 최종 수문장 · 5회 타격 격파 · 초고속 심연 단죄 참격파
+          { id: 'n10', name: '심연 수문장 파이널 나이트 (Final Knight)', shortTag: '⚔️파이널나이트 [수문장]', type: 'monster', hp: 5, maxHp: 5, dmg: 35, sprite: 'spr_finalknight_f1', sprite2: 'spr_finalknight_f2', x: 2120, y: 769, origX: 2120, origY: 769, w: 112, h: 86, moveMode: 'patrol', minX: 2070, maxX: 2230, vx: 1.1, origVx: 1.1, origVy: 0, hit: false, attackCooldown: 25 }
+        ]
+      }
+    ];
+
+    var NICKNAMES = ['민트','레몬','자두','체리','피치','멜론','망고','베리','라임','키위','유자','살구','포도','사과','다래','모과','석류','감귤','자몽','호두'];
+
+    var state = {
+      student: { code: 'S01', nickname: '민트', level: '기본' },
+      unlockedValmanway: false,
+      currentStageGoalReached: false,
+      controlMode: 'wasd', // 'wasd' (Strict action) or 'click' (Exploration)
+      currentStageIdx: 0,
+      abstractSight: false,
+      wideOverview: false,
+      cameraX: 0,
+      cameraY: 0,
+      gameOver: false,
+      gameOverTick: 0,
+      stageCleared: {},
+      submissions: {},
+      drafts: {},
+      visitedNodes: ['A'],
+      routeMinutes: 0,
+      tookDetour: false,
+      teleportCooldown: 0,
+      player: {
+        x: 65,
+        y: 110,
+        vx: 0,
+        vy: 0,
+        facing: 1,
+        onGround: false,
+        jumpsLeft: 2,
+        attackTimer: 0,
+        invulnTimer: 0,
+        animTick: 0,
+        hp: 150,
+        maxHp: 150,
+        autoWaypoints: null,
+        autoWpIdx: 0
+      },
+      bolts: [],
+      particles: [],
+      floatingTexts: [],
+      hazardProjectiles: []
+    };
+
+    var keys = {};
+    window.addEventListener('keydown', function(e) {
+      if (document.activeElement && (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'SELECT')) {
+        return;
+      }
+      if (state.gameOver) {
+        if (e.code === 'Enter' || e.code === 'Space') {
+          e.preventDefault();
+          resetCurrentStage();
+        }
+        return;
+      }
+      keys[e.code] = true;
+      if (e.code === 'Space' || e.code === 'KeyZ') {
+        e.preventDefault();
+        triggerAttack();
+      } else if (e.code === 'KeyC' || e.code === 'KeyX') {
+        if (state.controlMode === 'click') {
+          e.preventDefault();
+          pruneAllDecoyNoises();
+        }
+      } else if (e.code === 'Tab' || e.code === 'KeyE') {
+        e.preventDefault();
+        toggleAbstractSight();
+      } else if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+        e.preventDefault();
+        triggerJump();
+      }
+    });
+    window.addEventListener('keyup', function(e) {
+      keys[e.code] = false;
+    });
+
+    function setKey(code, val) {
+      keys[code] = val;
+    }
+
+    function toggleControlMode() {
+      state.controlMode = state.controlMode === 'wasd' ? 'click' : 'wasd';
+      updateControlModeUI();
+      playSfx('sfx_glyph', 0.5);
+    }
+
+    function updateControlModeUI() {
+      var btn = document.getElementById('controlModeBtn');
+      var pruneBtn = document.getElementById('pruneBtn');
+      if (state.controlMode === 'wasd') {
+        btn.textContent = '🎮 모드: WASD 액션 (클릭 불가)';
+        btn.className = 'btn btn-gold';
+        if (pruneBtn) pruneBtn.style.display = 'none';
+        state.player.autoWaypoints = null;
+      } else {
+        btn.textContent = '🖱️ 모드: 클릭 탐험 (마우스 지원)';
+        btn.className = 'btn btn-cyan';
+        if (pruneBtn) pruneBtn.style.display = 'inline-flex';
+      }
+    }
+
+    function isStageUnlocked(idx) {
+      if (idx === 0) return true;
+      var prevStage = STAGES[idx - 1];
+      return !!state.stageCleared[prevStage.id];
+    }
+
+    function toggleCameraOverview() {
+      state.wideOverview = !state.wideOverview;
+      var btn = document.getElementById('camModeBtn');
+      btn.textContent = state.wideOverview ? '🔍 시점: 캐릭터 밀착 스크롤로 전환' : '🔍 시점: 전체 긴 맵 한눈에 보기';
+      playSfx('sfx_glyph', 0.45);
+    }
+
+    function triggerJump() {
+      if (state.gameOver) return;
+      var p = state.player;
+      p.autoWaypoints = null;
+      if (p.onGround) {
+        p.vy = -11.4;
+        p.onGround = false;
+        p.jumpsLeft = 1;
+        playSfx('sfx_jump', 0.45);
+      } else if (p.jumpsLeft > 0) {
+        p.vy = -10.5;
+        p.jumpsLeft = 0;
+        playSfx('sfx_jump', 0.5);
+        spawnParticles(p.x + 16, p.y + 36, '#80deea', 12);
+      }
+    }
+
+    function triggerGameOver(reasonMsg) {
+      if (state.gameOver) return;
+      state.gameOver = true;
+      state.gameOverTick = 0;
+      state.player.autoWaypoints = null;
+      playGameOverTragicMusic();
+      spawnParticles(state.player.x + 16, state.player.y + 20, '#ff1744', 50);
+      if (reasonMsg) {
+        state.floatingTexts.push({
+          x: state.player.x + 16,
+          y: state.player.y - 18,
+          text: reasonMsg,
+          color: '#ff1744',
+          life: 90
+        });
+      }
+    }
+
+    function damagePlayer(dmg, reasonText, srcX, isInstant) {
+      var p = state.player;
+      var st = STAGES[state.currentStageIdx];
+      if (p.invulnTimer > 0 || state.gameOver) return;
+
+      if (isInstant || dmg >= 150) {
+        p.hp = 0;
+        damageFX(p, srcX, st.worldW);
+        triggerGameOver('💀 ' + reasonText + ' (즉사!)');
+        return;
+      }
+
+      p.hp = Math.max(0, p.hp - dmg);
+      damageFX(p, srcX, st.worldW);
+      state.floatingTexts.push({
+        x: p.x + 16,
+        y: p.y - 12,
+        text: '💥 ' + reasonText + ' (-' + dmg + ' HP)',
+        color: '#ff5252',
+        life: 58
+      });
+
+      if (p.hp <= 0) {
+        triggerGameOver();
+      }
+    }
+
+    function damageFX(p, srcX, maxW) {
+      p.invulnTimer = 48;
+      p.vy = -6.0;
+      p.onGround = false;
+      var knockDir = (srcX !== undefined && srcX > p.x + 16) ? -1 : 1;
+      p.x = Math.max(15, Math.min(maxW - 45, p.x + knockDir * 26));
+      playSfx('sfx_hit', 0.65);
+      spawnParticles(p.x + 16, p.y + 20, '#ff1744', 18);
+    }
+
+    function pruneSingleNoiseRemotely(nz) {
+      if (nz.hit) return;
+      var p = state.player;
+      var cx = nz.x + nz.w * 0.5;
+      var cy = nz.y + nz.h * 0.5;
+      state.bolts.push({
+        x1: p.x + 16,
+        y1: p.y + 18,
+        x2: cx,
+        y2: cy,
+        color: nz.immortal ? '#ff1744' : '#00e5ff',
+        life: 16
+      });
+
+      if (nz.immortal) {
+        playSfx('sfx_sword', 0.6);
+        spawnParticles(cx, cy, '#ff1744', 18);
+        nz.vx = -nz.vx;
+        state.floatingTexts.push({
+          x: cx,
+          y: cy - 16,
+          text: '🛡️ 심연의 사신(Death)은 불사신입니다! (처치 불가 — 피해 탈출하세요!)',
+          color: '#ff8a80',
+          life: 68
+        });
+        return;
+      }
+
+      if (nz.hp && nz.hp > 1) {
+        nz.hp--;
+        playSfx('sfx_hit', 0.85);
+        spawnParticles(cx, cy, '#ff1744', 28);
+        state.floatingTexts.push({
+          x: cx,
+          y: cy - 18,
+          text: '🛡️ ' + (nz.shortTag || nz.name) + ' 강철 방어! (체력: ' + nz.hp + '/' + (nz.maxHp || 5) + ')',
+          color: '#ff8a80',
+          life: 60
+        });
+        return;
+      }
+
+      nz.hit = true;
+      nz.discoveredPruned = true;
+      playSfx('sfx_dispel', 0.55);
+      spawnParticles(cx, cy, nz.type === 'monster' ? '#ffd740' : '#00e5ff', 24);
+      state.floatingTexts.push({
+        x: cx,
+        y: cy - 12,
+        text: '✂️ 가지치기 완료! [' + nz.name + '] (우회 불필요)',
+        color: '#80deea',
+        life: 58
+      });
+      updateNoiseProgressUI();
+    }
+
+    function pruneAllDecoyNoises() {
+      if (state.gameOver || state.controlMode === 'wasd') return;
+      var st = STAGES[state.currentStageIdx];
+      var prunedCount = 0;
+      st.noises.forEach(function(nz) {
+        if (!nz.hit) {
+          pruneSingleNoiseRemotely(nz);
+          prunedCount++;
+        }
+      });
+      if (prunedCount > 0) {
+        playSfx('sfx_glyph', 0.6);
+      }
+    }
+
+    function triggerAttack() {
+      if (state.gameOver) {
+        resetCurrentStage();
+        return;
+      }
+      var p = state.player;
+      var st = STAGES[state.currentStageIdx];
+      var isValmanway = !!state.unlockedValmanway;
+
+      p.attackTimer = isValmanway ? 6 : 16;
+      playWeaponAttackSfx(isValmanway ? 'valmanway' : st.id);
+
+      var reachX = isValmanway ? (p.x - 110) : (p.facing > 0 ? p.x + 10 : p.x - 155);
+      var reachW = isValmanway ? 250 : 165;
+      var hitAny = false;
+      var closestRemote = null;
+      var closestDist = 99999;
+
+      st.noises.forEach(function(nz) {
+        if (!nz.hit) {
+          var cx = nz.x + nz.w * 0.5;
+          var cy = nz.y + nz.h * 0.5;
+          var d = Math.hypot(cx - (p.x + 16), cy - (p.y + 20));
+          if (cx >= reachX - 30 && cx <= reachX + reachW + 30 && Math.abs(cy - (p.y + 20)) < 115) {
+            if (nz.immortal) {
+              playSfx('sfx_sword', 0.65);
+              nz.x += p.facing * (isValmanway ? 65 : 42);
+              spawnParticles(cx, cy, isValmanway ? '#00e676' : '#ff1744', 24);
+              state.floatingTexts.push({
+                x: cx,
+                y: cy - 16,
+                text: isValmanway ? '⚡ 전설 비검의 칼바람이 심연의 사신을 밀쳐냅니다!' : '🛡️ 심연의 사신(Death)! 공격으로 죽지 않습니다 — 피해서 탈출하세요!',
+                color: isValmanway ? '#a7ffeb' : '#ff8a80',
+                life: 65
+              });
+            } else if (nz.hp && nz.hp > 1) {
+              nz.hp--;
+              hitAny = true;
+              playSfx('sfx_hit', 0.85);
+              spawnParticles(cx, cy, '#ff1744', 28);
+              state.floatingTexts.push({
+                x: cx,
+                y: cy - 18,
+                text: '🛡️ ' + (nz.shortTag || nz.name) + ' 강철 방어! (체력: ' + nz.hp + '/' + (nz.maxHp || 5) + ')',
+                color: '#ff8a80',
+                life: 60
+              });
+            } else {
+              if (nz.hp !== undefined) nz.hp = 0;
+              nz.hit = true;
+              nz.discoveredPruned = true;
+              hitAny = true;
+              spawnParticles(cx, cy, isValmanway ? '#00e676' : (nz.type === 'monster' ? '#ffd740' : '#00e5ff'), 36);
+              playSfx(isValmanway ? 'sfx_dispel' : 'sfx_hit', 0.75);
+              state.floatingTexts.push({
+                x: cx,
+                y: cy - 12,
+                text: isValmanway ? '👑 비검 일도양단! (-' + nz.name + ' 격파)' : (nz.type === 'monster' ? '⚔️ ' + nz.name + ' 격파 완료!' : '🧹 함정 무력화! (-' + nz.name + ')'),
+                color: isValmanway ? '#a7ffeb' : (nz.type === 'monster' ? '#ffe07d' : '#80deea'),
+                life: 60
+              });
+            }
+          } else if (state.controlMode === 'click' && !nz.immortal && d < closestDist && d < 460) {
+            closestDist = d;
+            closestRemote = nz;
+          }
+        }
+      });
+
+      if (!hitAny && closestRemote && state.controlMode === 'click') {
+        pruneSingleNoiseRemotely(closestRemote);
+        hitAny = true;
+      }
+
+      if (hitAny) {
+        playSfx('sfx_dispel', 0.6);
+        updateNoiseProgressUI();
+      }
+    }
+
+    function toggleAbstractSight() {
+      state.abstractSight = !state.abstractSight;
+      var btn = document.getElementById('sightBtn');
+      var pill = document.getElementById('sightKeyPill');
+      var txt = state.abstractSight ? '👁️ 맵 힌트 (Tab): ON (안전 루트 안내)' : '👁️ 맵 힌트 (Tab): OFF';
+      btn.textContent = txt;
+      if (pill) pill.textContent = txt;
+      playSfx('sfx_glyph', 0.55);
+      updateNoiseProgressUI();
+    }
+
+    function spawnParticles(x, y, color, count) {
+      for (var i = 0; i < count; i++) {
+        var ang = Math.random() * Math.PI * 2;
+        var spd = 1.5 + Math.random() * 4.5;
+        state.particles.push({
+          x: x,
+          y: y,
+          vx: Math.cos(ang) * spd,
+          vy: Math.sin(ang) * spd - 1.5,
+          color: color,
+          life: 25 + Math.floor(Math.random() * 20)
+        });
+      }
+    }
+
+    function renderStageTabs() {
+      var container = document.getElementById('stageTabs');
+      container.innerHTML = STAGES.map(function(st, idx) {
+        var isAct = idx === state.currentStageIdx;
+        var isClr = state.stageCleared[st.id];
+        var sub = state.submissions[st.id];
+        var unlocked = isStageUnlocked(idx);
+        var statusBadge = !unlocked
+          ? '🔒 이전 맵 클리어 필요'
+          : (sub ? '✅ 시트제출완료' : (isClr ? '⭐ 탈출성공' : '진행중'));
+        return (
+          '<button class="stage-tab ' + (isAct ? 'active ' : '') + (!unlocked ? 'locked' : '') + '" onclick="selectStage(' + idx + ')">' +
+            '<div class="stage-tab-num">' +
+              '<span>' + st.mapNum + '</span>' +
+              '<span>' + statusBadge + '</span>' +
+            '</div>' +
+            '<div class="stage-tab-title">' + (unlocked ? '' : '🔒 ') + st.title + '</div>' +
+            '<div class="stage-tab-hint">💡 힌트: ' + st.hint + '</div>' +
+          '</button>'
+        );
+      }).join('');
+
+      var nextBtn = document.getElementById('nextStageQuickBtn');
+      if (nextBtn) {
+        var curSt = STAGES[state.currentStageIdx];
+        if (state.stageCleared[curSt.id] && state.currentStageIdx < STAGES.length - 1) {
+          nextBtn.style.display = 'inline-flex';
+        } else {
+          nextBtn.style.display = 'none';
+        }
+      }
+    }
+
+    function selectStage(idx) {
+      if (!isStageUnlocked(idx)) {
+        playSfx('sfx_hit', 0.5);
+        alert('🔒 잠긴 스테이지입니다!\n먼저 [MAP ' + idx + ']의 탈출구에 도달하여 클리어해야 다음 스테이지가 해금됩니다.');
+        return;
+      }
+      saveCurrentDraft();
+      state.currentStageIdx = idx;
+      resetCurrentStage();
+      renderStageTabs();
+      loadStageWorksheetUI();
+    }
+
+    function goToNextUnlockedStage() {
+      if (state.currentStageIdx < STAGES.length - 1 && isStageUnlocked(state.currentStageIdx + 1)) {
+        selectStage(state.currentStageIdx + 1);
+      }
+    }
+
+    function openStageClearModal(st) {
+      var modal = document.getElementById('stageClearModal');
+      if (!modal) return;
+
+      document.getElementById('modalStageTitle').textContent = st.mapNum + ' : ' + st.title + ' — 탈출 성공!';
+      document.getElementById('modalPlayerTime').textContent = state.routeMinutes + '분';
+      document.getElementById('modalTargetTime').textContent = st.targetMinutes + '분';
+
+      var isOpt = !state.tookDetour && (state.routeMinutes <= st.targetMinutes);
+      var verdictEl = document.getElementById('modalOptVerdict');
+      var feedbackEl = document.getElementById('modalFeedbackText');
+
+      if (isOpt) {
+        verdictEl.textContent = '🌟 최적 핵심 경로 완벽 탈출!';
+        verdictEl.style.color = '#ffd740';
+        feedbackEl.innerHTML = '<strong>완벽한 정보 교과 추상화 성공!</strong><br/>불필요한 미끼와 위험한 함정을 모두 제거하고 최단 경로(' + state.routeMinutes + '분)로 완벽히 탈출했습니다.';
+      } else {
+        verdictEl.textContent = '⭐ 우회로 탐험 성공 (' + state.routeMinutes + '분)';
+        verdictEl.style.color = '#e2c481';
+        feedbackEl.innerHTML = '<strong>탈출에 성공했습니다!</strong><br/>다만 우회로나 미끼 구역을 거쳐 시간이 ' + state.routeMinutes + '분 소요되었습니다. 최단 ' + st.targetMinutes + '분 핵심 경로를 찾아 다시 도전해보세요.';
+      }
+
+      var rewardBox = document.getElementById('modalValmanwayReward');
+      var nextBtn = document.getElementById('modalNextStageBtn');
+      if (st.id === 'T04') {
+        state.unlockedValmanway = true;
+        try { localStorage.setItem('valmanway_unlocked_' + state.student.code, 'true'); } catch(e){}
+        if (rewardBox) rewardBox.style.display = 'block';
+        if (nextBtn) {
+          nextBtn.textContent = '🗡️ 비검 장착하고 자유 탐험';
+          nextBtn.onclick = function() {
+            closeStageClearModal();
+            playWeaponAttackSfx('valmanway');
+          };
+        }
+      } else {
+        if (rewardBox) rewardBox.style.display = 'none';
+        if (nextBtn) {
+          nextBtn.textContent = '다음 해금 스테이지로 진입 ➔';
+          nextBtn.onclick = function() {
+            closeStageClearModal();
+            goToNextUnlockedStage();
+          };
+        }
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeStageClearModal() {
+      var modal = document.getElementById('stageClearModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function replayStageWithRespawn() {
+      closeStageClearModal();
+      resetCurrentStage();
+      playStageBgm();
+      playSfx('sfx_clear', 0.45);
+      state.floatingTexts.push({
+        x: state.player.x,
+        y: state.player.y - 20,
+        text: '↻ 몬스터와 함정이 리스폰되었습니다!',
+        color: '#ffe07d',
+        life: 120
+      });
+    }
+
+    function resetCurrentStage() {
+      var st = STAGES[state.currentStageIdx];
+      state.currentStageGoalReached = false;
+      state.gameOver = false;
+      state.gameOverTick = 0;
+      state.visitedNodes = [st.nodes[0].id];
+      state.routeMinutes = 0;
+      state.tookDetour = false;
+      state.teleportCooldown = 0;
+      state.bolts = [];
+
+      state.hazardProjectiles = [];
+      st.noises.forEach(function(n) {
+        n.hit = false;
+        n.discoveredPruned = false;
+        n.respawnCooldown = undefined;
+        if (n.maxHp) n.hp = n.maxHp;
+        n.attackCooldown = 60;
+        if (n.origX === undefined) { n.origX = n.x; n.origY = n.y; }
+        if (n.origVx === undefined) n.origVx = n.vx || 0;
+        if (n.origVy === undefined) n.origVy = n.vy || 0;
+        n.x = n.origX;
+        n.y = n.origY;
+        n.vx = n.origVx;
+        n.vy = n.origVy;
+      });
+
+      var startNode = st.nodes[0];
+      state.player.x = startNode.x - 16;
+      state.player.y = startNode.y - 36;
+      state.player.vx = 0;
+      state.player.vy = 0;
+      state.player.hp = state.player.maxHp;
+      state.player.invulnTimer = 0;
+      state.player.jumpsLeft = 2;
+      state.player.autoWaypoints = null;
+      state.player.autoWpIdx = 0;
+      state.cameraX = 0;
+      state.cameraY = 0;
+
+      document.getElementById('mainScreenTitle').textContent =
+        '⚔️ ' + st.mapNum + ' : ' + st.title + ' | 💡 힌트: ' + st.hint;
+      updateNoiseProgressUI();
+      updateRouteAnalyzerUI();
+      renderStageTabs();
+      updateControlModeUI();
+      if (bgmEnabled) playStageBgm();
+      else stopAllMusic();
+    }
+
+    function getRemovableNoiseStats() {
+      var st = STAGES[state.currentStageIdx];
+      var removed = 0;
+      var total = 0;
+      st.noises.forEach(function(n) {
+        if (!n.immortal) {
+          total++;
+          if (n.hit || n.discoveredPruned) removed++;
+        }
+      });
+      return { removed: removed, total: Math.max(1, total) };
+    }
+
+    function updateNoiseProgressUI() {
+      var stats = getRemovableNoiseStats();
+      var pct = state.abstractSight ? 100 : Math.round((stats.removed / stats.total) * 100);
+
+      document.getElementById('statusHudText').textContent =
+        '가지치기한 탈출 방해물: ' + stats.removed + ' / ' + stats.total + '개 ' + (state.abstractSight ? '[맵 힌트 ON]' : '');
+      document.getElementById('graphStateBadge').textContent =
+        pct >= 80 ? '✨ [추상화 완료: 최적 핵심 노선도 추출됨!]' : '[추상화 진행률 ' + pct + '%]';
+    }
+
+    function updateRouteAnalyzerUI() {
+      var st = STAGES[state.currentStageIdx];
+      var pathStr = state.visitedNodes.join(' → ');
+      var optStr = st.optimalNodeSeq.join(' → ');
+      var badge = document.getElementById('routeLiveBadge');
+      if (badge) {
+        badge.textContent = '🧭 현재 이동 경로: ' + pathStr + ' (누적 ' + state.routeMinutes + '분 / 목표 최단 ' + st.targetMinutes + '분)';
+        badge.style.color = state.tookDetour ? '#ff8a80' : '#80deea';
+      }
+      var tEl = document.getElementById('analyzerRouteTarget');
+      var cEl = document.getElementById('analyzerCurrentStatus');
+      if (tEl) {
+        tEl.textContent = '• 목표 최적 핵심 경로: ' + optStr + ' (최단 ' + st.targetMinutes + '분)';
+      }
+      if (cEl) {
+        cEl.textContent = '• 내 실제 이동 경로: ' + pathStr + ' (' + state.routeMinutes + '분 소요' + (state.tookDetour ? ' — ⚠️비최적 우회/막다른길 포함' : ' — ✅최적 경로 유지 중!') + ')';
+        cEl.style.color = state.tookDetour ? '#ff8a80' : '#ffe07d';
+      }
+    }
+
+    function recordVisitedNode(nodeId) {
+      var st = STAGES[state.currentStageIdx];
+      var lastId = state.visitedNodes[state.visitedNodes.length - 1];
+      if (lastId === nodeId) return;
+
+      var edge = st.edges.find(function(e) {
+        return (e.from === lastId && e.to === nodeId) || (e.to === lastId && e.from === nodeId);
+      });
+      var addMin = edge ? (edge.minutes || 2) : 2;
+      state.visitedNodes.push(nodeId);
+      state.routeMinutes += addMin;
+
+      if (st.optimalNodeSeq.indexOf(nodeId) === -1 || (edge && !edge.optimal)) {
+        state.tookDetour = true;
+        state.floatingTexts.push({
+          x: state.player.x + 16,
+          y: state.player.y - 24,
+          text: '⚠️ 비최적 우회로/막다른길 진입! (+' + addMin + '분 시간 손실)',
+          color: '#ff8a80',
+          life: 65
+        });
+      } else {
+        state.floatingTexts.push({
+          x: state.player.x + 16,
+          y: state.player.y - 20,
+          text: '✅ 주요 장소 [' + nodeId + '] 통과 (+' + addMin + '분)',
+          color: '#80deea',
+          life: 45
+        });
+      }
+      updateRouteAnalyzerUI();
+    }
+
+    // Canvas Click Event: Strict Separation between WASD mode and Click mode!
+    var gameCanvas = document.getElementById('gameCanvas');
+    gameCanvas.addEventListener('click', function(e) {
+      if (state.gameOver) {
+        resetCurrentStage();
+        return;
+      }
+
+      // If in WASD Mode: Strictly block mouse click shortcuts!
+      if (state.controlMode === 'wasd') {
+        state.floatingTexts.push({
+          x: state.player.x + 16,
+          y: state.player.y - 20,
+          text: '🚫 WASD 액션 모드: 마우스 클릭 조작 불가! 키보드(W/A/D/Space)로 컨트롤하세요!',
+          color: '#ff8a80',
+          life: 60
+        });
+        return;
+      }
+
+      // If in Click Mode: Allow clicking noise or platforms!
+      var rect = gameCanvas.getBoundingClientRect();
+      var cxCanvas = (e.clientX - rect.left) * (gameCanvas.width / rect.width);
+      var cyCanvas = (e.clientY - rect.top) * (gameCanvas.height / rect.height);
+      var st = STAGES[state.currentStageIdx];
+
+      var mx = state.wideOverview ? (cxCanvas * (st.worldW / gameCanvas.width)) : (cxCanvas + state.cameraX);
+      var my = state.wideOverview ? (cyCanvas * (st.worldH / gameCanvas.height)) : (cyCanvas + (state.cameraY || 0));
+
+      var clickedNoise = false;
+      st.noises.forEach(function(nz) {
+        if (!nz.hit && mx >= nz.x - 20 && mx <= nz.x + nz.w + 20 && my >= nz.y - 20 && my <= nz.y + nz.h + 20) {
+          pruneSingleNoiseRemotely(nz);
+          clickedNoise = true;
+        }
+      });
+      if (!clickedNoise) {
+        state.player.autoWaypoints = [{ x: mx, y: my }];
+        state.player.autoWpIdx = 0;
+      }
+    });
+
+    // Sub-Screen Graph Click
+    var graphCanvas = document.getElementById('graphCanvas');
+    graphCanvas.addEventListener('click', function(e) {
+      if (state.gameOver) return;
+
+      if (state.controlMode === 'wasd') {
+        state.floatingTexts.push({
+          x: state.player.x + 16,
+          y: state.player.y - 20,
+          text: '🚫 WASD 액션 모드: 노선도 클릭 이동 불가! 키보드로 직접 이동하세요!',
+          color: '#ff8a80',
+          life: 60
+        });
+        return;
+      }
+
+      var rect = graphCanvas.getBoundingClientRect();
+      var gx = (e.clientX - rect.left) * (graphCanvas.width / rect.width);
+      var gy = (e.clientY - rect.top) * (graphCanvas.height / rect.height);
+      var st = STAGES[state.currentStageIdx];
+      var scaleX = graphCanvas.width / st.worldW;
+      var scaleY = graphCanvas.height / st.worldH;
+
+      var hitNoiseOnGraph = false;
+      st.noises.forEach(function(nz) {
+        if (!nz.hit) {
+          var nx = (nz.x + nz.w * 0.5) * scaleX;
+          var ny = (nz.y + nz.h * 0.5) * scaleY;
+          if (Math.hypot(gx - nx, gy - ny) < 16) {
+            pruneSingleNoiseRemotely(nz);
+            hitNoiseOnGraph = true;
+          }
+        }
+      });
+      if (hitNoiseOnGraph) return;
+
+      st.nodes.forEach(function(nd) {
+        var nx = nd.x * scaleX, ny = nd.y * scaleY;
+        if (Math.hypot(gx - nx, gy - ny) < 22) {
+          state.player.autoWaypoints = [{ x: nd.x, y: nd.y }];
+          state.player.autoWpIdx = 0;
+        }
+      });
+    });
+
+    // Main 60FPS Game Loop
+    function updateGame() {
+      var st = STAGES[state.currentStageIdx];
+      var p = state.player;
+      p.animTick++;
+
+      // [클리어 후 백그라운드 게임 일시 정지]
+      // 탈출구 도달 후 몬스터 공격/데스 추적으로 인한 패배 효과음 버그 완전 차단
+      if (state.currentStageGoalReached) {
+        p.invulnTimer = 99999;
+        p.vx = 0;
+        p.vy = 0;
+        // 축하 파티클과 플로팅 텍스트만 업데이트 후 게임 물리/충돌 중단
+        for (var k = state.particles.length - 1; k >= 0; k--) {
+          var gp = state.particles[k];
+          gp.x += gp.vx;
+          gp.y += gp.vy;
+          gp.life--;
+          if (gp.life <= 0) state.particles.splice(k, 1);
+        }
+        for (var j = state.floatingTexts.length - 1; j >= 0; j--) {
+          var ft = state.floatingTexts[j];
+          ft.y -= 0.65;
+          ft.life--;
+          if (ft.life <= 0) state.floatingTexts.splice(j, 1);
+        }
+        return;
+      }
+
+      if (state.gameOver) {
+        state.gameOverTick++;
+        if (state.gameOverTick % 4 === 0) {
+          state.particles.push({
+            x: state.cameraX + Math.random() * 1320,
+            y: (state.cameraY || 0) + 40 + Math.random() * 160,
+            vx: (Math.random() - 0.5) * 1.2,
+            vy: 1.0 + Math.random() * 2.0,
+            color: Math.random() > 0.4 ? '#ff1744' : '#d50000',
+            life: 45
+          });
+        }
+        for (var k = state.particles.length - 1; k >= 0; k--) {
+          var gp = state.particles[k];
+          gp.x += gp.vx;
+          gp.y += gp.vy;
+          gp.life--;
+          if (gp.life <= 0) state.particles.splice(k, 1);
+        }
+        return;
+      }
+
+      if (p.attackTimer > 0) p.attackTimer--;
+      if (p.invulnTimer > 0) p.invulnTimer--;
+      if (state.teleportCooldown > 0) state.teleportCooldown--;
+
+      // 0. Update Moving Lift Platforms (Elevator Shaft & Gear Lifts)
+      st.platforms.forEach(function(plat) {
+        if (plat.moveY) {
+          var prevY = plat.y;
+          plat.y = plat.baseY + Math.sin(p.animTick * (plat.spd || 0.04)) * (plat.ampY || 36);
+          plat.dy = plat.y - prevY;
+          if (plat.nodeId) {
+            var nd = st.nodes.find(function(n){ return n.id === plat.nodeId; });
+            if (nd) nd.y = plat.y - 30;
+          }
+        }
+      });
+
+      // 1. Teleportation Pads Check (MAP 4) - Traps delay & warp backwards!
+      if (st.teleporters && state.teleportCooldown <= 0) {
+        st.teleporters.forEach(function(tp) {
+          if (Math.abs((p.x + 16) - (tp.x + tp.w * 0.5)) < tp.w * 0.5 + 12 &&
+              Math.abs((p.y + 36) - (tp.y + tp.h * 0.5)) < tp.h * 0.5 + 14) {
+            p.x = tp.targetX - 16;
+            p.y = tp.targetY - 38;
+            p.vx = 0;
+            p.vy = -3;
+            state.teleportCooldown = 120;
+            playSfx('sfx_dispel', 0.7);
+            spawnParticles(p.x + 16, p.y + 20, tp.isTrap ? '#ff1744' : '#00e5ff', 40);
+            if (tp.isTrap) {
+              state.tookDetour = true;
+              state.routeMinutes += 5;
+              updateRouteAnalyzerUI();
+              state.floatingTexts.push({
+                x: p.x + 16,
+                y: p.y - 24,
+                text: '🌀 함정 마법진 발동! [지름길이 아닌 시공 왜곡 함정! 상층 역송 +5분 지연]',
+                color: '#ff5252',
+                life: 95
+              });
+            } else {
+              state.floatingTexts.push({
+                x: p.x + 16,
+                y: p.y - 22,
+                text: '🌀 순간이동 발동!',
+                color: '#80deea',
+                life: 70
+              });
+            }
+          }
+        });
+      }
+
+      // 2. Check Instant Death Hazards (MAP 4 Hard Mode)
+      if (st.instantHazards) {
+        st.instantHazards.forEach(function(ih) {
+          var pcx = p.x + 16, pcy = p.y + 20;
+          if (ih.r) {
+            if (Math.hypot(pcx - ih.x, pcy - ih.y) < ih.r) {
+              damagePlayer(150, ih.name, ih.x, true);
+            }
+          } else {
+            if (pcx >= ih.x && pcx <= ih.x + ih.w && pcy >= ih.y && pcy <= ih.y + ih.h) {
+              damagePlayer(150, ih.name, ih.x + ih.w * 0.5, true);
+            }
+          }
+        });
+      }
+
+      // 3. Update Swinging Ceiling Pendulum Axes
+      if (st.pendulums) {
+        st.pendulums.forEach(function(pend) {
+          var angle = Math.sin(p.animTick * pend.spd + pend.phase) * pend.amp;
+          pend.curAngle = angle;
+          var bladeX = pend.x - Math.sin(angle) * (pend.len - 14);
+          var bladeY = pend.y + Math.cos(angle) * (pend.len - 14);
+          var midX = pend.x - Math.sin(angle) * (pend.len * 0.6);
+          var midY = pend.y + Math.cos(angle) * (pend.len * 0.6);
+
+          if (p.invulnTimer === 0) {
+            var pcx = p.x + 16;
+            var pcy = p.y + 20;
+            if (Math.hypot(pcx - bladeX, pcy - bladeY) < 32 || Math.hypot(pcx - midX, pcy - midY) < 20) {
+              var axeName = '천장 진자 도끼 함정';
+              if (state.currentStageIdx === 0) axeName = '황금 화염 도끼 함정';
+              else if (state.currentStageIdx === 1) axeName = '청빙 얼음 도끼 함정';
+              else if (state.currentStageIdx === 2) axeName = '시계탑 강철 도끼 함정';
+              else if (state.currentStageIdx === 3) axeName = '심연 거대 진자단두추 즉사 함정';
+
+              if (pend.instantKill) {
+                damagePlayer(150, axeName, bladeX, true);
+              } else {
+                damagePlayer(pend.dmg || 25, axeName, bladeX);
+              }
+            }
+          }
+        });
+      }
+
+      // 3-B. Update Wall & Rail Hazards (인화차 / 회전 기어)
+      if (st.wallHazards) {
+        st.wallHazards.forEach(function(wh) {
+          if (wh.minX !== undefined && wh.maxX !== undefined) {
+            wh.x += wh.vx;
+            if (wh.x < wh.minX) { wh.x = wh.minX; wh.vx = Math.abs(wh.vx); }
+            if (wh.x > wh.maxX) { wh.x = wh.maxX; wh.vx = -Math.abs(wh.vx); }
+          }
+          if (p.invulnTimer === 0) {
+            var pcx = p.x + 16;
+            var pcy = p.y + 20;
+            if (Math.hypot(pcx - wh.x, pcy - wh.y) < (wh.r || 24) + 16) {
+              damagePlayer(wh.dmg || 25, wh.name || '벽면 회전 함정', wh.x);
+            }
+          }
+        });
+      }
+
+      // 4. Update Moving Monsters
+      st.noises.forEach(function(nz, idx) {
+        if (nz.hit) {
+          if (st.id === 'T04' && nz.type === 'monster' && !nz.immortal) {
+            if (nz.respawnCooldown === undefined) nz.respawnCooldown = 360;
+            nz.respawnCooldown--;
+            if (nz.respawnCooldown <= 0) {
+              nz.hit = false;
+              nz.respawnCooldown = undefined;
+              nz.x = nz.origX !== undefined ? nz.origX : nz.x;
+              nz.y = nz.origY !== undefined ? nz.origY : nz.y;
+              if (nz.origVx !== undefined) nz.vx = nz.origVx;
+              if (nz.origVy !== undefined) nz.vy = nz.origVy;
+              spawnParticles(nz.x + nz.w * 0.5, nz.y + nz.h * 0.5, '#ff1744', 24);
+              playSfx('sfx_dispel', 0.4);
+              state.floatingTexts.push({
+                x: nz.x + nz.w * 0.5,
+                y: nz.y - 12,
+                text: '💀 몬스터 부활! [' + (nz.shortTag || nz.name) + ']',
+                color: '#ff5252',
+                life: 55
+              });
+              updateNoiseProgressUI();
+            }
+          }
+          return;
+        }
+        // NaN 방어: 좌표가 깨지면 원위치로 복구
+        if (!isFinite(nz.x) || !isFinite(nz.y) || !isFinite(nz.vx || 0) || !isFinite(nz.vy || 0)) {
+          nz.x = nz.origX !== undefined ? nz.origX : 100;
+          nz.y = nz.origY !== undefined ? nz.origY : 100;
+          nz.vx = nz.origVx || 1;
+          nz.vy = nz.origVy || 0;
+        }
+        if (nz.moveMode === 'patrol') {
+          // 지상형 몬스터: y좌표 고정 (절대 공중으로 뜨지 않음)
+          if (nz.origY !== undefined) nz.y = nz.origY;
+          nz.x += nz.vx;
+          if (nz.x <= nz.minX) { nz.x = nz.minX; nz.vx = Math.abs(nz.vx); }
+          if (nz.x >= nz.maxX) { nz.x = nz.maxX; nz.vx = -Math.abs(nz.vx); }
+        } else if (nz.moveMode === 'sine') {
+          nz.x += nz.vx;
+          if (nz.x <= nz.minX) { nz.x = nz.minX; nz.vx = Math.abs(nz.vx); }
+          if (nz.x >= nz.maxX) { nz.x = nz.maxX; nz.vx = -Math.abs(nz.vx); }
+          nz.y = nz.baseY + Math.sin((p.animTick * 0.06) + idx) * (nz.ampY || 22);
+        } else if (nz.moveMode === 'territoryRoam') {
+          nz.x += nz.vx;
+          nz.y += nz.vy;
+          if (nz.x <= nz.minX) { nz.x = nz.minX; nz.vx = Math.abs(nz.vx); }
+          if (nz.x + nz.w >= nz.maxX) { nz.x = nz.maxX - nz.w; nz.vx = -Math.abs(nz.vx); }
+          if (nz.y <= nz.minY) { nz.y = nz.minY; nz.vy = Math.abs(nz.vy); }
+          if (nz.y + nz.h >= nz.maxY) { nz.y = nz.maxY - nz.h; nz.vy = -Math.abs(nz.vy); }
+        } else if (nz.moveMode === 'freeRoam' || nz.moveMode === 'stalker') {
+          if (nz.moveMode === 'stalker') {
+            var dxP = (p.x + 16) - (nz.x + nz.w * 0.5);
+            var dyP = (p.y + 20) - (nz.y + nz.h * 0.5);
+            var distP = Math.max(1, Math.hypot(dxP, dyP));
+            var accel = nz.immortal ? 0.12 : 0.10;
+            var maxSpd = nz.immortal ? 2.45 : 2.25;
+            nz.vx = nz.vx * 0.96 + (dxP / distP) * accel;
+            nz.vy = nz.vy * 0.96 + (dyP / distP) * accel;
+            var spd = Math.hypot(nz.vx, nz.vy);
+            if (spd > maxSpd) {
+              nz.vx = (nz.vx / spd) * maxSpd;
+              nz.vy = (nz.vy / spd) * maxSpd;
+            }
+          }
+          nz.x += nz.vx;
+          nz.y += nz.vy;
+          if (nz.x <= 25) { nz.x = 25; nz.vx = Math.abs(nz.vx); }
+          if (nz.x + nz.w >= st.worldW - 25) { nz.x = st.worldW - 25 - nz.w; nz.vx = -Math.abs(nz.vx); }
+          if (nz.y <= 50) { nz.y = 50; nz.vy = Math.abs(nz.vy); }
+          if (nz.y + nz.h >= st.worldH - 55) { nz.y = st.worldH - 55 - nz.h; nz.vy = -Math.abs(nz.vy); }
+        }
+
+        // [심연 수문장 전용 공격 AI] 대성문 앞 침입자를 향해 초고속 심연 단죄 참격파 연속 발사!
+        if (nz.id === 'n10' && !nz.hit && !state.gameOver) {
+          var distToP = Math.hypot((p.x + 16) - (nz.x + nz.w * 0.5), (p.y + 20) - (nz.y + nz.h * 0.5));
+          // [공격 범위 및 반응 사거리 720px로 확장, 고저차 380px 커버]
+          if (distToP < 720 && Math.abs((p.y + 20) - (nz.y + nz.h * 0.5)) < 380) {
+            // 플레이어를 향해 즉시 방향 정렬
+            if (p.x < nz.x + nz.w * 0.5) {
+              nz.vx = -Math.abs(nz.vx || 1.1);
+            } else {
+              nz.vx = Math.abs(nz.vx || 1.1);
+            }
+            if (nz.attackCooldown === undefined) nz.attackCooldown = 25;
+            nz.attackCooldown--;
+            // [공격 속도 60프레임 (~1.0초) 초고속 주기 연속 발사]
+            if (nz.attackCooldown <= 0) {
+              nz.attackCooldown = 60;
+              var dirX = (p.x < nz.x + nz.w * 0.5) ? -1 : 1;
+              if (!state.hazardProjectiles) state.hazardProjectiles = [];
+              state.hazardProjectiles.push({
+                x: dirX < 0 ? nz.x - 16 : nz.x + nz.w + 16,
+                y: nz.y + nz.h * 0.45,
+                vx: dirX * 6.2, // 초고속 탄도 속도
+                vy: 0,
+                r: 24, // 초대형 초승달 참격 검기
+                dmg: 30,
+                life: 140, // 850px 이상 장거리 커버
+                color: '#ba68c8',
+                name: '심연 단죄 참격파'
+              });
+              playSfx('slash', 0.85);
+              state.floatingTexts.push({
+                x: nz.x + nz.w * 0.5,
+                y: nz.y - 20,
+                text: '⚔️ 파이널 나이트: 심연 단죄 참격파!',
+                color: '#ff80ab',
+                life: 45
+              });
+            }
+          }
+        }
+
+        var canHitPlayer = nz.immortal || (!state.abstractSight && p.attackTimer === 0);
+        if (canHitPlayer && p.invulnTimer === 0) {
+          var px1 = p.x + 6, py1 = p.y + 6, px2 = p.x + 26, py2 = p.y + 38;
+          var nx1 = nz.x + 4, ny1 = nz.y + 4, nx2 = nz.x + nz.w - 4, ny2 = nz.y + nz.h - 4;
+          if (px2 > nx1 && px1 < nx2 && py2 > ny1 && py1 < ny2) {
+            damagePlayer(nz.dmg || 20, nz.name + ' 피격', nz.x + nz.w * 0.5);
+          }
+        }
+      });
+
+      // Update hazard projectiles (수문장 참격파 등)
+      if (state.hazardProjectiles && state.hazardProjectiles.length > 0) {
+        for (var hpIdx = state.hazardProjectiles.length - 1; hpIdx >= 0; hpIdx--) {
+          var hp = state.hazardProjectiles[hpIdx];
+          hp.x += hp.vx;
+          hp.y += (hp.vy || 0);
+          hp.life--;
+          if (p.invulnTimer === 0 && !state.gameOver) {
+            var pDist = Math.hypot((p.x + 16) - hp.x, (p.y + 20) - hp.y);
+            if (pDist < hp.r + 15) {
+              damagePlayer(hp.dmg, hp.name, hp.x);
+              spawnParticles(hp.x, hp.y, '#ba68c8', 18);
+              hp.life = 0;
+            }
+          }
+          if (hp.life <= 0) {
+            state.hazardProjectiles.splice(hpIdx, 1);
+          }
+        }
+      }
+
+      // (몬스터 간 밀어내기 물리 제거: 각 몬스터는 자기 고정 구역에서만 활동하므로 뭉치지 않음)
+
+      // 5. Player Movement & Platform Landing
+      if (p.autoWaypoints && p.autoWpIdx < p.autoWaypoints.length && state.controlMode === 'click') {
+        var target = p.autoWaypoints[p.autoWpIdx];
+        var tx = target.x - 16;
+        var ty = target.y - 40;
+        var dx = tx - p.x;
+        var dy = ty - p.y;
+        var dist = Math.hypot(dx, dy);
+        if (dist < 9) {
+          p.x = tx;
+          p.y = ty;
+          p.autoWpIdx++;
+          if (p.autoWpIdx >= p.autoWaypoints.length) {
+            p.autoWaypoints = null;
+          }
+        } else {
+          p.facing = dx >= 0 ? 1 : -1;
+          p.x += (dx / dist) * 5.6;
+          p.y += (dy / dist) * 5.6;
+        }
+      } else {
+        var moveX = 0;
+        if (keys['ArrowLeft'] || keys['KeyA']) { moveX = -4.6; p.facing = -1; }
+        if (keys['ArrowRight'] || keys['KeyD']) { moveX = 4.6; p.facing = 1; }
+        p.x += moveX;
+        p.vy += 0.46;
+        if (p.vy > 9.5) p.vy = 9.5;
+        p.y += p.vy;
+
+        p.onGround = false;
+        st.platforms.forEach(function(plat) {
+          if (p.x + 25 > plat.x && p.x + 7 < plat.x + plat.w) {
+            if (p.vy >= 0 && p.y + 40 >= plat.y - 4 && p.y + 40 - p.vy <= plat.y + 18) {
+              p.y = plat.y - 40;
+              p.vy = 0;
+              p.onGround = true;
+              p.jumpsLeft = 2;
+              if (plat.dy) {
+                p.y += plat.dy;
+              }
+            }
+          }
+        });
+
+        // Bottom Hazard Zone Check
+        var bottomHazardY = st.worldH - 62;
+        if (p.y > bottomHazardY) {
+          p.y = bottomHazardY;
+          p.vy = -10.0;
+          p.onGround = false;
+          p.jumpsLeft = 1;
+          if (st.worldH > 480) {
+            damagePlayer(150, st.hazardName, p.x + 16, true);
+          } else {
+            damagePlayer(25, st.hazardName, p.x + 16);
+          }
+        }
+        p.x = Math.max(10, Math.min(st.worldW - 42, p.x));
+      }
+
+      // Check Node Visits & Goal Door
+      st.nodes.forEach(function(nd, nIdx) {
+        if (Math.hypot((p.x + 16) - nd.x, (p.y + 28) - nd.y) < 46) {
+          recordVisitedNode(nd.id);
+          if (nIdx === st.nodes.length - 1) {
+            onReachStageGoal();
+          }
+        }
+      });
+
+      // Smooth Camera Follow: Both Horizontal and Vertical for Map 4!
+      var targetCamX = (p.x + 16) - (gameCanvas.width * 0.42);
+      targetCamX = Math.max(0, Math.min(st.worldW - gameCanvas.width, targetCamX));
+      state.cameraX += (targetCamX - state.cameraX) * 0.14;
+
+      var targetCamY = (st.worldH > 480) ? (p.y + 20) - (gameCanvas.height * 0.5) : 0;
+      targetCamY = Math.max(0, Math.min(st.worldH - gameCanvas.height, targetCamY));
+      state.cameraY += (targetCamY - (state.cameraY || 0)) * 0.14;
+
+      // Update Bolts, Particles & Floating Texts
+      for (var b = state.bolts.length - 1; b >= 0; b--) {
+        state.bolts[b].life--;
+        if (state.bolts[b].life <= 0) state.bolts.splice(b, 1);
+      }
+      for (var i = state.particles.length - 1; i >= 0; i--) {
+        var pt = state.particles[i];
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+        pt.vy += 0.15;
+        pt.life--;
+        if (pt.life <= 0) state.particles.splice(i, 1);
+      }
+      for (var j = state.floatingTexts.length - 1; j >= 0; j--) {
+        var ft = state.floatingTexts[j];
+        ft.y -= 0.65;
+        ft.life--;
+        if (ft.life <= 0) state.floatingTexts.splice(j, 1);
+      }
+    }
+
+    function onReachStageGoal() {
+      var st = STAGES[state.currentStageIdx];
+      if (state.currentStageGoalReached) return;
+      state.currentStageGoalReached = true;
+      state.stageCleared[st.id] = true;
+      try { localStorage.setItem('map_abstraction_clr_' + state.student.code, JSON.stringify(state.stageCleared)); } catch(e){}
+      playSfx('sfx_clear', 0.65);
+      spawnParticles(state.player.x + 16, state.player.y + 20, '#ffd740', 50);
+      state.hazardProjectiles = []; // 클리어 즉시 잔존 투사체 일괄 소거
+      state.player.invulnTimer = 99999;
+      state.player.vx = 0;
+      state.player.vy = 0;
+
+      if (st.id === 'T04') {
+        state.unlockedValmanway = true;
+        try { localStorage.setItem('valmanway_unlocked_' + state.student.code, 'true'); } catch(e){}
+      }
+
+      renderStageTabs();
+      openStageClearModal(st);
+    }
+
+    function drawDistinctPlatform(ctx, plat, st, isAbstractMode) {
+      ctx.save();
+      if (isAbstractMode && !plat.core) {
+        ctx.globalAlpha = 0.20;
+      }
+
+      var texKey = st.platTex;
+      var borderCol = '#d4af37';
+      var topTrimCol = '#ffe07d';
+
+      if (state.currentStageIdx === 0) {
+        // [MAP 1: 용암 지하성당] - 화산암 바살트 및 마그마 텍스처
+        if (plat.style === 'altar') {
+          texKey = 'tile_plat_gold_arch';
+          borderCol = '#ffd740';
+          topTrimCol = '#ffe082';
+        } else if (plat.style === 'core') {
+          texKey = 'tile_plat_lava';
+          borderCol = '#ff5722';
+          topTrimCol = '#ff8a65';
+        } else if (plat.style === 'stair') {
+          texKey = 'tile_plat_stair_brick';
+          borderCol = '#d84315';
+          topTrimCol = '#ffab91';
+        } else if (plat.style === 'detour') {
+          texKey = 'tile_plat_magma_rock';
+          borderCol = '#ff3d00';
+          topTrimCol = '#ff6e40';
+        } else if (plat.style === 'deadend') {
+          texKey = 'tile_plat_cursed_trap';
+          borderCol = '#bf360c';
+          topTrimCol = '#ff1744';
+        }
+      } else if (state.currentStageIdx === 1) {
+        // [MAP 2: 빙하 수로 미궁] - 청빙 얼음 크리스탈 및 만년설 텍스처 (주황색 완전 배제!)
+        if (plat.style === 'altar') {
+          texKey = 'tile_plat_glacier';
+          borderCol = '#e0f7fa';
+          topTrimCol = '#80deea';
+        } else if (plat.style === 'core') {
+          texKey = 'tile_plat_ice_crystal';
+          borderCol = '#00e5ff';
+          topTrimCol = '#e0f7fa';
+        } else if (plat.style === 'stair') {
+          texKey = 'tile_plat_ice_crystal';
+          borderCol = '#4fc3f7';
+          topTrimCol = '#b3e5fc';
+        } else if (plat.style === 'detour') {
+          texKey = 'tile_plat_glacier';
+          borderCol = '#29b6f6';
+          topTrimCol = '#81d4fa';
+        } else if (plat.style === 'deadend') {
+          texKey = 'tile_plat_glacier';
+          borderCol = '#0288d1';
+          topTrimCol = '#4fc3f7';
+        } else if (plat.style === 'lift') {
+          texKey = 'tile_plat_ice_crystal';
+          borderCol = '#80deea';
+          topTrimCol = '#e0f7fa';
+        }
+      } else if (state.currentStageIdx === 2) {
+        // [MAP 3: 기계 시계탑] - 황동, 청동 및 강철 기어 거더 텍스처 (주황색 완전 배제!)
+        if (plat.style === 'altar') {
+          texKey = 'tile_plat_clock';
+          borderCol = '#ffd740';
+          topTrimCol = '#ffe082';
+        } else if (plat.style === 'core') {
+          texKey = 'tile_plat_iron_gear';
+          borderCol = '#ffb300';
+          topTrimCol = '#fff9c4';
+        } else if (plat.style === 'stair') {
+          texKey = 'tile_plat_clock';
+          borderCol = '#bcaaa4';
+          topTrimCol = '#d7ccc8';
+        } else if (plat.style === 'detour') {
+          texKey = 'tile_plat_clock';
+          borderCol = '#8d6e63';
+          topTrimCol = '#bcaaa4';
+        } else if (plat.style === 'deadend') {
+          texKey = 'tile_plat_clock';
+          borderCol = '#5d4037';
+          topTrimCol = '#8d6e63';
+        } else if (plat.style === 'lift') {
+          texKey = 'tile_plat_iron_gear';
+          borderCol = '#ffd740';
+          topTrimCol = '#ffab00';
+        }
+      } else {
+        // [MAP 4: 심연 최종 탈출] - 암흑 고딕 흑요석 및 보라빛 심연 석조 텍스처
+        if (plat.style === 'altar') {
+          texKey = 'tile_plat_castle';
+          borderCol = '#ffd740';
+          topTrimCol = '#ea80fc';
+        } else if (plat.style === 'core') {
+          texKey = 'tile_plat_castle';
+          borderCol = '#b388ff';
+          topTrimCol = '#d1c4e9';
+        } else if (plat.style === 'stair') {
+          texKey = 'tile_plat_castle';
+          borderCol = '#7c4dff';
+          topTrimCol = '#b388ff';
+        } else if (plat.style === 'detour') {
+          texKey = 'tile_plat_castle';
+          borderCol = '#ab47bc';
+          topTrimCol = '#ce93d8';
+        } else if (plat.style === 'deadend') {
+          texKey = 'tile_plat_cursed_trap';
+          borderCol = '#ff1744';
+          topTrimCol = '#ff80ab';
+        } else if (plat.style === 'lift') {
+          texKey = 'tile_plat_castle';
+          borderCol = '#b388ff';
+          topTrimCol = '#ffd740';
+        }
+      }
+
+      var platImg = loadedImages[texKey] || loadedImages[st.platTex];
+
+      // Draw elevator shaft cables if it's the vertical continuous shaft elevator
+      if (plat.isShaftElevator) {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(212, 175, 55, 0.45)';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(plat.x + 14, 200);
+        ctx.lineTo(plat.x + 14, plat.y);
+        ctx.moveTo(plat.x + plat.w - 14, 200);
+        ctx.lineTo(plat.x + plat.w - 14, plat.y);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // Draw support pillars under Altar platforms
+      if (plat.style === 'altar') {
+        var pilImg = loadedImages['spr_pillar'];
+        if (pilImg && pilImg.complete) {
+          ctx.save();
+          ctx.globalAlpha *= 0.65;
+          ctx.drawImage(pilImg, plat.x + 12, plat.y + plat.h, 38, Math.max(40, st.worldH - (plat.y + plat.h)));
+          ctx.drawImage(pilImg, plat.x + plat.w - 50, plat.y + plat.h, 38, Math.max(40, st.worldH - (plat.y + plat.h)));
+          ctx.restore();
+        }
+      }
+
+      // Draw stepped geometry for 'stair'
+      if (plat.style === 'stair') {
+        var steps = 3;
+        var sw = plat.w / steps;
+        for (var s = 0; s < steps; s++) {
+          var sx = plat.x + s * sw;
+          var sy = plat.y + (s - 1) * 4;
+          if (platImg && platImg.complete) {
+            ctx.drawImage(platImg, 0, 0, Math.min(96, sw), 28, sx, sy, sw, plat.h);
+          } else {
+            ctx.fillStyle = '#37474f';
+            ctx.fillRect(sx, sy, sw, plat.h);
+          }
+          ctx.strokeStyle = borderCol;
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(sx, sy, sw, plat.h);
+          ctx.fillStyle = topTrimCol;
+          ctx.fillRect(sx, sy, sw, 3);
+        }
+      } else {
+        if (platImg && platImg.complete) {
+          for (var tx = 0; tx < plat.w; tx += 64) {
+            var drawW = Math.min(64, plat.w - tx);
+            ctx.drawImage(platImg, 0, 0, drawW, 28, plat.x + tx, plat.y, drawW, plat.h);
+          }
+        } else {
+          ctx.fillStyle = '#261b38';
+          ctx.fillRect(plat.x, plat.y, plat.w, plat.h);
+        }
+
+        if (plat.style === 'core') {
+          ctx.fillStyle = (state.currentStageIdx === 1) ? 'rgba(0, 229, 255, 0.22)' : 'rgba(255, 215, 64, 0.18)';
+          ctx.fillRect(plat.x, plat.y, plat.w, 5);
+          ctx.strokeStyle = borderCol;
+          ctx.lineWidth = 2.2;
+          ctx.strokeRect(plat.x, plat.y, plat.w, plat.h);
+        } else if (plat.style === 'lift') {
+          var gImg = loadedImages['spr_gear_large'];
+          if (gImg && gImg.complete) {
+            [plat.x + 8, plat.x + plat.w - 8].forEach(function(gx, gi) {
+              ctx.save();
+              ctx.translate(gx, plat.y + plat.h * 0.5);
+              ctx.rotate(state.player.animTick * 0.06 * (gi === 0 ? 1 : -1));
+              ctx.drawImage(gImg, -16, -16, 32, 32);
+              ctx.restore();
+            });
+          }
+          ctx.strokeStyle = borderCol;
+          ctx.lineWidth = 2.2;
+          ctx.strokeRect(plat.x, plat.y, plat.w, plat.h);
+        } else if (plat.style === 'warp') {
+          ctx.strokeStyle = '#e040fb';
+          ctx.lineWidth = 2.4;
+          ctx.strokeRect(plat.x, plat.y, plat.w, plat.h);
+          var portalSpr = loadedImages['spr_portal_f1'];
+          if (portalSpr && portalSpr.complete) {
+            ctx.drawImage(portalSpr, plat.x + plat.w * 0.5 - 20, plat.y - 20, 40, 24);
+          }
+        } else if (plat.style === 'detour') {
+          ctx.strokeStyle = borderCol;
+          ctx.lineWidth = 2;
+          ctx.strokeRect(plat.x, plat.y, plat.w, plat.h);
+          if (state.currentStageIdx === 0) {
+            var spk = loadedImages['tile_spikes_blood'];
+            if (spk && spk.complete) {
+              for (var sx2 = plat.x; sx2 < plat.x + plat.w - 16; sx2 += 48) {
+                ctx.drawImage(spk, sx2, plat.y - 8, 36, 9);
+              }
+            }
+          } else if (state.currentStageIdx === 1) {
+            var spkIce = loadedImages['tile_spikes_ice'];
+            if (spkIce && spkIce.complete) {
+              for (var sx2 = plat.x; sx2 < plat.x + plat.w - 16; sx2 += 48) {
+                ctx.drawImage(spkIce, sx2, plat.y - 8, 36, 9);
+              }
+            }
+          } else if (state.currentStageIdx === 2) {
+            ctx.fillStyle = '#ffb300';
+            for (var rx = plat.x + 8; rx < plat.x + plat.w - 8; rx += 24) {
+              ctx.beginPath();
+              ctx.arc(rx, plat.y + 4, 2, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          } else {
+            ctx.fillStyle = 'rgba(255, 23, 68, 0.4)';
+            ctx.fillRect(plat.x, plat.y, plat.w, 4);
+          }
+        } else if (plat.style === 'deadend') {
+          ctx.strokeStyle = borderCol;
+          ctx.setLineDash([6, 4]);
+          ctx.lineWidth = 2;
+          ctx.strokeRect(plat.x, plat.y, plat.w, plat.h);
+          ctx.setLineDash([]);
+        } else {
+          ctx.strokeStyle = borderCol;
+          ctx.lineWidth = 2;
+          ctx.strokeRect(plat.x, plat.y, plat.w, plat.h);
+          ctx.fillStyle = topTrimCol;
+          ctx.fillRect(plat.x, plat.y, plat.w, 3);
+        }
+      }
+      ctx.restore();
+    }
+
+    function drawMainGame() {
+      var ctx = gameCanvas.getContext('2d');
+      ctx.imageSmoothingEnabled = false;
+      var st = STAGES[state.currentStageIdx];
+      var stats = getRemovableNoiseStats();
+      var isAbstractMode = state.abstractSight || (stats.removed >= stats.total);
+
+      // 1. Base Sky / Cavern Backdrop
+      var grad = ctx.createLinearGradient(0, 0, 0, 480);
+      grad.addColorStop(0, st.themeBg[0]);
+      grad.addColorStop(0.68, st.themeBg[1]);
+      grad.addColorStop(1, '#07040b');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1320, 480);
+
+      // World Transform: fit entire worldW/worldH in wideOverview, or smooth camera follow
+      ctx.save();
+      if (state.wideOverview) {
+        ctx.scale(1320 / st.worldW, 480 / st.worldH);
+      } else {
+        ctx.translate(-Math.round(state.cameraX), -Math.round(state.cameraY || 0));
+      }
+
+      // 2. Background Architecture
+      ctx.save();
+      ctx.globalAlpha = isAbstractMode ? 0.15 : 0.78;
+      var bgTile0 = loadedImages[st.tileSheet0];
+      var bgTile1 = loadedImages[st.tileSheet1];
+
+      if (state.currentStageIdx === 2) {
+        var clockWall = loadedImages['tile_clock_wall'];
+        if (clockWall && clockWall.complete) {
+          for (var cwx = 0; cwx < st.worldW; cwx += 128) {
+            for (var cwy = 36; cwy < st.worldH - 50; cwy += 128) {
+              ctx.drawImage(clockWall, cwx, cwy, 128, 128);
+            }
+          }
+        }
+        var gearImg = loadedImages['spr_gear_large'];
+        if (gearImg && gearImg.complete) {
+          for (var gxBg = 160; gxBg < st.worldW; gxBg += 280) {
+            ctx.save();
+            ctx.translate(gxBg, 195 + (gxBg % 3) * 35);
+            ctx.rotate(state.player.animTick * 0.008 * (gxBg % 560 === 0 ? 1 : -1));
+            ctx.globalAlpha = isAbstractMode ? 0.12 : 0.52;
+            ctx.drawImage(gearImg, -75, -75, 150, 150);
+            ctx.restore();
+          }
+        }
+        if (bgTile0 && bgTile0.complete && bgTile1 && bgTile1.complete) {
+          for (var cmx = 20; cmx < st.worldW; cmx += 256) {
+            ctx.drawImage(bgTile0, cmx, 60, 128, 128);
+            ctx.drawImage(bgTile1, cmx + 128, 60, 128, 128);
+            ctx.drawImage(bgTile0, cmx, 240, 128, 128);
+            ctx.drawImage(bgTile1, cmx + 128, 240, 128, 128);
+          }
+        }
+      } else {
+        for (var wx = 38; wx < st.worldW; wx += 128) {
+          ctx.fillStyle = st.themeBg[1];
+          ctx.fillRect(wx, 42, 82, st.worldH - 100);
+        }
+        if (bgTile0 && bgTile0.complete) {
+          for (var bx = 0; bx < st.worldW; bx += 128) {
+            for (var by = 38; by < st.worldH - 60; by += 260) {
+              ctx.drawImage(bgTile0, 0, 0, 128, 110, bx, by, 128, 130);
+              if (bgTile1 && bgTile1.complete) {
+                ctx.drawImage(bgTile1, 0, 0, 128, 110, bx, by + 130, 128, 130);
+              }
+            }
+          }
+        }
+      }
+
+      var pillarImg = loadedImages['spr_pillar'];
+      if (pillarImg && pillarImg.complete) {
+        for (var px = 20; px < st.worldW; px += 260) {
+          ctx.drawImage(pillarImg, px, 130, 50, st.worldH - 180);
+        }
+      }
+      ctx.restore();
+
+      // 3. Bottom Hazard Textures & Instant Death Pit
+      ctx.save();
+      var bHazY = st.worldH - 46;
+      if (state.currentStageIdx === 0) {
+        var hazLava = loadedImages['tile_haz_lava'];
+        if (hazLava && hazLava.complete) {
+          for (var lx = 0; lx < st.worldW; lx += 128) {
+            ctx.drawImage(hazLava, 0, 48, 128, 64, lx, bHazY, 128, 46);
+          }
+        }
+        var fireImg = loadedImages[(Math.floor(state.player.animTick / 9) % 2 === 0) ? 'spr_fire_f1' : 'spr_fire_f2'];
+        if (fireImg && fireImg.complete) {
+          for (var fx = 12; fx < st.worldW; fx += 78) {
+            ctx.drawImage(fireImg, fx, bHazY - 16, 40, 56);
+          }
+        }
+      } else if (state.currentStageIdx === 1) {
+        var hazIce = loadedImages['tile_haz_glacier'];
+        if (hazIce && hazIce.complete) {
+          for (var ix = 0; ix < st.worldW; ix += 128) {
+            ctx.drawImage(hazIce, 0, 64, 128, 64, ix, bHazY, 128, 44);
+          }
+        }
+        var spkIce = loadedImages['tile_spikes_ice'];
+        if (spkIce && spkIce.complete) {
+          for (var sx = 0; sx < st.worldW; sx += 64) {
+            ctx.drawImage(spkIce, sx, bHazY - 2, 64, 20);
+          }
+        }
+      } else if (state.currentStageIdx === 2) {
+        var gearPit = loadedImages['spr_gear_large'];
+        if (gearPit && gearPit.complete) {
+          for (var gx = 30; gx < st.worldW; gx += 115) {
+            ctx.save();
+            ctx.translate(gx, bHazY + 20);
+            ctx.rotate(state.player.animTick * 0.025 * (gx % 230 === 0 ? 1 : -1));
+            ctx.drawImage(gearPit, -40, -40, 80, 80);
+            ctx.restore();
+          }
+        }
+        var spkSteel = loadedImages['tile_spikes_steel'];
+        if (spkSteel && spkSteel.complete) {
+          for (var stx = 0; stx < st.worldW; stx += 64) {
+            ctx.drawImage(spkSteel, stx, bHazY - 2, 64, 22);
+          }
+        }
+      } else {
+        // MAP 4 HARD MODE: Impregnable Dark Gothic Castle & Cursed Instant Death Abyss Pit
+        // 1. Deep abyss chasm background glow
+        var pitGrad = ctx.createLinearGradient(0, bHazY - 40, 0, st.worldH);
+        pitGrad.addColorStop(0, 'rgba(10, 2, 6, 0.1)');
+        pitGrad.addColorStop(0.4, 'rgba(74, 8, 18, 0.85)');
+        pitGrad.addColorStop(1, 'rgba(183, 28, 28, 0.95)');
+        ctx.fillStyle = pitGrad;
+        ctx.fillRect(0, bHazY - 30, st.worldW, 76);
+
+        // 2. Weathered Dark Obsidian Stone Floor Foundation
+        var platCastle = loadedImages['tile_plat_castle'];
+        if (platCastle && platCastle.complete) {
+          for (var cx = 0; cx < st.worldW; cx += 96) {
+            ctx.drawImage(platCastle, cx, bHazY - 10, 96, 32);
+          }
+        }
+
+        // 3. Dual-Layer Staggered Blood Spikes (고성 심연 즉사 가시)
+        var spkSteel = loadedImages['tile_spikes_steel'];
+        var spkBlood = loadedImages['tile_spikes_blood'];
+        if (spkSteel && spkSteel.complete) {
+          ctx.save();
+          ctx.globalAlpha = 0.55;
+          for (var ssx = 32; ssx < st.worldW; ssx += 64) {
+            ctx.drawImage(spkSteel, ssx, bHazY - 32, 64, 26);
+          }
+          ctx.restore();
+        }
+        if (spkBlood && spkBlood.complete) {
+          for (var bsx = 0; bsx < st.worldW; bsx += 64) {
+            ctx.drawImage(spkBlood, bsx, bHazY - 24, 64, 24);
+          }
+        }
+
+        // 4. Impaled Skull & Bone Relics along the Trench
+        var skullImg = loadedImages['spr_dest_skull'];
+        if (skullImg && skullImg.complete) {
+          for (var skx = 70; skx < st.worldW; skx += 160) {
+            ctx.drawImage(skullImg, skx, bHazY - 20, 24, 24);
+          }
+        }
+
+        // 5. Rising Cursed Blood Miasma Wave
+        var miasmaWave = Math.sin(state.player.animTick * 0.08) * 4;
+        ctx.fillStyle = 'rgba(255, 23, 68, 0.18)';
+        ctx.fillRect(0, bHazY - 18 + miasmaWave, st.worldW, 14);
+
+        // 6. Draw Menacing Gothic Warning Emblems
+        if (st.instantHazards) {
+          st.instantHazards.forEach(function(ih) {
+            ctx.save();
+            if (ih.r) {
+              var radGlow = ctx.createRadialGradient(ih.x, ih.y, 4, ih.x, ih.y, ih.r);
+              radGlow.addColorStop(0, 'rgba(255, 23, 68, 0.45)');
+              radGlow.addColorStop(1, 'rgba(183, 28, 28, 0.15)');
+              ctx.fillStyle = radGlow;
+              ctx.strokeStyle = '#ff1744';
+              ctx.lineWidth = 2.5;
+              ctx.beginPath();
+              ctx.arc(ih.x, ih.y, ih.r, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.stroke();
+            } else {
+              ctx.strokeStyle = '#ff1744';
+              ctx.lineWidth = 2;
+              ctx.strokeRect(ih.x, ih.y, ih.w, ih.h);
+            }
+            ctx.font = 'bold 12px "Noto Serif KR", "Nanum Myeongjo", serif';
+            ctx.fillStyle = '#ff8a80';
+            ctx.textAlign = 'center';
+            ctx.fillText(ih.name, ih.x + (ih.w ? ih.w * 0.5 : 0), (ih.y ? ih.y - 12 : 40));
+            ctx.restore();
+          });
+        }
+      }
+
+      // [맵별 고유 특색 장애물 렌더링: 각 스테이지 고유의 물리 위험 요소 - 정통 캐슬바니아 스프라이트 렌더링]
+      if (st.pendulums) {
+        st.pendulums.forEach(function(pend) {
+          var ang = pend.curAngle || 0;
+          ctx.save();
+          ctx.translate(pend.x, pend.y);
+
+          if (state.currentStageIdx === 0) {
+            // [MAP 1: 용암 지하성당] 정통 황금 화염 단두도끼 (Golden Flame Guillotine Axe)
+            ctx.rotate(ang);
+            var axeImg = loadedImages['tile_axe_gold'] || loadedImages['tile_guillotine'];
+            if (axeImg && axeImg.complete) {
+              ctx.fillStyle = '#ffb300';
+              ctx.beginPath();
+              ctx.arc(0, 0, 5, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.drawImage(axeImg, -15, 0, 54, pend.len);
+            }
+          } else if (state.currentStageIdx === 1) {
+            // [MAP 2: 빙하 수로 미궁] 정통 청빙 얼음 단두도끼 (Glacial Frost Guillotine)
+            ctx.rotate(ang);
+            var axeImg = loadedImages['tile_axe_frost_guillotine'] || loadedImages['tile_guillotine'];
+            if (axeImg && axeImg.complete) {
+              ctx.fillStyle = '#80deea';
+              ctx.beginPath();
+              ctx.arc(0, 0, 5, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.drawImage(axeImg, -26, 0, 52, pend.len);
+            }
+          } else if (state.currentStageIdx === 2) {
+            // [MAP 3: 기계 시계탑] 정통 시계탑 강철 진자 단두도끼 (Steel Clock Pendulum Guillotine)
+            ctx.rotate(ang);
+            var axeImg = loadedImages['tile_guillotine'];
+            if (axeImg && axeImg.complete) {
+              ctx.fillStyle = '#cfd8dc';
+              ctx.beginPath();
+              ctx.arc(0, 0, 5, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.drawImage(axeImg, -27, 0, 52, pend.len);
+            }
+          } else {
+            // [MAP 4: 심연 최종 탈출] 거대 진자단두추 (Abyssal Pendulum Blade)
+            ctx.rotate(ang);
+            var axeImg = loadedImages['tile_guillotine'];
+            if (axeImg && axeImg.complete) {
+              ctx.fillStyle = '#ff1744';
+              ctx.beginPath();
+              ctx.arc(0, 0, 6, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.drawImage(axeImg, -27, 0, 52, pend.len);
+            }
+            if (pend.instantKill) {
+              ctx.strokeStyle = '#ff1744';
+              ctx.lineWidth = 2.5;
+              ctx.beginPath();
+              ctx.arc(0, pend.len - 14, 26, 0.1, Math.PI - 0.1);
+              ctx.stroke();
+              ctx.fillStyle = '#ff1744';
+              ctx.font = 'bold 11px "Noto Serif KR", "Nanum Myeongjo", serif';
+              ctx.textAlign = 'center';
+              ctx.fillText('💀즉사단두대', 0, pend.len + 14);
+            }
+          }
+          ctx.restore();
+        });
+      }
+
+      // [벽면 및 레일 탑재형 정통 장애물: 인화차 및 거대 기어]
+      if (st.wallHazards) {
+        st.wallHazards.forEach(function(wh) {
+          ctx.save();
+          ctx.translate(wh.x, wh.y);
+          if (wh.type === 'flame_skull_wheel') {
+            // Draw rail line
+            if (wh.minX !== undefined && wh.maxX !== undefined) {
+              ctx.save();
+              ctx.translate(-wh.x, -wh.y);
+              ctx.strokeStyle = '#3e2723';
+              ctx.lineWidth = 5;
+              ctx.beginPath();
+              ctx.moveTo(wh.minX, wh.y + 24);
+              ctx.lineTo(wh.maxX, wh.y + 24);
+              ctx.stroke();
+              ctx.strokeStyle = '#d84315';
+              ctx.lineWidth = 1.5;
+              ctx.beginPath();
+              ctx.moveTo(wh.minX, wh.y + 23);
+              ctx.lineTo(wh.maxX, wh.y + 23);
+              ctx.stroke();
+              ctx.restore();
+            }
+            var wheelImg = loadedImages['spr_flame_skull_wheel'];
+            if (wheelImg && wheelImg.complete) {
+              var rot = (wh.x || 0) * 0.08 + (state.player.animTick * 0.04);
+              ctx.rotate(rot);
+              ctx.drawImage(wheelImg, -24, -24, 48, 48);
+            }
+            // Warning tag
+            ctx.fillStyle = 'rgba(183, 28, 28, 0.9)';
+            ctx.strokeStyle = '#ff5722';
+            ctx.lineWidth = 1;
+            ctx.font = 'bold 9px "Noto Serif KR", serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(wh.shortTag || '🔥인화차', 0, -28);
+          } else if (wh.type === 'gear_large') {
+            var gearImg = loadedImages['spr_gear_large'];
+            if (gearImg && gearImg.complete) {
+              var gRot = state.player.animTick * (wh.rotSpd || 0.03);
+              ctx.rotate(gRot);
+              ctx.drawImage(gearImg, -42, -42, 84, 84);
+              ctx.fillStyle = '#ffd54f';
+              ctx.beginPath();
+              ctx.arc(0, 0, 7, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+          ctx.restore();
+        });
+      }
+      ctx.restore();
+
+      // 4. Draw Graph Edges
+      st.edges.forEach(function(ed) {
+        var n1 = st.nodes.find(function(n){ return n.id === ed.from; });
+        var n2 = st.nodes.find(function(n){ return n.id === ed.to; });
+        if (!n1 || !n2) return;
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(n1.x, n1.y);
+        ctx.lineTo(n2.x, n2.y);
+        if (ed.broken || ed.deadEnd) {
+          ctx.strokeStyle = isAbstractMode ? '#ff5252' : 'rgba(255,82,82,0.45)';
+          ctx.setLineDash([7, 6]);
+          ctx.lineWidth = isAbstractMode ? 3.2 : 1.8;
+        } else if (ed.optimal) {
+          ctx.strokeStyle = isAbstractMode ? '#00e5ff' : 'rgba(0,229,255,0.52)';
+          ctx.lineWidth = isAbstractMode ? 4.4 : 2.4;
+        } else {
+          ctx.strokeStyle = isAbstractMode ? 'rgba(255,112,67,0.45)' : 'rgba(176,168,194,0.28)';
+          ctx.lineWidth = 1.8;
+        }
+        ctx.stroke();
+
+        var mx = (n1.x + n2.x) * 0.5;
+        var my = (n1.y + n2.y) * 0.5 + (ed.labelDy || -14);
+        ctx.font = 'bold 11px "Noto Serif KR", "Nanum Myeongjo", serif';
+        var tw = ctx.measureText(ed.cost).width + 12;
+        ctx.fillStyle = isAbstractMode ? 'rgba(9,7,14,0.92)' : 'rgba(9,7,14,0.82)';
+        ctx.strokeStyle = ed.optimal ? '#00e5ff' : '#8d6e32';
+        ctx.lineWidth = 1;
+        ctx.fillRect(mx - tw/2, my - 9, tw, 18);
+        ctx.strokeRect(mx - tw/2, my - 9, tw, 18);
+        ctx.fillStyle = ed.broken || ed.deadEnd ? '#ff8a80' : (ed.optimal ? '#80deea' : '#ffe07d');
+        ctx.textAlign = 'center';
+        ctx.fillText(ed.cost, mx, my + 4);
+        ctx.restore();
+      });
+
+      // 5. Draw Platforms
+      st.platforms.forEach(function(plat) {
+        drawDistinctPlatform(ctx, plat, st, isAbstractMode);
+      });
+
+      // 6. Draw Nodes
+      st.nodes.forEach(function(nd, nIdx) {
+        var isGoal = (nIdx === st.nodes.length - 1);
+        var isStart = (nIdx === 0);
+        if (isGoal) {
+          var doorImg = loadedImages[state.currentStageGoalReached ? 'spr_door_open' : 'spr_door_closed'];
+          var portalImg = loadedImages['spr_portal_f1'];
+          if (portalImg && portalImg.complete) {
+            ctx.drawImage(portalImg, nd.x - 32, nd.y - 22, 64, 48);
+          }
+          if (doorImg && doorImg.complete) {
+            ctx.drawImage(doorImg, nd.x - 16, nd.y - 46, 32, 64);
+          }
+        }
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(nd.x, nd.y, isAbstractMode ? 9 : 6.5, 0, Math.PI * 2);
+        ctx.fillStyle = isGoal ? '#ff4081' : (isStart ? '#ffd740' : (isAbstractMode ? '#00e5ff' : '#d4af37'));
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#fff';
+        ctx.stroke();
+
+        // [심사위원 시인성 개선] 노드 라벨 폰트 크기 확대 및 위치 자동 보정 (플랫폼/천장과 겹침 방지)
+        ctx.font = 'bold 12.5px "Noto Serif KR", "Nanum Myeongjo", serif';
+        var ntw = ctx.measureText(nd.label).width + 16;
+        var labelY = (nd.labelDy != null) ? (nd.y + nd.labelDy) : (nd.y - 20);
+        ctx.fillStyle = 'rgba(8, 6, 14, 0.95)';
+        ctx.strokeStyle = isGoal ? '#ff4081' : (isStart ? '#ffd740' : '#80deea');
+        ctx.lineWidth = 1.3;
+        ctx.fillRect(nd.x - ntw/2, labelY - 14, ntw, 20);
+        ctx.strokeRect(nd.x - ntw/2, labelY - 14, ntw, 20);
+        ctx.fillStyle = isGoal ? '#ff80ab' : (isStart ? '#ffe082' : '#ffffff');
+        ctx.textAlign = 'center';
+        ctx.fillText(nd.label, nd.x, labelY + 1);
+        ctx.restore();
+      });
+
+      // 7. Draw Moving Monsters & Traps with Explicit Warning Icons!
+      st.noises.forEach(function(nz) {
+        if (nz.hit) return;
+        ctx.save();
+        if (state.abstractSight && !nz.immortal) {
+          ctx.globalAlpha = 0.22;
+        }
+
+        // Draw Pulsing Hazard Alert Aura under Traps
+        if (nz.type === 'trap') {
+          ctx.save();
+          var pulseAlpha = 0.25 + Math.sin(state.player.animTick * 0.1) * 0.15;
+          ctx.fillStyle = 'rgba(255, 23, 68, ' + pulseAlpha + ')';
+          ctx.strokeStyle = '#ff1744';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(nz.x + nz.w * 0.5, nz.y + nz.h * 0.5, Math.max(nz.w, nz.h) * 0.65, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        var useFrame2 = (Math.floor(state.player.animTick / 11) % 2 === 1) && nz.sprite2;
+        var spr = loadedImages[useFrame2 ? nz.sprite2 : nz.sprite];
+        if (spr && spr.complete) {
+          ctx.save();
+          ctx.translate(nz.x + nz.w * 0.5, nz.y + nz.h * 0.5);
+          if (nz.sprite === 'spr_flame_skull_wheel') {
+            ctx.rotate(nz.x * 0.08);
+          } else if (nz.vx && nz.vx > 0) {
+            ctx.scale(-1, 1);
+          }
+          ctx.drawImage(spr, -nz.w * 0.5, -nz.h * 0.5, nz.w, nz.h);
+          ctx.restore();
+        } else {
+          ctx.fillStyle = '#e53935';
+          ctx.fillRect(nz.x, nz.y, nz.w, nz.h);
+        }
+
+        // Draw HP bar for elite 5-hit monsters
+        if (nz.maxHp && nz.hp !== undefined && !nz.hit) {
+          var barW = 54, barH = 5;
+          var barX = nz.x + nz.w * 0.5 - barW * 0.5;
+          var barY = nz.y - 8;
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+          ctx.fillRect(barX - 1, barY - 1, barW + 2, barH + 2);
+          var hpRatio = Math.max(0, nz.hp / nz.maxHp);
+          ctx.fillStyle = hpRatio > 0.5 ? '#00e676' : (hpRatio > 0.25 ? '#ffd600' : '#ff1744');
+          ctx.fillRect(barX, barY, barW * hpRatio, barH);
+        }
+
+        var tagStr = nz.shortTag || nz.name;
+        ctx.font = 'bold 9.5px "Noto Serif KR", "Nanum Myeongjo", serif';
+        var bw = ctx.measureText(tagStr).width + 8;
+        var bx = nz.x + nz.w * 0.5 - bw * 0.5;
+        var by = nz.y - 16;
+        ctx.fillStyle = nz.immortal ? 'rgba(183, 28, 28, 0.95)' : (nz.type === 'trap' ? 'rgba(183, 28, 28, 0.92)' : 'rgba(140, 14, 30, 0.9)');
+        ctx.strokeStyle = nz.immortal ? '#ffd740' : (nz.type === 'trap' ? '#ff1744' : '#ff5252');
+        ctx.lineWidth = nz.immortal ? 1.5 : 1;
+        ctx.fillRect(bx, by, bw, 14);
+        ctx.strokeRect(bx, by, bw, 14);
+        ctx.fillStyle = nz.immortal ? '#ffe07d' : '#fff';
+        ctx.textAlign = 'center';
+        ctx.fillText(tagStr, nz.x + nz.w * 0.5, by + 10);
+        ctx.restore();
+      });
+
+      // 8. Draw Remote Pruning Bolts
+      state.bolts.forEach(function(b) {
+        ctx.save();
+        ctx.strokeStyle = b.color;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(b.x1, b.y1);
+        ctx.lineTo(b.x2, b.y2);
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // 8-2. Draw Abyssal Shockwaves (심연 수문장 단죄 참격파)
+      if (state.hazardProjectiles && state.hazardProjectiles.length > 0) {
+        state.hazardProjectiles.forEach(function(hp) {
+          ctx.save();
+          ctx.translate(hp.x, hp.y);
+          // Energy Core
+          ctx.fillStyle = '#ba68c8';
+          ctx.beginPath();
+          ctx.arc(0, 0, hp.r * 0.7, 0, Math.PI * 2);
+          ctx.fill();
+          // Crescent Blade Arc
+          ctx.strokeStyle = '#ea80fc';
+          ctx.lineWidth = 3.5;
+          ctx.beginPath();
+          var startA = hp.vx > 0 ? -Math.PI * 0.5 : Math.PI * 0.5;
+          var endA = hp.vx > 0 ? Math.PI * 0.5 : -Math.PI * 0.5;
+          ctx.arc(0, 0, hp.r + 2, startA, endA, hp.vx < 0);
+          ctx.stroke();
+          ctx.restore();
+        });
+      }
+
+      // [사용자 요청 튜토리얼] 맵 1 진입 시 첫 함정 위치에 간결한 안내 말풍선 표시
+      if (st.id === 'T03' && stats.removed === 0 && state.player.x < 360) {
+        var tipMsg = (state.controlMode === 'click') ? '💡 함정이 있다면 클릭으로 제거해볼까요?' : '💡 함정이 있다면 스페이스로 제거해볼까요?';
+        ctx.save();
+        var tipX = 230, tipY = 115;
+        ctx.font = 'bold 12.5px "Noto Serif KR", "Nanum Myeongjo", serif';
+        var ttw = ctx.measureText(tipMsg).width + 22;
+        var pulse = Math.sin(state.player.animTick * 0.1) * 3;
+        ctx.fillStyle = 'rgba(16, 12, 24, 0.94)';
+        ctx.strokeStyle = '#ffd740';
+        ctx.lineWidth = 1.6;
+        ctx.shadowColor = 'rgba(255, 215, 64, 0.5)';
+        ctx.shadowBlur = 8;
+        ctx.fillRect(tipX - ttw/2, tipY - 14 + pulse, ttw, 24);
+        ctx.strokeRect(tipX - ttw/2, tipY - 14 + pulse, ttw, 24);
+        ctx.fillStyle = '#ffe082';
+        ctx.textAlign = 'center';
+        ctx.fillText(tipMsg, tipX, tipY + 3 + pulse);
+        ctx.beginPath();
+        ctx.moveTo(tipX - 6, tipY + 10 + pulse);
+        ctx.lineTo(tipX + 6, tipY + 10 + pulse);
+        ctx.lineTo(tipX, tipY + 18 + pulse);
+        ctx.fillStyle = '#ffd740';
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // 9. Draw Student Protagonist
+      var p = state.player;
+      ctx.save();
+      if (p.invulnTimer > 0 && Math.floor(p.invulnTimer / 3) % 2 === 1) {
+        ctx.globalAlpha = 0.45;
+      }
+      ctx.translate(p.x + 16, p.y + 20);
+      ctx.scale(p.facing, 1);
+
+      var sprKey = 'spr_student_idle';
+      if (p.attackTimer > 0) {
+        sprKey = 'spr_student_atk';
+      } else if (keys['ArrowLeft'] || keys['ArrowRight'] || keys['KeyA'] || keys['KeyD'] || p.autoWaypoints) {
+        sprKey = (Math.floor(p.animTick / 7) % 2 === 0) ? 'spr_student_run1' : 'spr_student_run2';
+      }
+      var stuImg = loadedImages[sprKey];
+      if (stuImg && stuImg.complete) {
+        ctx.drawImage(stuImg, -16, -20, 32, 40);
+      }
+
+      if (p.attackTimer > 0) {
+        if (state.unlockedValmanway) {
+                    // [전설의 비검] 4연격 전방 팽창 진공 칼바람(真空波)
+          var tick = p.animTick || 0;
+          var waves = [
+            { dx: 24, dy: -22, w: 52, h: 36, rot: -0.22, col: '#00e676', bg: 'rgba(0, 230, 118, 0.45)' },
+            { dx: 48, dy: -6,  w: 68, h: 44, rot: 0.05,  col: '#1de9b6', bg: 'rgba(29, 233, 182, 0.50)' },
+            { dx: 34, dy: 14,  w: 58, h: 38, rot: 0.26,  col: '#00e676', bg: 'rgba(0, 230, 118, 0.45)' },
+            { dx: 72, dy: 3,   w: 80, h: 50, rot: -0.06, col: '#00e5ff', bg: 'rgba(0, 229, 255, 0.55)' }
+          ];
+
+          waves.forEach(function(wv, idx) {
+            ctx.save();
+            ctx.translate(wv.dx, wv.dy);
+            ctx.rotate(wv.rot);
+
+            var alpha = Math.max(0.35, (p.attackTimer / 6));
+            ctx.globalAlpha = alpha;
+
+            // 1. 에메랄드 네온 초승달 진공 칼바람 면 (Filled Crescent Body)
+            ctx.beginPath();
+            ctx.moveTo(-14, -wv.h * 0.5);
+            ctx.quadraticCurveTo(wv.w, 0, -14, wv.h * 0.5);
+            ctx.quadraticCurveTo(wv.w * 0.52, 0, -14, -wv.h * 0.5);
+            ctx.closePath();
+            ctx.fillStyle = wv.bg;
+            ctx.shadowColor = wv.col;
+            ctx.shadowBlur = 14;
+            ctx.fill();
+
+            // 2. 외곽 절단선 (Razor Edge Stroke)
+            ctx.strokeStyle = wv.col;
+            ctx.lineWidth = 3.2;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+
+            // 3. 순백 코어 절단면 (Razor White Spine)
+            ctx.shadowBlur = 6;
+            ctx.shadowColor = '#ffffff';
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.8;
+            ctx.beginPath();
+            ctx.moveTo(-10, -wv.h * 0.42);
+            ctx.quadraticCurveTo(wv.w * 0.88, 0, -10, wv.h * 0.42);
+            ctx.stroke();
+
+            // 4. 카마이타치 풍압 잔상선 (Wind Speed Streaks)
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = 'rgba(224, 255, 250, 0.55)';
+            ctx.lineWidth = 1.4;
+            ctx.beginPath();
+            ctx.moveTo(-28, -wv.h * 0.3);
+            ctx.quadraticCurveTo(wv.w * 0.35, 0, -12, wv.h * 0.3);
+            ctx.stroke();
+
+            ctx.restore();
+          });
+
+          // 전방 십자 절단 섬광 (Cross-Cutting Flash Sparks)
+          ctx.save();
+          ctx.translate(68, 0);
+          ctx.rotate((tick * 0.45) % Math.PI);
+          ctx.shadowColor = '#00e676';
+          ctx.shadowBlur = 14;
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2.6;
+          ctx.beginPath();
+          ctx.moveTo(-18, 0); ctx.lineTo(18, 0);
+          ctx.moveTo(0, -18); ctx.lineTo(0, 18);
+          ctx.stroke();
+          ctx.restore();        } else {
+          var wpnImg = loadedImages[st.weaponSprite];
+          if (wpnImg && wpnImg.complete) {
+            ctx.drawImage(wpnImg, 8, -22, 84, 36);
+          }
+          ctx.strokeStyle = '#e2c481';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.arc(18, -4, 44, -0.7, 0.7);
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+
+      ctx.fillStyle = '#ffe07d';
+      ctx.font = 'bold 10.5px "Noto Serif KR", "Nanum Myeongjo", serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🎓' + state.student.nickname, p.x + 16, p.y - 6);
+
+      // 10. Particles & Floating Texts
+      state.particles.forEach(function(pt) {
+        ctx.fillStyle = pt.color;
+        ctx.fillRect(pt.x, pt.y, 4, 4);
+      });
+      state.floatingTexts.forEach(function(ft) {
+        ctx.fillStyle = 'rgba(9,7,14,0.85)';
+        ctx.font = 'bold 11.5px "Noto Serif KR", "Nanum Myeongjo", serif';
+        var ftw = ctx.measureText(ft.text).width + 10;
+        ctx.fillRect(ft.x - ftw/2, ft.y - 12, ftw, 16);
+        ctx.fillStyle = ft.color;
+        ctx.textAlign = 'center';
+        ctx.fillText(ft.text, ft.x, ft.y);
+      });
+
+      ctx.restore(); // End World Transform
+
+      // 11. Top-Left HUD
+      ctx.save();
+      ctx.fillStyle = 'rgba(12, 8, 22, 0.92)';
+      ctx.strokeStyle = p.invulnTimer > 0 ? '#ff5252' : '#d4af37';
+      ctx.lineWidth = 2;
+      ctx.fillRect(14, 10, 370, 50);
+      ctx.strokeRect(14, 10, 370, 50);
+
+      var hpRatio = Math.max(0, p.hp / p.maxHp);
+      ctx.fillStyle = hpRatio < 0.35 ? '#ff5252' : '#ffe07d';
+      ctx.font = 'bold 13px "Cinzel", serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('HP ' + p.hp + '/' + p.maxHp, 24, 29);
+
+      ctx.fillStyle = '#3a1018';
+      ctx.fillRect(118, 18, 135, 10);
+      ctx.fillStyle = hpRatio > 0.5 ? '#ff1744' : (hpRatio > 0.25 ? '#ff9100' : '#ffea00');
+      ctx.fillRect(118, 18, Math.round(135 * hpRatio), 10);
+
+      ctx.fillStyle = '#b0a8c2';
+      ctx.font = 'bold 10px "Noto Serif KR", "Nanum Myeongjo", serif';
+      ctx.fillText(state.controlMode === 'wasd' ? '🎮 WASD 컨트롤' : '🖱️ 클릭 탐험 모드', 260, 27);
+
+      ctx.fillStyle = state.unlockedValmanway ? '#a7ffeb' : '#dcd6cd';
+      ctx.font = 'bold 11px "Cinzel", "Noto Serif KR", "Nanum Myeongjo", serif';
+      var curWpnName = state.unlockedValmanway ? '👑 전설의 비검 (Gale Blade)' : st.weaponName;
+      ctx.fillText('무기: ' + curWpnName, 24, 48);
+
+      // Top-Right World Radar
+      var radarW = 280, radarH = 26, radarX = 1320 - radarW - 14, radarY = 12;
+      ctx.fillStyle = 'rgba(12, 8, 22, 0.88)';
+      ctx.strokeStyle = '#a88438';
+      ctx.lineWidth = 1.5;
+      ctx.fillRect(radarX, radarY, radarW, radarH);
+      ctx.strokeRect(radarX, radarY, radarW, radarH);
+      var startNode = st.nodes[0];
+      var goalNode = st.nodes[st.nodes.length - 1];
+      var totalDistX = Math.max(1, goalNode.x - startNode.x);
+      var currentDistX = Math.max(0, (p.x + 16) - startNode.x);
+      var stuRatio = Math.min(1.0, Math.max(0, currentDistX / totalDistX));
+      // Only reach 100% when physically at or past the gate!
+      if ((p.x + 16) >= goalNode.x - 50) {
+        stuRatio = 1.0;
+      } else if (stuRatio > 0.99) {
+        stuRatio = 0.99;
+      }
+      ctx.fillStyle = 'rgba(168, 132, 56, 0.35)';
+      ctx.fillRect(radarX + 2, radarY + 2, Math.round((radarW - 4) * stuRatio), radarH - 4);
+      ctx.fillStyle = '#e2c481';
+      ctx.font = 'bold 11px "Cinzel", "Noto Serif KR", "Nanum Myeongjo", serif';
+      ctx.textAlign = 'center';
+      var depthText = st.worldH > 480 ? ' (심연 2배 960px)' : '';
+      ctx.fillText('가로 진행도: ' + Math.round(stuRatio * 100) + '%' + depthText, radarX + radarW * 0.5, radarY + 17);
+      ctx.restore();
+
+      // 12. Game Over Overlay
+      if (state.gameOver) {
+        ctx.save();
+        var overAlpha = Math.min(0.88, state.gameOverTick / 35);
+        ctx.fillStyle = 'rgba(12, 2, 5, ' + overAlpha + ')';
+        ctx.fillRect(0, 0, 1320, 480);
+
+        var vig = ctx.createRadialGradient(660, 240, 80, 660, 240, 560);
+        vig.addColorStop(0, 'rgba(183, 28, 28, 0.05)');
+        vig.addColorStop(1, 'rgba(183, 28, 28, 0.58)');
+        ctx.fillStyle = vig;
+        ctx.fillRect(0, 0, 1320, 480);
+
+        ctx.shadowColor = '#ff0000';
+        ctx.shadowBlur = 28;
+        ctx.fillStyle = '#ff1744';
+        ctx.font = '900 72px "Cinzel", serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('GAME OVER', 660, 215);
+
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#ffcdd2';
+        ctx.font = 'bold 20px "Noto Serif KR", "Nanum Myeongjo", serif';
+        ctx.fillText('고성 미궁 탈출에 실패했습니다. 다시 도전하세요.', 660, 265);
+
+        ctx.fillStyle = '#ffe07d';
+        ctx.font = 'bold 14px "Noto Serif KR", "Nanum Myeongjo", serif';
+        ctx.fillText('💡 팁: [맵 힌트 (Tab)]를 켜서 안전 루트를 확인하고 최적 경로로 이동하세요!', 660, 298);
+
+        ctx.fillStyle = 'rgba(183, 28, 28, 0.85)';
+        ctx.strokeStyle = '#ff8a80';
+        ctx.lineWidth = 2;
+        ctx.fillRect(520, 325, 280, 42);
+        ctx.strokeRect(520, 325, 280, 42);
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 15px "Noto Serif KR", "Nanum Myeongjo", serif';
+        ctx.fillText('↻ 화면 클릭 또는 [Enter] 키로 재도전', 660, 351);
+        ctx.restore();
+      }
+    }
+
+    function drawAbstractionGraph() {
+      var ctx = graphCanvas.getContext('2d');
+      var st = STAGES[state.currentStageIdx];
+      var stats = getRemovableNoiseStats();
+      var ratio = state.abstractSight ? 1.0 : (stats.removed / stats.total);
+
+      ctx.fillStyle = '#070a12';
+      ctx.fillRect(0, 0, 900, 250);
+
+      ctx.strokeStyle = 'rgba(38, 198, 218, 0.11)';
+      ctx.lineWidth = 1;
+      for (var gx = 0; gx < 900; gx += 30) {
+        ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, 250); ctx.stroke();
+      }
+      for (var gy = 0; gy < 250; gy += 30) {
+        ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(900, gy); ctx.stroke();
+      }
+
+      var scaleX = 900 / st.worldW;
+      var scaleY = 250 / st.worldH;
+
+      if (!state.wideOverview) {
+        ctx.strokeStyle = 'rgba(255, 224, 125, 0.35)';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(state.cameraX * scaleX, (state.cameraY || 0) * scaleY, 1320 * scaleX, 480 * scaleY);
+      }
+
+      // Draw Noise blips on graph
+      st.noises.forEach(function(nz) {
+        if (!nz.hit && (!state.abstractSight || nz.immortal)) {
+          var nx = (nz.x + nz.w * 0.5) * scaleX;
+          var ny = (nz.y + nz.h * 0.5) * scaleY;
+          ctx.beginPath();
+          ctx.arc(nx, ny, nz.immortal ? 7 : 5, 0, Math.PI * 2);
+          ctx.fillStyle = nz.immortal ? '#ff1744' : (nz.type === 'trap' ? 'rgba(255, 23, 68, 0.9)' : 'rgba(255, 82, 82, 0.85)');
+          ctx.fill();
+        }
+      });
+
+      // Draw Edges
+      st.edges.forEach(function(ed) {
+        var n1 = st.nodes.find(function(n){ return n.id === ed.from; });
+        var n2 = st.nodes.find(function(n){ return n.id === ed.to; });
+        if (!n1 || !n2) return;
+        var x1 = n1.x * scaleX, y1 = n1.y * scaleY;
+        var x2 = n2.x * scaleX, y2 = n2.y * scaleY;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        if (ed.broken || ed.deadEnd) {
+          ctx.strokeStyle = '#ff5252';
+          ctx.setLineDash([5, 4]);
+          ctx.lineWidth = 1.8;
+        } else if (ed.optimal) {
+          ctx.strokeStyle = ratio >= 0.5 ? '#00e676' : '#00e5ff';
+          ctx.lineWidth = ratio >= 0.5 ? 3.5 : 2.5;
+        } else {
+          ctx.strokeStyle = 'rgba(255, 112, 67, 0.55)';
+          ctx.lineWidth = 1.8;
+        }
+        ctx.stroke();
+
+        var mx = (x1 + x2) * 0.5 + (ed.labelDx ? ed.labelDx * 0.5 : 0);
+        var my = (y1 + y2) * 0.5 + (ed.labelDy ? ed.labelDy * 0.5 : -7);
+        ctx.font = 'bold 10.5px "Noto Serif KR", "Nanum Myeongjo", serif';
+        var tw = ctx.measureText(ed.cost).width + 12;
+        ctx.fillStyle = 'rgba(7, 5, 14, 0.95)';
+        ctx.fillRect(mx - tw/2, my - 8, tw, 15);
+        ctx.strokeStyle = (ed.broken || ed.deadEnd) ? '#ff5252' : (ed.optimal ? '#00e676' : '#ffa726');
+        ctx.lineWidth = 1;
+        ctx.strokeRect(mx - tw/2, my - 8, tw, 15);
+        ctx.fillStyle = (ed.broken || ed.deadEnd) ? '#ff8a80' : (ed.optimal ? '#b9f6ca' : '#ffe082');
+        ctx.textAlign = 'center';
+        ctx.fillText(ed.cost, mx, my + 3);
+        ctx.restore();
+      });
+
+      // Draw Nodes
+      st.nodes.forEach(function(nd, idx) {
+        var nx = nd.x * scaleX, ny = nd.y * scaleY;
+        var isGoal = (idx === st.nodes.length - 1);
+        var isVisited = state.visitedNodes.indexOf(nd.id) !== -1;
+        ctx.beginPath();
+        ctx.arc(nx, ny, 7, 0, Math.PI * 2);
+        ctx.fillStyle = isGoal ? '#ff4081' : (isVisited ? '#00e676' : '#00e5ff');
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#fff';
+        ctx.stroke();
+
+        ctx.fillStyle = 'rgba(7, 10, 18, 0.92)';
+        ctx.font = 'bold 10.5px "Noto Serif KR", "Nanum Myeongjo", serif';
+        var lw = ctx.measureText(nd.label).width + 8;
+        // If node is C in Map 4, draw label ABOVE so it never overlaps with Y below!
+        var labelY = (st.id === 'T04' && nd.id === 'C') ? (ny - 18) : (ny + 7);
+        ctx.fillRect(nx - lw/2, labelY, lw, 13);
+        ctx.strokeStyle = '#3a3225';
+        ctx.strokeRect(nx - lw/2, labelY, lw, 13);
+        ctx.fillStyle = isGoal ? '#ff80ab' : (isVisited ? '#b9f6ca' : '#fff');
+        ctx.textAlign = 'center';
+        ctx.fillText(nd.label, nx, labelY + 9);
+      });
+
+      // Draw live Student Dot
+      var px = (state.player.x + 16) * scaleX;
+      var py = (state.player.y + 20) * scaleY;
+      ctx.beginPath();
+      ctx.arc(px, py, 5.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffd740';
+      ctx.fill();
+    }
+
+    function loop() {
+      updateGame();
+      drawMainGame();
+      drawAbstractionGraph();
+      requestAnimationFrame(loop);
+    }
+
+    function saveCurrentDraft() {
+      var st = STAGES[state.currentStageIdx];
+      state.drafts[st.id] = {
+        step1: document.getElementById('ansStep1').value,
+        step2: document.getElementById('ansStep2').value,
+        step3: document.getElementById('ansStep3').value
+      };
+    }
+
+    function loadStageWorksheetUI() {
+      var st = STAGES[state.currentStageIdx];
+      document.getElementById('grimoireHeaderTitle').textContent =
+        '📜 추상화 학습 기록장 — ' + st.mapNum + ': ' + st.title;
+      document.getElementById('qStep1Label').textContent = st.step1Question;
+      document.getElementById('qStep2Label').textContent = st.step2Question;
+      document.getElementById('qStep3Label').textContent = st.step3Question;
+
+      var saved = state.drafts[st.id] || state.submissions[st.id] || { step1: '', step2: '', step3: '' };
+      document.getElementById('ansStep1').value = saved.step1 || '';
+      document.getElementById('ansStep2').value = saved.step2 || '';
+      document.getElementById('ansStep3').value = saved.step3 || '';
+      document.getElementById('submitStatusMsg').textContent = '';
+    }
+
+    function autoFillFromGameplay() {
+      var st = STAGES[state.currentStageIdx];
+      document.getElementById('ansStep1').value = st.autoStep1;
+      document.getElementById('ansStep2').value = st.autoStep2;
+      document.getElementById('ansStep3').value = (st.autoStep3 || st.optimalSummary);
+      playSfx('sfx_glyph', 0.5);
+      document.getElementById('submitStatusMsg').textContent =
+        '✨ 게임에서 탐구한 탈출 방해물(1단계), 추출한 핵심 그래프(2단계), 최적 탈출 경로(3단계)가 채워졌습니다!';
+    }
+
+    function submitGrimoireAnswer() {
+      saveCurrentDraft();
+      var st = STAGES[state.currentStageIdx];
+      var s1 = document.getElementById('ansStep1').value.trim();
+      var s2 = document.getElementById('ansStep2').value.trim();
+      var s3 = document.getElementById('ansStep3').value.trim();
+
+      if (!s1 || !s2 || !s3) {
+        alert('1단계~3단계 답안을 모두 작성하거나 [자동 채우기] 버튼을 눌러 완성해 주세요!');
+        return;
+      }
+
+      var nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
+      state.submissions[st.id] = {
+        timestamp: nowStr,
+        taskId: st.id,
+        step1: s1,
+        step2: s2,
+        step3: s3,
+        teacherFeedback: ''
+      };
+      localStorage.setItem('map_abstraction_subs_' + state.student.code, JSON.stringify(state.submissions));
+      playSfx('sfx_clear', 0.6);
+      renderStageTabs();
+
+      var msgEl = document.getElementById('submitStatusMsg');
+      msgEl.textContent = '⏳ 구글 시트(Google Sheets)에 답안을 전송 중입니다...';
+
+      var payload = {
+        action: 'submitStudentAnswer',
+        code: state.student.code,
+        taskId: st.id,
+        step1: s1,
+        step2: s2,
+        step3: s3
+      };
+
+      if (window.google && google.script && google.script.run) {
+        google.script.run.withSuccessHandler(function(res) {
+          msgEl.textContent = '✅ ' + (res && res.message ? res.message : '구글 시트 저장 완료!');
+        }).submitStudentAnswer(payload);
+      } else {
+        fetch(GAS_EXEC_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        }).then(function() {
+          msgEl.textContent = '✅ 구글 시트 [제출] 탭 연동 및 로컬 백업 저장이 완료되었습니다! (' + nowStr + ')';
+        }).catch(function() {
+          msgEl.textContent = '✅ 내 전용 기록장에 안전하게 저장되었습니다! ([내 구글 시트 기록]에서 엑셀 다운로드 가능)';
+        });
+      }
+    }
+
+    function askPresetQuestion(qText) {
+      document.getElementById('tutorInput').value = qText;
+      sendTutorQuestion();
+    }
+
+    function sendTutorQuestion() {
+      var input = document.getElementById('tutorInput');
+      var q = input.value.trim();
+      if (!q) return;
+      input.value = '';
+
+      var log = document.getElementById('chatLog');
+      log.innerHTML += '<div class="chat-bubble chat-user">' + escapeHtml(q) + '</div>';
+      log.scrollTop = log.scrollHeight;
+
+      var st = STAGES[state.currentStageIdx];
+      var reply = buildTutorReply(st, q);
+      setTimeout(function() {
+        log.innerHTML += '<div class="chat-bubble chat-ai">' + escapeHtml(reply) + '</div>';
+        log.scrollTop = log.scrollHeight;
+        playSfx('sfx_glyph', 0.4);
+      }, 250);
+    }
+
+    function buildTutorReply(st, q) {
+      var header = '🔮 [대도서관 사서의 조언 · ' + st.mapNum + ']\n';
+      if (q.indexOf('1단계') !== -1 || q.indexOf('가지치기') !== -1 || q.indexOf('노이즈') !== -1) {
+        return header + '만약 막다른 방이나 느린 우회로에 있는 보물상자·함정(방해물)을 없애려고 캐릭터가 직접 걸어가면, 불필요한 이동 시간이 추가되어 "최적 경로"가 깨집니다!\n따라서 추상화에서는 [' + st.autoStep1 + '] 같은 요소를 [맵 힌트]로 먼저 파악하고, 몸은 핵심 경로로만 이동해야 합니다.';
+      }
+      if (q.indexOf('2단계') !== -1 || q.indexOf('핵심') !== -1) {
+        return header + '가짜 미끼 길과 장식 함정을 모두 가지치기한 뒤 하단 [실시간 추상화 노선도]에 무엇이 남았는지 보세요.\n[' + st.autoStep2 + ']만 남겨두면 복잡한 지형도 한눈에 최적 경로를 찾을 수 있습니다.';
+      }
+      return header + '추상화 노선도에서 초록·청록색으로 강조된 핵심 경로의 소요 시간(분)을 더해 보세요.\n이 맵의 최적 탈출 루트는 "' + st.optimalSummary + '" 입니다.';
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // Populate S01 ~ S20 Dropdown
+    function initLoginDropdown() {
+      var sel = document.getElementById('studentCodeSelect');
+      var html = '';
+      for (var i = 1; i <= 20; i++) {
+        var c = 'S' + (i < 10 ? '0' + i : i);
+        var nick = NICKNAMES[i - 1];
+        html += '<option value="' + c + '">' + c + '번 (' + nick + ')</option>';
+      }
+      sel.innerHTML = html;
+    }
+    initLoginDropdown();
+
+    function goToLoginPage() {
+      saveCurrentDraft();
+      stopAllMusic();
+      document.getElementById('gameAppView').classList.add('hidden');
+      document.getElementById('loginPageView').classList.remove('hidden');
+      playLoginBgm();
+    }
+
+            function restartEntireGameFromScratch(skipConfirm) {
+      if (!skipConfirm) {
+        var ok = confirm('⚠️ [처음부터 전체 재도전]\n현재 학생(' + state.student.code + ')의 탈출 성공 기록을 초기화하고, 1단계(용암 지하성당)부터 처음부터 다시 시작하시겠습니까?\n(작성하신 학습지 답안은 안전하게 보존됩니다.)');
+        if (!ok) return;
+      }
+      closeStageClearModal();
+      state.stageCleared = {};
+      state.currentStageGoalReached = false;
+      try {
+        localStorage.removeItem('map_abstraction_clr_' + state.student.code);
+        localStorage.removeItem('valmanway_unlocked_' + state.student.code);
+      } catch(e) {}
+      state.unlockedValmanway = false;
+      state.currentStageIdx = 0;
+      resetCurrentStage();
+      renderStageTabs();
+      loadStageWorksheetUI();
+      playSfx('dispel', 0.85);
+      state.floatingTexts.push({
+        x: state.player.x + 20,
+        y: state.player.y - 25,
+        text: '🔄 [전체 재도전] 1단계부터 처음부터 새로 시작합니다!',
+        color: '#ffd54f',
+        life: 140
+      });
+      if (bgmEnabled) playStageBgm();
+    }
+
+    function resetSelectedStudentData() {
+      var sel = document.getElementById('studentCodeSelect');
+      var code = sel ? sel.value : 'S01';
+      var ok = confirm('⚠️ 학생 [' + code + ']의 탈출 진행 기록을 초기화하시겠습니까?\n초기화 후 로그인하면 1단계(용암 지하성당)부터 새로운 도전이 시작됩니다.');
+      if (!ok) return;
+      try {
+        localStorage.removeItem('map_abstraction_clr_' + code);
+        localStorage.removeItem('valmanway_unlocked_' + code);
+      } catch(e) {}
+      playSfx('dispel', 0.85);
+      alert('✅ 학생 [' + code + ']의 탈출 진행 기록이 초기화되었습니다.\n이제 [고성 미궁 탈출 시작하기] 버튼을 누르면 1단계부터 정상 도전하실 수 있습니다.');
+    }
+
+    function startValmanwayNewGame() {
+      closeStageClearModal();
+      state.unlockedValmanway = true;
+      try { localStorage.setItem('valmanway_unlocked_' + state.student.code, 'true'); } catch(e){}
+
+      // Reset stage progression so player can replay sequentially from Map 1 with Valmanway!
+      state.stageCleared = { 'T03': true }; // Map 1 unlocked
+      try { localStorage.setItem('map_abstraction_clr_' + state.student.code, JSON.stringify(state.stageCleared)); } catch(e){}
+
+      state.currentStageIdx = 0; // Go to Map 1
+      resetCurrentStage();
+      renderStageTabs();
+      loadStageWorksheetUI();
+      updateControlModeUI();
+      playStageBgm();
+
+      playWeaponAttackSfx('valmanway');
+      playSfx('clear', 0.85);
+
+      state.floatingTexts.push({
+        x: state.player.x + 20,
+        y: state.player.y - 25,
+        text: '⚔️ [전설의 비검 장착 완료!] 1단계부터 고성 재도전 (New Game+)을 시작합니다!',
+        color: '#a7ffeb',
+        life: 140
+      });
+    }
+
+    function confirmStudentLogin() {
+      playButtonClickSfx();
+      playGateOpeningSfx();
+      var sel = document.getElementById('studentCodeSelect');
+      var code = sel.value;
+      var num = parseInt(code.replace('S', ''), 10);
+      var nick = NICKNAMES[num - 1] || '탐험가';
+
+      var modeRadios = document.getElementsByName('loginControlMode');
+      var chosenMode = 'wasd';
+      for (var r = 0; r < modeRadios.length; r++) {
+        if (modeRadios[r].checked) chosenMode = modeRadios[r].value;
+      }
+      state.controlMode = chosenMode;
+
+      state.student = { code: code, nickname: nick, level: '기본' };
+      document.getElementById('studentBadge').textContent = '학생코드: ' + code + ' (' + nick + ')';
+
+      var cachedSubs = localStorage.getItem('map_abstraction_subs_' + code);
+      state.submissions = cachedSubs ? JSON.parse(cachedSubs) : {};
+
+      var cachedClr = localStorage.getItem('map_abstraction_clr_' + code);
+      state.stageCleared = cachedClr ? JSON.parse(cachedClr) : {};
+      var cachedVal = localStorage.getItem('valmanway_unlocked_' + code);
+      state.unlockedValmanway = (cachedVal === 'true');
+
+      // 1. Play Castle Gate Opening sound & trigger heavy gate transition
+      playSfx('door', 0.95);
+      var gateOverlay = document.getElementById('gateTransitionOverlay');
+      if (gateOverlay) {
+        gateOverlay.classList.remove('hidden');
+        gateOverlay.classList.remove('opening');
+        void gateOverlay.offsetWidth;
+        gateOverlay.classList.add('opening');
+      }
+
+      // 2. Mid-transition (420ms): switch view, start stage 1 & loop Chronicles theme
+      setTimeout(function() {
+        stopAllMusic();
+        state.currentStageIdx = 0;
+        document.getElementById('loginPageView').classList.add('hidden');
+        document.getElementById('gameAppView').classList.remove('hidden');
+        renderStageTabs();
+        resetCurrentStage();
+        loadStageWorksheetUI();
+        updateControlModeUI();
+        if (bgmEnabled) playStageBgm();
+      }, 420);
+
+      // 3. Complete transition (1100ms): hide overlay
+      setTimeout(function() {
+        if (gateOverlay) {
+          gateOverlay.classList.add('hidden');
+          gateOverlay.classList.remove('opening');
+        }
+      }, 1100);
+    }
+
+        function openCopyrightModal() {
+      playButtonClickSfx();
+      var m = document.getElementById('copyrightModal');
+      if (m) m.classList.remove('hidden');
+    }
+    function closeCopyrightModal() {
+      playButtonClickSfx();
+      var m = document.getElementById('copyrightModal');
+      if (m) m.classList.add('hidden');
+    }
+
+    function openSheetModal() {
+      var box = document.getElementById('sheetTableContainer');
+      var rows = STAGES.map(function(st) {
+        var sub = state.submissions[st.id];
+        return (
+          '<tr style="border-bottom:1px solid #2f2347;">' +
+            '<td style="padding:8px; color:var(--gold-bright); font-weight:700;">' + st.mapNum + '<br/>' + st.title + '</td>' +
+            '<td style="padding:8px;">' + (sub ? escapeHtml(sub.step1) : '<span style="color:#777;">미제출</span>') + '</td>' +
+            '<td style="padding:8px;">' + (sub ? escapeHtml(sub.step2) : '-') + '</td>' +
+            '<td style="padding:8px;">' + (sub ? escapeHtml(sub.step3) : '-') + '</td>' +
+            '<td style="padding:8px; color:#80deea;">' + (sub ? sub.timestamp : '-') + '</td>' +
+          '</tr>'
+        );
+      }).join('');
+      box.innerHTML =
+        '<table style="width:100%; border-collapse:collapse; text-align:left;">' +
+          '<thead><tr style="background:#24193c; color:var(--gold-bright);">' +
+            '<th style="padding:8px;">스테이지</th><th style="padding:8px;">1단계(탈출 방해물 가지치기)</th><th style="padding:8px;">2단계(핵심 요소 추출)</th><th style="padding:8px;">3단계(최적 탈출 경로)</th><th style="padding:8px;">제출 시각</th>' +
+          '</tr></thead><tbody>' + rows + '</tbody></table>';
+      document.getElementById('sheetModal').classList.remove('hidden');
+    }
+    function closeSheetModal() {
+      document.getElementById('sheetModal').classList.add('hidden');
+    }
+
+    function downloadCsv() {
+      var csv = '\uFEFF학생코드,별명,스테이지ID,맵이름,1단계답안(방해물가지치기),2단계답안(핵심추출),3단계답안(최적경로),제출시각\n';
+      STAGES.forEach(function(st) {
+        var sub = state.submissions[st.id] || { step1: '', step2: '', step3: '', timestamp: '미제출' };
+        var row = [
+          state.student.code,
+          state.student.nickname,
+          st.id,
+          st.title,
+          '"' + (sub.step1 || '').replace(/"/g, '""') + '"',
+          '"' + (sub.step2 || '').replace(/"/g, '""') + '"',
+          '"' + (sub.step3 || '').replace(/"/g, '""') + '"',
+          sub.timestamp
+        ];
+        csv += row.join(',') + '\n';
+      });
+      var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = '맵탈출게임_추상화학습기록_' + state.student.code + '.csv';
+      a.click();
+    }
+
+    // Start 60fps Loop & Login BGM
+    renderStageTabs();
+    resetCurrentStage();
+    loadStageWorksheetUI();
+    updateControlModeUI();
+    playLoginBgm();
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>
