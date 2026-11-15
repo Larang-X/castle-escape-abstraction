@@ -9,21 +9,21 @@
     @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap');
 
     :root {
-      /* Bloodborne Dark Gothic Victorian Palette */
-      --bg-deep: #0a0c0f;          /* Deep Obsidian Void */
-      --bg-panel: #12151b;         /* Weathered Dark Slate Panel */
-      --bg-card: #181c24;          /* Chiseled Stone Card */
-      --gold: #a88438;             /* Antique Aged Brass / Tarnished Gold */
-      --gold-bright: #e2c481;      /* Shimmering Gilded Inlay */
-      --gold-dim: #5c471f;         /* Deep Aged Bronze */
-      --crimson: #731b1b;          /* Dried Gothic Blood Maroon */
-      --crimson-bright: #9e2828;   /* Muted Blood Red */
-      --cyan: #4a6374;             /* Cold Cathedral Slate */
-      --cyan-bright: #8da4b8;      /* Pale Moonlit Iron */
-      --text-main: #dcd6cd;        /* Aged Parchment / Weathered Bone */
-      --text-muted: #9c9588;       /* Cathedral Ash Sepia */
-      --border-gothic: #3a3225;    /* Antique Dark Iron Rim */
-      --border-metal: #4a4030;     /* Wrought Iron Border */
+      /* Bloodborne Atmospheric Gloomy Victorian Palette */
+      --bg-deep: #06070a;          /* Deepest Yharnam Nocturnal Void */
+      --bg-panel: #0e0c12;         /* Weathered Wet Cobblestone Slate */
+      --bg-card: #141018;          /* Antique Reliquary Stone Card */
+      --gold: #9e7a32;             /* Tarnished Victorian Brass */
+      --gold-bright: #e5c378;      /* Gilded Rune Gold */
+      --gold-dim: #523e1b;         /* Oxidized Hunter's Bronze */
+      --crimson: #801818;          /* Dried Hunter's Blood Maroon */
+      --crimson-bright: #b82323;   /* Fresh Crimson Ember */
+      --cyan: #3b5060;             /* Cold Cathedral Tombstone */
+      --cyan-bright: #7a98b0;      /* Pale Moonlit Quicksilver */
+      --text-main: #e2dbd0;        /* Aged Grimoire Parchment */
+      --text-muted: #8f8578;       /* Ash & Soot Sepia */
+      --border-gothic: #4a361e;    /* Wrought Iron Filigree */
+      --border-metal: #5a4224;     /* Heavy Victorian Bevel Rim */
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,7 +31,7 @@
       font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif !important;
     }
     body {
-      background: radial-gradient(circle at 50% 0%, #1c1815 0%, #0a0c0f 72%);
+      background: radial-gradient(ellipse at 50% -12%, #2d1017 0%, #130e17 42%, #06070a 90%); background-attachment: fixed;
       color: var(--text-main);
       min-height: 100vh;
       overflow-x: hidden;
@@ -46,18 +46,21 @@
       justify-content: center;
       padding: 24px;
       background:
-        radial-gradient(circle at 50% 20%, rgba(168, 132, 56, 0.12) 0%, transparent 55%),
-        radial-gradient(circle at 50% 80%, rgba(115, 27, 27, 0.18) 0%, #08090c 75%);
+        radial-gradient(circle at 50% 15%, rgba(138, 28, 28, 0.25) 0%, transparent 55%),
+        radial-gradient(circle at 50% 85%, rgba(158, 122, 50, 0.15) 0%, #06070a 80%);
     }
     .login-page-card {
-      background: linear-gradient(180deg, #181c24 0%, #0e1015 100%);
-      border: 2px solid var(--gold);
-      border-radius: 12px;
+      background: radial-gradient(circle at 50% 10%, #1c1219 0%, #0c090e 85%);
+      border: 2px solid #5a4224;
+      outline: 1px solid rgba(138, 28, 28, 0.45);
+      outline-offset: -5px;
+      border-radius: 8px;
       max-width: 680px;
       width: 100%;
       padding: 32px 28px;
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(168, 132, 56, 0.22);
+      box-shadow: 0 0 70px rgba(0, 0, 0, 0.98), 0 0 35px rgba(90, 18, 26, 0.35), inset 0 0 45px rgba(0, 0, 0, 0.85);
       text-align: center;
+      position: relative;
     }
     .login-emblem {
       width: 58px;
@@ -119,15 +122,15 @@
 
     /* Top Header */
     .top-bar {
-      background: linear-gradient(180deg, #171b23 0%, #0b0d11 100%);
-      border-bottom: 2px solid var(--gold);
+      background: linear-gradient(180deg, #17111b 0%, #0a080d 100%);
+      border-bottom: 2px solid #5a4224;
       padding: 10px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 10px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.85);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.95), 0 1px 0 rgba(142, 28, 28, 0.45);
       position: sticky;
       top: 0;
       z-index: 100;
@@ -154,10 +157,13 @@
     }
     .brand-title {
       font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif;
-      font-size: 18px;
+      font-size: 19px;
       font-weight: 900;
-      color: var(--gold-bright);
-      letter-spacing: 0.03em;
+      background: linear-gradient(180deg, #fff3d1 0%, #e5c378 60%, #9e7a32 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.05em;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
     }
     .brand-sub {
       font-size: 12px;
@@ -183,9 +189,9 @@
 
     /* Bloodborne Gothic Victorian Buttons */
     .btn {
-      background: linear-gradient(180deg, #222731 0%, #13161c 100%);
+      background: linear-gradient(180deg, #221a25 0%, #110d14 100%);
       color: var(--text-main);
-      border: 1px solid var(--border-metal);
+      border: 1px solid #543f25;
       padding: 7px 14px;
       border-radius: 4px;
       font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif;
@@ -193,18 +199,18 @@
       font-weight: 700;
       letter-spacing: 0.03em;
       cursor: pointer;
-      transition: all 0.14s ease;
+      transition: all 0.15s ease;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 2px 4px rgba(0,0,0,0.6);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 2px 6px rgba(0,0,0,0.8);
       user-select: none;
     }
     .btn:hover {
-      border-color: var(--gold);
-      color: #f7eee1;
-      background: linear-gradient(180deg, #2b313e 0%, #1a1e27 100%);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 0 10px rgba(168, 132, 56, 0.25);
+      border-color: var(--gold-bright);
+      color: #fff8ee;
+      background: linear-gradient(180deg, #2e2133 0%, #17111c 100%);
+      box-shadow: 0 0 15px rgba(184, 142, 60, 0.4), inset 0 0 10px rgba(142, 28, 28, 0.35);
       transform: translateY(-1px);
     }
     .btn:active {
@@ -908,7 +914,6 @@
   <!-- 1. DEDICATED LOGIN PAGE VIEW (#loginPageView) -->
   <section id="loginPageView" class="login-page-wrap">
     <div class="login-page-card">
-      <div class="login-emblem">AT</div>
       <h1 class="login-title">맵 탈출 게임으로 추상화 배워보기</h1>
       <p class="login-subtitle">
         중학교 『정보』 III. 알고리즘과 프로그래밍 — 추상화(Abstraction)와 최적 핵심 경로 탐색
@@ -983,7 +988,6 @@
     <!-- Top Navigation Bar -->
     <header class="top-bar">
       <div class="brand-box">
-        <div class="brand-crest">AT</div>
         <div>
           <div class="brand-title">맵 탈출 게임으로 추상화 배워보기</div>
           <div class="brand-sub">중학교 『정보』 — 불필요한 우회로와 함정을 제거(가지치기)하고, 최적 핵심 경로를 추출하여 탈출하라!</div>
@@ -1142,23 +1146,22 @@
           </div>
           <div class="step-card">
             <label class="step-label" id="qStep2Label">2단계 질문</label>
-            <div style="font-size:12.5px; color:#e0c98b; background:rgba(18, 14, 26, 0.85); border:1px solid #5c471f; border-left:3px solid var(--gold); padding:8px 12px; border-radius:4px; margin-bottom:8px; line-height:1.6;">
-              <strong>💡 2단계 작성 팁 &amp; 표준 예시 규격:</strong><br>
-              • <strong>꼭 지나야 할 주요 장소(방):</strong> A.출발방 ➔ B.복도 ➔ C.승강도크 ➔ ... ➔ 목표방<br>
-              • <strong>장소 사이의 구간별 소요 시간:</strong> [A➔B: 1분] + [B➔C: 2분] + ... ➔ 총 소요 시간 합계: O분<br>
-              • <strong>특수 조건 및 주의 사항:</strong> 통행 불가 조건, 역송/지연 함정 주의
+            <div style="font-size:12px; color:#e0c98b; background:rgba(16, 11, 20, 0.92); border:1px solid #5c471f; border-left:3px solid #b88e3c; padding:9px 13px; border-radius:4px; margin-bottom:8px; line-height:1.65; box-shadow:inset 0 0 15px rgba(0,0,0,0.7);">
+              <strong style="color:#ffd54f;">💡 2단계 작성 팁 &amp; 표준 예시 규격:</strong><br>
+              • <strong>주요 핵심 구간별 소요 시간:</strong> [출발방 ➔ 도착방]: O분, ...<br>
+              • <strong>우회로 및 위험 요소 배제 이유:</strong> [배제할 장소/함정]: 막다른 길, 함정 역송, 시간 지연 등 구체적 배제 사유 서술
             </div>
-            <textarea id="ansStep2" class="step-textarea" placeholder="위의 표준 형식처럼 꼭 남겨야 할 '주요 장소(방)'와 '각 통로별 소요 시간 및 총합'을 적어 보세요."></textarea>
+            <textarea id="ansStep2" class="step-textarea" placeholder="탈출에 꼭 필요한 핵심 구간별 소요 시간과, 가지치기하여 배제한 우회로 및 함정의 구체적 배제 이유를 서술해 보세요."></textarea>
           </div>
           <div class="step-card">
             <label class="step-label" id="qStep3Label">3단계 질문</label>
-            <div style="font-size:12.5px; color:#e0c98b; background:rgba(18, 14, 26, 0.85); border:1px solid #5c471f; border-left:3px solid var(--gold); padding:8px 12px; border-radius:4px; margin-bottom:8px; line-height:1.6;">
-              <strong>💡 3단계 작성 팁 &amp; 표준 예시 규격:</strong><br>
-              • <strong>구간별 이동 경로 및 소요 시간:</strong> [출발방 ➔ 중간방]: O분, ...<br>
-              • <strong>전체 최적 경로 순서:</strong> 출발방(A) ➔ 중간방(B) ➔ ... ➔ 목표방(Z)<br>
-              • <strong>총 최단 탈출 시간:</strong> 각 구간 소요 시간의 합 = 총 O분
+            <div style="font-size:12px; color:#e0c98b; background:rgba(16, 11, 20, 0.92); border:1px solid #5c471f; border-left:3px solid #8e2020; padding:9px 13px; border-radius:4px; margin-bottom:8px; line-height:1.65; box-shadow:inset 0 0 15px rgba(0,0,0,0.7);">
+              <strong style="color:#ffd54f;">💡 3단계 작성 팁 &amp; 표준 예시 규격:</strong><br>
+              • <strong>전체 최적 탈출 경로:</strong> 출발방(A) ➔ 중간방(B) ➔ ... ➔ 탈출구(Z)<br>
+              • <strong>총 최단 탈출 시간 계산:</strong> O분 + O분 + ... = 총 O분<br>
+              • <strong>최종 탈출 전략 요약:</strong> 가지치기를 통해 도출한 유일한 최적 탈출로의 특징 서술
             </div>
-            <textarea id="ansStep3" class="step-textarea" placeholder="추상화 노선도를 통해 확정한 '최적 핵심 탈출 경로'와 '총 최단 탈출 시간(분)'을 적어 보세요."></textarea>
+            <textarea id="ansStep3" class="step-textarea" placeholder="2단계 핵심 구간을 종합한 전체 최적 탈출 경로 순서와 총 소요 시간(합산 계산식)을 명확히 적어 보세요."></textarea>
           </div>
           <div id="submitStatusMsg" style="font-size:13px; font-weight:700; color:#80deea; margin-top:4px;"></div>
         </div>
@@ -1630,7 +1633,7 @@
         worldW: 1850,
         worldH: 480,
         title: '용암 지하성당',
-        hint: '불필요한 [C.상층보물실(막다른길)]과 느린 [E.화산암우회로(느림)]를 가지치기하면, [D.지하성소교각]과 [F.흑요석룬대교]를 통과하는 6분 최적 탈출 경로가 완성됩니다.',
+        hint: '막다른 방인 [C.상층보물실(막다른길)]과 위험 지연로인 [E.화산암우회로(느림)]를 배제하고, [D.지하성소교각]과 [F.흑요석룬대교]를 거치면 6분 최적 탈출 경로가 완성됩니다.',
         bgm: 'bgm_lava',
         weaponSprite: 'spr_sword_glyph',
         weaponName: '단검 글리프 (Confodere)',
@@ -1646,7 +1649,7 @@
         step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 탈출에 꼭 필요한 핵심 장소 간 \'구간별 소요 시간\'과, 가지치기하여 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
         step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 출발지부터 탈출구까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
         autoStep1: '• 가지치기할 불필요한 장소(방): C.상층보물실(막다른길), E.화산암우회로(느림)\n• 원격 제거할 함정 및 장애물: ⚠️폭발 화염 촛대 함정, ⚠️가짜 유인 미믹 보물상자\n• 반드시 회피해야 할 위험 지형: 🔥용암 마그마 지대(-25 HP, 원격 제거 불가 지형)\n• 방해 몬스터: 화염 임프, 적색 해골, 우회로 지하 좀비, 지하 순찰 인화차',
-        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.상층입구제단 ➔ B.청동하강계단]: 1분\n  - [B.청동하강계단 ➔ D.지하성소교각]: 2분\n  - [D.지하성소교각 ➔ F.흑요석룬대교]: 2분\n  - [F.흑요석룬대교 ➔ G.지하봉인문]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.상층보물실]: 탈출로가 없는 막다른 방이므로 배제함\n  - [E.화산암우회로]: 용암 위험과 7분이 걸리는 비효율적 우회로이므로 배제함',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.상층입구제단 ➔ B.청동하강계단]: 1분\n  - [B.청동하강계단 ➔ D.지하성소교각]: 2분\n  - [D.지하성소교각 ➔ F.흑요석룬대교]: 2분\n  - [F.흑요석룬대교 ➔ G.지하봉인문]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.상층보물실(막다른길)]: 탈출로가 없는 막다른 방이므로 배제함\n  - [E.화산암우회로(느림)]: 용암 위험과 7분이 걸리는 비효율적 우회로이므로 배제함',
         nodes: [
           { id: 'A', label: 'A.상층입구제단[출발]', x: 110, y: 125 },
           { id: 'B', label: 'B.청동하강계단', x: 410, y: 215 },
@@ -1709,7 +1712,7 @@
         worldW: 1980,
         worldH: 480,
         title: '빙하 수로 미궁',
-        hint: '우회로인 [C.상층폭포다리(우회로)]와 [X.빙하동굴(막다른길)]을 가지치기하고, [D.심층크리스탈수로]에서 [E.빙하승강장]을 타면 7분 만에 탈출할 수 있습니다.',
+        hint: '지연 우회로인 [C.상층폭포다리(우회로)]와 막다른 길인 [X.빙하동굴(막다른길)]을 배제하고, [D.심층크리스탈수로]에서 [E.빙하승강장]을 타면 7분 최적 경로로 탈출할 수 있습니다.',
         bgm: 'bgm_glacier',
         weaponSprite: 'spr_rapier_glyph',
         weaponName: '레이피어 글리프 (Vol Confodere)',
@@ -1720,12 +1723,12 @@
         hazardName: '극저온 빙하 가시 급류 (-25 HP)',
         targetMinutes: 7,
         optimalNodeSeq: ['A', 'B', 'D', 'E', 'F', 'G'],
-        optimalSummary: '• 전체 최적 탈출 경로: A.빙하절벽입구 ➔ B.수로분기점 ➔ D.심층크리스탈수로 ➔ E.빙하승강장 ➔ F.결정회랑 ➔ G.얼음신전성문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 1분 + 1분 + 2분 = 총 7분\n• 최종 탈출 전략: 설인 폭포다리(C)와 얼음방(X)을 피하고 수직 승강기(E)를 활용한 7분 최단 경로임',
+        optimalSummary: '• 전체 최적 탈출 경로: A.빙하절벽입구 ➔ B.수로분기점 ➔ D.심층크리스탈수로 ➔ E.빙하승강장 ➔ F.결정회랑 ➔ G.얼음신전성문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 1분 + 1분 + 2분 = 총 7분\n• 최종 탈출 전략: 폭포다리(C)와 빙하동굴(X)을 배제하고 수직 승강기(E)를 활용한 7분 최단 경로임',
         step1Question: '[1단계: 탈출 방해물 가지치기 (불필요한 정보 제거)] 빙하 절벽(A)에서 얼음 신전 성문(G)으로 이동할 때, 길찾기를 방해하는 불필요한 장소(방), 함정, 방해 몬스터 요소를 각각 분류하여 적어 보세요.',
         step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] V자 수로를 통과하기 위한 핵심 장소 간 \'구간별 소요 시간\'과, 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
         step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 [A.빙하절벽입구]에서 [G.얼음신전성문]까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
-        autoStep1: '• 가지치기할 불필요한 장소(방): C.상층폭포다리(예티·우회), X.막다른얼음방(Dead)\n• 원격 제거할 함정 및 장애물: ⚠️독침 분출 고딕석관 함정, ⚠️낙하 얼음가시 샹들리에 함정, ⚠️막다른 얼음 미끼상자 함정\n• 반드시 회피해야 할 위험 지형: ❄️극저온 빙하 가시 급류(-25 HP, 원격 제거 불가 지형)\n• 방해 몬스터: 상층 설인 예티, 설원 화이트 울프, 수로 불가사리 데카라비아, 빙하 원령 벤시',
-        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.빙하절벽입구 ➔ B.수로분기점]: 1분\n  - [B.수로분기점 ➔ D.심층크리스탈수로]: 2분\n  - [D.심층크리스탈수로 ➔ E.빙하승강장]: 1분 (수직 승강대)\n  - [E.빙하승강장 ➔ F.결정회랑]: 1분\n  - [F.결정회랑 ➔ G.얼음신전성문]: 2분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.상층폭포다리]: 설인이 지키고 5분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.막다른얼음방]: 낭떠러지로 연결되는 막다른 방이므로 배제함',
+        autoStep1: '• 가지치기할 불필요한 장소(방): C.상층폭포다리(우회로), X.빙하동굴(막다른길)\n• 원격 제거할 함정 및 장애물: ⚠️독침 분출 고딕석관 함정, ⚠️낙하 얼음가시 샹들리에 함정, ⚠️막다른 얼음 미끼상자 함정\n• 반드시 회피해야 할 위험 지형: ❄️극저온 빙하 가시 급류(-25 HP, 원격 제거 불가 지형)\n• 방해 몬스터: 상층 설인 예티, 설원 화이트 울프, 수로 불가사리 데카라비아, 빙하 원령 벤시',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.빙하절벽입구 ➔ B.수로분기점]: 1분\n  - [B.수로분기점 ➔ D.심층크리스탈수로]: 2분\n  - [D.심층크리스탈수로 ➔ E.빙하승강장]: 1분 (수직 승강대)\n  - [E.빙하승강장 ➔ F.결정회랑]: 1분\n  - [F.결정회랑 ➔ G.얼음신전성문]: 2분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.상층폭포다리(우회로)]: 설인이 지키고 5분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.빙하동굴(막다른길)]: 낭떠러지로 연결되는 막다른 방이므로 배제함',
         nodes: [
           { id: 'A', label: 'A.빙하절벽입구', x: 105, y: 185 },
           { id: 'B', label: 'B.수로분기점', x: 390, y: 255 },
@@ -1788,7 +1791,7 @@
         worldW: 2220,
         worldH: 480,
         title: '기계 시계탑',
-        hint: '붕괴된 중앙 다리와 [C.서쪽종탑(우회로)], [X.폐쇄태엽고(막다른길)]를 피하고, [D.하부진자회랑]에서 [F.중앙태엽승강기]로 상승하여 8분 만에 정상에 도달하세요.',
+        hint: '붕괴된 중앙 다리와 [C.서쪽종탑(우회로)], [X.폐쇄태엽고(막다른길)]를 배제하고, [D.하부진자회랑]에서 [F.중앙태엽승강기]로 상승하여 8분 최적 경로로 정상에 도달하세요.',
         bgm: 'bgm_clock',
         weaponSprite: 'spr_lance_glyph',
         weaponName: '빙창 글리프 (Grando)',
@@ -1799,12 +1802,12 @@
         hazardName: '시계탑 강철 스파이크·회전 기어 심연 (-25 HP)',
         targetMinutes: 8,
         optimalNodeSeq: ['A', 'B', 'D', 'F', 'G', 'H'],
-        optimalSummary: '• 전체 최적 탈출 경로: A.지하태엽실 ➔ B.제1기어교차로 ➔ D.하부진자회랑 ➔ F.중앙태엽승강기 ➔ G.상층시계문자판 ➔ H.시계탑정상종각\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 2분 + 2분 + 1분 = 총 8분\n• 최종 탈출 전략: 붕괴 다리(B-G)와 서쪽 종탑(C)을 피해 중앙 태엽 승강기(F)로 수직 상승하는 8분 최적 탈출로임',
+        optimalSummary: '• 전체 최적 탈출 경로: A.지하태엽실 ➔ B.제1기어교차로 ➔ D.하부진자회랑 ➔ F.중앙태엽승강기 ➔ G.상층시계문자판 ➔ H.시계탑정상종각\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 2분 + 2분 + 1분 = 총 8분\n• 최종 탈출 전략: 붕괴 다리와 서쪽 종탑(C)을 배제하고 중앙 태엽 승강기(F)로 수직 상승하는 8분 최적 탈출로임',
         step1Question: '[1단계: 탈출 방해물 가지치기 (불필요한 정보 제거)] 지하 태엽실(A)에서 정상 종각(H)으로 올라갈 때, 등반을 방해하는 불필요한 장소(방), 함정, 방해 몬스터 요소를 각각 분류하여 적어 보세요.',
         step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 중앙 붕괴 조건을 반영하여 정상까지의 핵심 장소 간 \'구간별 소요 시간\'과, 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
         step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 [A.지하태엽실]에서 [H.시계탑정상종각]까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
-        autoStep1: '• 가지치기할 불필요한 장소(방): C.서쪽종탑우회로(느림), X.막다른태엽고(Dead)\n• 원격 제거할 함정 및 장애물: ⚠️고드름 처형기사 석상 함정, ⚠️막다른 태엽 미끼상자 함정, ⚠️분쇄 기어 분쇄기 함정\n• 반드시 회피해야 할 위험 지형: ⚡태엽 고압 전송로(원격 제거 불가 지형)\n• 방해 몬스터: 파동 메두사 헤드, 시계탑 비행 악마 데빌, 종탑 우회로 도끼아머, 태엽 자동병기 틴맨, 감시자의 눈 피핑아이',
-        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.지하태엽실 ➔ B.제1기어교차로]: 1분\n  - [B.제1기어교차로 ➔ D.하부진자회랑]: 2분\n  - [D.하부진자회랑 ➔ F.중앙태엽승강기]: 2분 (수직 상승 승강기)\n  - [F.중앙태엽승강기 ➔ G.상층시계문자판]: 2분\n  - [G.상층시계문자판 ➔ H.시계탑정상종각]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.서쪽종탑우회로]: 중기갑 기사가 순찰하며 4분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.막다른태엽고]: 통로가 막힌 위험 구역이므로 배제함\n  - [B➔G 중앙 구름다리]: 다리가 붕괴되어 진입 불가능하므로 배제함',
+        autoStep1: '• 가지치기할 불필요한 장소(방): C.서쪽종탑(우회로), X.폐쇄태엽고(막다른길)\n• 원격 제거할 함정 및 장애물: ⚠️고드름 수호기사 석상 함정, ⚠️막다른 태엽 미끼상자 함정, ⚠️분쇄 기어 분쇄기 함정\n• 반드시 회피해야 할 위험 지형: ⚡태엽 고압 전송로(원격 제거 불가 지형)\n• 방해 몬스터: 파동 메두사 헤드, 시계탑 비행 악마 데빌, 종탑 우회로 도끼아머, 태엽 자동병기 틴맨, 감시자의 눈 피핑아이',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.지하태엽실 ➔ B.제1기어교차로]: 1분\n  - [B.제1기어교차로 ➔ D.하부진자회랑]: 2분\n  - [D.하부진자회랑 ➔ F.중앙태엽승강기]: 2분 (수직 상승 승강기)\n  - [F.중앙태엽승강기 ➔ G.상층시계문자판]: 2분\n  - [G.상층시계문자판 ➔ H.시계탑정상종각]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.서쪽종탑(우회로)]: 중기갑 기사가 순찰하며 4분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.폐쇄태엽고(막다른길)]: 통로가 막힌 위험 구역이므로 배제함\n  - [B➔G 중앙 구름다리]: 다리가 붕괴되어 진입 불가능하므로 배제함',
         nodes: [
           { id: 'A', label: 'A.지하태엽실[출발]', x: 100, y: 400 },
           { id: 'B', label: 'B.제1기어교차로', x: 400, y: 310 },
@@ -1874,7 +1877,7 @@
         worldW: 2400,
         worldH: 960, // 2x Vertical Depth!
         title: '심연 최종 탈출 [ 🩸 최고난도: 몬스터 무한 소환 & 불사신 데스 ]',
-        hint: '[X1.고문실(막다른길)], [X2.폐쇄철문(통행불가)], [W.미혹마법진(함정)]을 피하고, [B.서쪽회랑]에서 [C.승강도크]로 하강 후 [E.심연중앙수로]와 [G.심연대교]로 탈출하세요.',
+        hint: '막다른 [X1.고문실(막다른길)], [X2.폐쇄철문(통행불가)], [W.미혹마법진(함정)]을 배제하고, [C.승강도크] 엘리베이터로 하강 후 [G.심연대교]를 거쳐 8분 만에 탈출하세요.',
         bgm: 'bgm_castle',
         weaponSprite: 'spr_great_glyph',
         weaponName: '빛의 대검 글리프 (Melio Confodere)',
@@ -1889,8 +1892,8 @@
         step1Question: '[1단계: 탈출 방해물 가지치기 (불필요한 정보 제거)] 첨탑 옥좌(A)에서 심연 대성문(Z)으로 탈출할 때, 시간을 낭비하게 만드는 불필요한 장소(방), 함정, 방해 몬스터 요소를 각각 분류하여 적어 보세요.',
         step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 심연 대성문까지의 핵심 장소 간 \'구간별 소요 시간\'과, 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
         step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 [A.첨탑옥좌]에서 [Z.심연대성문]까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
-        autoStep1: '• 가지치기할 불필요한 장소(방): X1.고문실(Dead), U1.상층 성당 A, U2.상층 성당 B, X2.폐쇄철문(Dead), Y.지하감옥(Dead)\n• 원격 제거할 함정 및 장애물: ⚠️고문실 유인미믹 함정, ⚠️심연 감옥 철창 차단벽 함정, ⚠️상층 폐쇄 철문 차단 함정\n• 반드시 회피해야 할 즉사 지형/함정: 💀심연가시 즉사구역(원격 제거 불가! 밟으면 즉사), 💀거대 진자단두추 즉사 함정, W.미혹마법진(상층 서쪽회랑 강제 역송 +5분 지연 함정)\n• 방해 몬스터: 심연의 사신(불사신 추적자), 심연 수문장 파이널 나이트(5회 타격 격파), 심연 사령 레이스, 부유 강령술사 네크로맨서, 날개 마수 가고일, 마탄의 알버스, 화염 마녀 위치, 저주 영혼체 엑토플라즘, 심연 몽마 릴리스, 심연 세이렌 로렐라이',
-        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.첨탑옥좌 ➔ B.서쪽회랑]: 1분\n  - [B.서쪽회랑 ➔ C.승강도크]: 2분 (수직 엘리베이터)\n  - [C.승강도크 ➔ D.고문실분기]: 1분\n  - [D.고문실분기 ➔ E.심연중앙수로]: 1분\n  - [E.심연중앙수로 ➔ F.대교진입로]: 1분\n  - [F.대교진입로 ➔ G.심연대교]: 1분\n  - [G.심연대교 ➔ Z.심연대성문]: 1분 (성문 개방)\n• 우회로 및 위험 요소 배제 이유:\n  - [X1.고문실, Y.지하감옥]: 막다른 방이므로 배제함\n  - [X2.폐쇄철문]: 통행이 완전 차단된 불통 구역이므로 배제함\n  - [W.미혹마법진]: 상층 B로 강제 역송시켜 +5분을 낭비하게 만드는 함정이므로 배제함',
+        autoStep1: '• 가지치기할 불필요한 장소(방): X1.고문실(막다른길), U1.상층 성당 A, U2.상층 성당 B, X2.폐쇄철문(통행불가), Y.지하감옥(막다른길)\n• 원격 제거할 함정 및 장애물: ⚠️고문실 유인미믹 함정, ⚠️심연 감옥 철창 차단벽 함정, ⚠️상층 폐쇄 철문 차단 함정\n• 반드시 회피해야 할 즉사 지형/함정: 💀심연가시 즉사구역(원격 제거 불가! 밟으면 즉사), 💀거대 진자단두추 즉사 함정, W.미혹마법진(상층 서쪽회랑 강제 역송 +5분 지연 함정)\n• 방해 몬스터: 심연의 사신(불사신 추적자), 심연 수문장 파이널 나이트(5회 타격 격파), 심연 사령 레이스, 부유 강령술사 네크로맨서, 날개 마수 가고일, 마탄의 알버스, 화염 마녀 위치, 저주 영혼체 엑토플라즘, 심연 몽마 릴리스, 심연 세이렌 로렐라이',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.첨탑옥좌 ➔ B.서쪽회랑]: 1분\n  - [B.서쪽회랑 ➔ C.승강도크]: 2분 (수직 엘리베이터)\n  - [C.승강도크 ➔ D.고문실분기]: 1분\n  - [D.고문실분기 ➔ E.심연중앙수로]: 1분\n  - [E.심연중앙수로 ➔ F.대교진입로]: 1분\n  - [F.대교진입로 ➔ G.심연대교]: 1분\n  - [G.심연대교 ➔ Z.심연대성문]: 1분 (성문 개방)\n• 우회로 및 위험 요소 배제 이유:\n  - [X1.고문실(막다른길), Y.지하감옥(막다른길)]: 막다른 방이므로 배제함\n  - [X2.폐쇄철문(통행불가)]: 통행이 완전 차단된 불통 구역이므로 배제함\n  - [W.미혹마법진(함정)]: 상층 B로 강제 역송시켜 +5분을 낭비하게 만드는 함정이므로 배제함',
         nodes: [
           { id: 'A', label: 'A.첨탑옥좌[출발]', x: 105, y: 140 },
           { id: 'B', label: 'B.서쪽회랑', x: 420, y: 240 },
