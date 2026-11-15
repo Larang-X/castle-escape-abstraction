@@ -1886,7 +1886,7 @@
     var STAGES = [
       // ==================== MAP 1: LAVA CATACOMBS ====================
       {
-        id: 'T03',
+        id: 'T01',
         mapNum: 'MAP 1',
         worldW: 1850,
         worldH: 480,
@@ -1965,7 +1965,7 @@
 
       // ==================== MAP 2: FROZEN AQUEDUCT ====================
       {
-        id: 'T01',
+        id: 'T02',
         mapNum: 'MAP 2',
         worldW: 1980,
         worldH: 480,
@@ -2044,7 +2044,7 @@
 
       // ==================== MAP 3: MECHANICAL CLOCK TOWER ====================
       {
-        id: 'T02',
+        id: 'T03',
         mapNum: 'MAP 3',
         worldW: 2220,
         worldH: 480,
@@ -4176,7 +4176,7 @@
       }
 
       // [사용자 요청 튜토리얼] 맵 1 진입 시 첫 함정 위치에 간결한 안내 말풍선 표시
-      if (st.id === 'T03' && stats.removed === 0 && state.player.x < 360) {
+      if (st.id === 'T01' && stats.removed === 0 && state.player.x < 360) {
         var tipMsg = (state.controlMode === 'click') ? '💡 함정이 있다면 클릭으로 제거해볼까요?' : '💡 함정이 있다면 스페이스로 제거해볼까요?';
         ctx.save();
         var tipX = 230, tipY = 115;
@@ -4746,7 +4746,7 @@
       try { localStorage.setItem('valmanway_unlocked_' + state.student.code, 'true'); } catch(e){}
 
       // Reset stage progression so player can replay sequentially from Map 1 with Valmanway!
-      state.stageCleared = { 'T03': true }; // Map 1 unlocked
+      state.stageCleared = { 'T01': true }; // Map 1 unlocked
       try { localStorage.setItem('map_abstraction_clr_' + state.student.code, JSON.stringify(state.stageCleared)); } catch(e){}
 
       state.currentStageIdx = 0; // Go to Map 1
