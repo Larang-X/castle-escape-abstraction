@@ -465,9 +465,26 @@ function submitStudentAnswer(payload) {
   lock.tryLock(8000);
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var submitSheet = ss.getSheetByName('제출');
+    var submitSheet = ss.getSheetByName('고성탈출_형성평가');
+    if (!submitSheet) {
+      submitSheet = ss.insertSheet('고성탈출_형성평가');
+      submitSheet.getRange(1, 1, 1, 11).setValues([[
+        '제출일시', '학생코드', '학생별명', '과제ID', '맵단계', '1단계: 문제 정의 및 목표 분석', 
+        '2단계: 핵심 요소 추출 및 경로 배제 분석', '3단계: 최적 탈출 경로 및 총 소요 시간 도출', 
+        '클리어시간(분)', '교사평가(루브릭 상/중/하)', '교사용 피드백 환류'
+      ]]);
+      submitSheet.getRange(1, 1, 1, 11)
+        .setBackground('#7f0000')
+        .setFontColor('#ffffff')
+        .setFontWeight('bold')
+        .setHorizontalAlignment('center');
+      submitSheet.setFrozenRows(1);
+    }
     var submitData = submitSheet.getDataRange().getValues();
     var nowStr = formatNow_();
+    var nickname = String((payload && payload.nickname) || '').trim();
+    var stageNum = String((payload && payload.stageNum) || '').trim();
+    var clearMinutes = String((payload && payload.clearMinutes) || '').trim();
 
     var existingTeacherFeedback = '';
     var matchedRowIndices = [];
@@ -486,10 +503,14 @@ function submitStudentAnswer(payload) {
     var rowValues = [
       nowStr,
       code,
+      nickname,
       taskId,
+      stageNum,
       step1,
       step2,
       step3,
+      clearMinutes,
+      '', // 교사평가(루브릭)
       existingTeacherFeedback
     ];
 
