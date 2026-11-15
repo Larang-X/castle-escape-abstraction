@@ -173,18 +173,54 @@
     .header-controls {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
     }
+    .btn-cluster {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(18, 13, 22, 0.92);
+      border: 1px solid #4d3822;
+      border-radius: 6px;
+      padding: 3px 4px;
+      gap: 4px;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+    .btn-cluster-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #bfa17c;
+      padding: 0 6px 0 4px;
+      letter-spacing: 0.03em;
+      border-right: 1px solid #3d2f20;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .btn-cluster-edu {
+      border-color: #8c6a28;
+      background: rgba(28, 20, 10, 0.92);
+    }
+    .btn-cluster-user {
+      border-color: #5c3030;
+      background: rgba(26, 12, 16, 0.92);
+    }
+    .btn-sm {
+      padding: 5px 10px !important;
+      font-size: 11.5px !important;
+      border-radius: 3px !important;
+      white-space: nowrap;
+    }
     .student-badge {
-      background: rgba(168, 132, 56, 0.16);
+      background: rgba(168, 132, 56, 0.20);
       border: 1px solid var(--gold);
       color: var(--gold-bright);
-      padding: 5px 12px;
+      padding: 4px 8px;
       border-radius: 4px;
-      font-size: 13px;
+      font-size: 11.5px;
       font-weight: 700;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.02em;
     }
 
     /* Bloodborne Gothic Victorian Buttons */
@@ -951,27 +987,46 @@
     </div>
   </div>
 
-  <div id="copyrightModal" class="modal-backdrop hidden">
-    <div class="modal-card" style="max-width:620px;">
-      <div style="font-size:19px; font-weight:900; color:#ffd54f; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-        <span>📜</span> <span>교육용 비영리 연구 저작권 고지문</span>
+    <div id="copyrightModal" class="modal-backdrop hidden">
+    <div class="modal-card" style="max-width:700px; max-height:88vh; overflow-y:auto; border:2px solid #e53935; background:linear-gradient(180deg,#1c0a10 0%,#100508 100%);">
+      <div style="font-size:18px; font-weight:900; color:#ff5252; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; border-bottom:1px solid rgba(229,57,53,0.3); padding-bottom:8px;">
+        <span style="display:flex; align-items:center; gap:8px;">
+          <span>⚖️</span> <span>## [비영리 교육 연구 목적 및 저작권 고지]</span>
+        </span>
+        <span style="background:#b71c1c; color:#ffffff; font-size:10.5px; padding:2px 8px; border-radius:3px; font-weight:bold;">Non-Commercial Educational Research &amp; Copyright Notice</span>
       </div>
-      <div style="font-size:13.5px; line-height:1.7; color:#e0d6f5; background:rgba(18,12,28,0.7); padding:16px; border-radius:8px; border:1px solid #4a3b68;">
-        <p style="margin-bottom:10px;">
-          <strong>1. 비영리 교육 연구 목적의 활용:</strong><br>
-          본 프로그램은 2022 개정 교육과정 중학교 『정보』 교과의 핵심 영역인 <strong>『추상화(Abstraction) 기반 문제 해결력 신장』</strong>을 위해 제작된 비영리 교육용 연구 소프트웨어입니다.
+      <div style="font-size:12.5px; line-height:1.75; color:#ffebee; background:rgba(32,10,14,0.7); padding:16px; border-radius:8px; border:1px solid rgba(229,57,53,0.35);">
+        <p style="margin-bottom:12px;">
+          <strong style="color:#ff8a80; font-size:13px;">**1. 비영리 학술 연구 및 교육 목적**</strong><br>
+          본 소프트웨어는 2022 개정 교육과정 중학교 『정보』 교과의 <strong>[9정03-01]을 비롯한 추상화 및 알고리즘적 문제 해결 학습</strong>을 지원하고, 교수·학습 효과를 탐구하기 위해 독자적으로 개발한 비영리 교육용 웹콘텐츠입니다.<br>
+          본 작품은 홍익대학교 사범대학 주관 「2026 교육용 웹콘텐츠 개발 경연대회」 출품을 목적으로 제작되었으며, GitHub를 통한 무상 시연 및 교육적 평가 이외에 프로그램 판매, 유료 서비스, 광고 등 지속적인 상업적 수익 창출을 목적으로 하지 않습니다.<br>
+          경진대회 수상에 따른 상금은 일회성 시상금으로, 본 소프트웨어의 판매나 상업적 이용에 따른 지속적 수익과 구별됩니다.
         </p>
-        <p style="margin-bottom:10px;">
-          <strong>2. 지식재산권 및 출처 표기:</strong><br>
-          게임 내 사용된 2D 도트 스프라이트 및 배경음악은 교육적 알고리즘 탐구의 몰입도를 높이기 위한 학술·교육 목적 인용으로 활용되었으며, 일체의 상업적 영리 목적이 배제되어 있습니다. 모든 게임 에셋 및 상표의 권리는 각 원작 저작권자(KONAMI 등)에게 귀속됩니다.
+        <p style="margin-bottom:12px;">
+          <strong style="color:#ff8a80; font-size:13px;">**2. 원저작권자 및 지식재산권 귀속**</strong><br>
+          본 작품은 <strong>KONAMI의 Castlevania(악마성) 시리즈</strong>를 주요 게임적·시각적 소재로 활용한 비공식 교육 연구 프로젝트입니다.<br>
+          작품에서 활용되는 Castlevania 관련 캐릭터, 2D 도트 스프라이트, 배경 그래픽, 음악, 음향 및 기타 원작 콘텐츠의 저작권과 관련 지식재산권은 KONAMI 및 각 원권리자에게 귀속됩니다.<br>
+          본 프로젝트는 원작 콘텐츠에 대한 소유권을 주장하지 않으며, KONAMI와 어떠한 공식적인 제휴, 후원 또는 승인 관계도 없습니다.
+        </p>
+        <p style="margin-bottom:12px;">
+          <strong style="color:#ff8a80; font-size:13px;">**3. 저작권법상 인용 및 공정이용 관련 고지**</strong><br>
+          본 작품은 교육 연구 목적의 저작물 이용에 관한 대한민국 <strong>저작권법 제28조(공표된 저작물의 인용) 및 제35조의5(저작물의 공정한 이용)</strong> 규정을 고려하여 제작되었습니다.<br>
+          원작 콘텐츠는 학습자의 교육적 몰입감과 알고리즘 학습에 대한 이해를 높이기 위한 목적으로 활용되었습니다.<br>
+          다만 비영리 교육 목적, 출처 표시 또는 본 고지문 자체가 저작물 이용에 대한 법적 허가나 면책을 의미하지 않으며, 개별 콘텐츠의 이용 적법성은 관련 법률과 구체적인 이용 방식에 따라 판단됩니다.
+        </p>
+        <p style="margin-bottom:12px;">
+          <strong style="color:#ff8a80; font-size:13px;">**4. 독자적 교육 시스템 및 창작물 보호**</strong><br>
+          본 작품의 핵심 교육 기능인 <strong>3단계 알고리즘 추상화 노선도 시각화 엔진, 가중치 그래프 최적화 시스템, 학생 실시간 형성평가 클라우드 연동 파이프라인</strong>은 출품자가 독자적으로 설계·구현한 교육용 소프트웨어 시스템입니다.<br>
+          해당 시스템의 독자적인 코드, 알고리즘 구현 및 창작적 표현은 원작 게임의 지식재산권과 구분되며, 관련 법령에 따라 보호됩니다.
         </p>
         <p style="margin-bottom:0;">
-          <strong>3. 독자적 창작 영역:</strong><br>
-          3단계 교육용 추상화 노선도 시각화 알고리즘, 학생별 활동 기록 및 구글 스프레드시트 실시간 데이터 연동 파이프라인, 단계별 자동 피드백 시스템은 순수 자체 기술로 개발되었습니다.
+          <strong style="color:#ff8a80; font-size:13px;">**5. 공개 범위 및 비상업적 운영**</strong><br>
+          본 작품은 교내 교육 경진대회의 제출 및 심사를 위해 GitHub 기반 웹콘텐츠 링크로 무상 제공됩니다.<br>
+          본 작품의 공개는 교육적 시연과 평가를 위한 것이며, 원작 콘텐츠에 대한 별도의 배포·판매 권한을 주장하는 것이 아닙니다.
         </p>
       </div>
       <div style="margin-top:16px; text-align:center;">
-        <button class="btn btn-gold" onclick="closeCopyrightModal()" style="padding:10px 24px; font-size:14px;">확인 및 닫기</button>
+        <button class="btn btn-gold" onclick="closeCopyrightModal()" style="padding:8px 24px; font-size:13.5px; border-color:#e53935; color:#ffebee; background:#b71c1c;">닫기</button>
       </div>
     </div>
   </div>
@@ -1049,25 +1104,45 @@
           ↻ 선택한 학생 진행 기록 초기화 (1단계부터 새로 시작)
         </button>
               <!-- Educational Non-profit Copyright & Statutory Legal Disclaimer -->
-        <div style="margin-top:18px; padding:14px 16px; background:rgba(32, 8, 12, 0.94); border:2px solid #e53935; border-radius:8px; font-size:12px; line-height:1.65; color:#ffcdd2; text-align:left; box-shadow: 0 0 25px rgba(229, 57, 53, 0.40), inset 0 0 20px rgba(0, 0, 0, 0.85);">
-          <div style="font-weight:900; color:#ff5252; font-size:13px; margin-bottom:6px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                <!-- 비영리 교육 연구 목적 및 저작권 고지 (공식 공모전 규정 전문) -->
+        <div style="margin-top:14px; padding:12px 14px; background:rgba(30, 8, 12, 0.95); border:2px solid #e53935; border-radius:8px; font-size:11.5px; line-height:1.65; color:#ffebee; text-align:left; box-shadow: 0 0 25px rgba(229, 57, 53, 0.40), inset 0 0 20px rgba(0, 0, 0, 0.85); max-height:240px; overflow-y:auto;">
+          <div style="font-weight:900; color:#ff5252; font-size:12.5px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; border-bottom:1px solid rgba(229,57,53,0.3); padding-bottom:6px; position:sticky; top:0; background:rgba(30,8,12,0.98); z-index:2;">
             <span style="display:flex; align-items:center; gap:6px;">
-              <span>⚖️</span> <span>[법적 면책 및 교육용 비영리 저작권 고지 (Statutory Fair Use Disclaimer)]</span>
+              <span>⚖️</span> <span>## [비영리 교육 연구 목적 및 저작권 고지]</span>
             </span>
-            <span style="background:#b71c1c; color:#ffffff; font-size:10.5px; padding:2px 8px; border-radius:3px; font-weight:bold;">저작권법 제28조·제35조의5 준수</span>
+            <span style="background:#b71c1c; color:#ffffff; font-size:10px; padding:2px 8px; border-radius:3px; font-weight:bold;">Non-Commercial Educational Research &amp; Copyright Notice</span>
           </div>
           <div style="color:#ffebee;">
-            <p style="margin-bottom:6px;">
-              • <strong>비영리 학술 연구 목적:</strong> 본 소프트웨어는 2022 개정 교육과정 중학교 『정보』 교과 <strong>[9정03-01 추상화와 문제 해결]</strong> 단원의 교수학습 효과 검증을 위해 제작된 순수 비영리 교육 연구 공모전 출품작입니다. 어떠한 영리적 수익 활동도 일체 수행하지 않습니다.
+            <p style="margin-bottom:8px;">
+              <strong style="color:#ff8a80; font-size:12px;">**1. 비영리 학술 연구 및 교육 목적**</strong><br>
+              본 소프트웨어는 2022 개정 교육과정 중학교 『정보』 교과의 <strong>[9정03-01]을 비롯한 추상화 및 알고리즘적 문제 해결 학습</strong>을 지원하고, 교수·학습 효과를 탐구하기 위해 독자적으로 개발한 비영리 교육용 웹콘텐츠입니다.<br>
+              본 작품은 홍익대학교 사범대학 주관 「2026 교육용 웹콘텐츠 개발 경연대회」 출품을 목적으로 제작되었으며, GitHub를 통한 무상 시연 및 교육적 평가 이외에 프로그램 판매, 유료 서비스, 광고 등 지속적인 상업적 수익 창출을 목적으로 하지 않습니다.<br>
+              경진대회 수상에 따른 상금은 일회성 시상금으로, 본 소프트웨어의 판매나 상업적 이용에 따른 지속적 수익과 구별됩니다.
             </p>
-            <p style="margin-bottom:6px;">
-              • <strong>공정 인용(Fair Use) 및 원권리자 지식재산권 귀속:</strong> 게임 내 삽입된 2D 도트 스프라이트 및 음향은 교육적 몰입감 신장을 위한 학술 인용(대한민국 저작권법 제28조)이며, 모든 상표권 및 저작재산권은 원작 권리자(KONAMI 등)에게 독점 귀속됩니다.
+            <p style="margin-bottom:8px;">
+              <strong style="color:#ff8a80; font-size:12px;">**2. 원저작권자 및 지식재산권 귀속**</strong><br>
+              본 작품은 <strong>KONAMI의 Castlevania(악마성) 시리즈</strong>를 주요 게임적·시각적 소재로 활용한 비공식 교육 연구 프로젝트입니다.<br>
+              작품에서 활용되는 Castlevania 관련 캐릭터, 2D 도트 스프라이트, 배경 그래픽, 음악, 음향 및 기타 원작 콘텐츠의 저작권과 관련 지식재산권은 KONAMI 및 각 원권리자에게 귀속됩니다.<br>
+              본 프로젝트는 원작 콘텐츠에 대한 소유권을 주장하지 않으며, KONAMI와 어떠한 공식적인 제휴, 후원 또는 승인 관계도 없습니다.
             </p>
-            <p style="margin-bottom:0; color:#ffcdd2;">
-              • <strong>독자적 저작물 보호:</strong> 3단계 알고리즘 추상화 노선도 시각화 엔진, 가중치 그래프 최적화 시스템, 학생 실시간 형성평가 클라우드 연동 파이프라인은 출품자가 독자적으로 설계·구현한 고유 저작물입니다.
+            <p style="margin-bottom:8px;">
+              <strong style="color:#ff8a80; font-size:12px;">**3. 저작권법상 인용 및 공정이용 관련 고지**</strong><br>
+              본 작품은 교육 연구 목적의 저작물 이용에 관한 대한민국 <strong>저작권법 제28조(공표된 저작물의 인용) 및 제35조의5(저작물의 공정한 이용)</strong> 규정을 고려하여 제작되었습니다.<br>
+              원작 콘텐츠는 학습자의 교육적 몰입감과 알고리즘 학습에 대한 이해를 높이기 위한 목적으로 활용되었습니다.<br>
+              다만 비영리 교육 목적, 출처 표시 또는 본 고지문 자체가 저작물 이용에 대한 법적 허가나 면책을 의미하지 않으며, 개별 콘텐츠의 이용 적법성은 관련 법률과 구체적인 이용 방식에 따라 판단됩니다.
+            </p>
+            <p style="margin-bottom:8px;">
+              <strong style="color:#ff8a80; font-size:12px;">**4. 독자적 교육 시스템 및 창작물 보호**</strong><br>
+              본 작품의 핵심 교육 기능인 <strong>3단계 알고리즘 추상화 노선도 시각화 엔진, 가중치 그래프 최적화 시스템, 학생 실시간 형성평가 클라우드 연동 파이프라인</strong>은 출품자가 독자적으로 설계·구현한 교육용 소프트웨어 시스템입니다.<br>
+              해당 시스템의 독자적인 코드, 알고리즘 구현 및 창작적 표현은 원작 게임의 지식재산권과 구분되며, 관련 법령에 따라 보호됩니다.
+            </p>
+            <p style="margin-bottom:0;">
+              <strong style="color:#ff8a80; font-size:12px;">**5. 공개 범위 및 비상업적 운영**</strong><br>
+              본 작품은 교내 교육 경진대회의 제출 및 심사를 위해 GitHub 기반 웹콘텐츠 링크로 무상 제공됩니다.<br>
+              본 작품의 공개는 교육적 시연과 평가를 위한 것이며, 원작 콘텐츠에 대한 별도의 배포·판매 권한을 주장하는 것이 아닙니다.
             </p>
           </div>
-        </div>
+        </div></div>
       </div>
     </div>
   </section>
@@ -1083,16 +1158,30 @@
         </div>
       </div>
       <div class="header-controls">
-        <span id="studentBadge" class="student-badge">학생코드: S01 (민트)</span>
-        <button class="btn btn-gold" onclick="toggleControlMode()" id="controlModeBtn">🎮 모드: WASD 액션 (클릭 불가)</button>
-        <button class="btn btn-gold" onclick="toggleAudioBgm()" id="bgmToggleBtn">배경음악 정지</button>
-        <button class="btn btn-cyan" onclick="toggleAbstractSight()" id="sightBtn">👁️ 맵 힌트 (Tab): OFF</button>
-        <button class="btn" onclick="toggleCameraOverview()" id="camModeBtn">🔍 시점: 전체 긴 맵 한눈에 보기</button>
-        <button class="btn" onclick="playButtonClickSfx(); openSheetModal()">📊 내 구글 시트 기록</button>
-        <button class="btn btn-red" onclick="playButtonClickSfx(); restartEntireGameFromScratch()" style="background:rgba(211,47,47,0.3); border-color:#e53935; color:#ffcdd2; font-weight:bold;" title="현재 학생의 진행 기록을 초기화하고 1단계부터 새로 시작">🔄 처음부터 재시작</button>
-        <button class="btn btn-gold" onclick="openPedagogyModal()" style="font-size:12px; font-weight:800; border-color:#ffd54f;">🎓 교육과정 연계 지도안</button>
-        <button class="btn" onclick="openCopyrightModal()" style="font-size:12px; opacity:0.9;">저작권 고지</button>
-        <button class="btn" onclick="playButtonClickSfx(); goToLoginPage()">🚪 로그인 페이지로 이동</button>
+        <!-- 1. 탐험 및 조작 클러스터 (Gameplay & View) -->
+        <div class="btn-cluster" title="게임 조작 및 화면 시점 설정">
+          <span class="btn-cluster-label">🎮 탐험·조작</span>
+          <button class="btn btn-gold btn-sm" onclick="toggleControlMode()" id="controlModeBtn">🎮 WASD 모드</button>
+          <button class="btn btn-cyan btn-sm" onclick="toggleAbstractSight()" id="sightBtn">👁️ 맵 힌트 (Tab)</button>
+          <button class="btn btn-sm" onclick="toggleCameraOverview()" id="camModeBtn">🔍 전체 맵 시점</button>
+          <button class="btn btn-sm" onclick="toggleAudioBgm()" id="bgmToggleBtn">🎵 BGM</button>
+        </div>
+
+        <!-- 2. 교육과정 및 평가 대시보드 클러스터 (Pedagogy & Sheets) -->
+        <div class="btn-cluster btn-cluster-edu" title="2022 개정 교육과정 정보과 지도안 및 실시간 형성평가">
+          <span class="btn-cluster-label" style="color:#ffd54f;">🎓 교육·평가</span>
+          <button class="btn btn-gold btn-sm" onclick="openPedagogyModal()" style="font-weight:800; border-color:#ffd54f; color:#fff3d1; background:linear-gradient(180deg,#3d2a0d 0%,#201505 100%);">🎓 교육과정 지도안</button>
+          <button class="btn btn-sm" onclick="playButtonClickSfx(); openSheetModal()" title="구글 스프레드시트 기반 형성평가 환류 대시보드">📊 구글 시트 기록</button>
+          <button class="btn btn-sm" onclick="openCopyrightModal()" title="비영리 교육 연구 목적 및 저작권 고지">⚖️ 저작권 고지</button>
+        </div>
+
+        <!-- 3. 학생 세션 및 초기화 클러스터 (Session Management) -->
+        <div class="btn-cluster btn-cluster-user" title="학생 로그인 세션 및 기록 관리">
+          <span class="btn-cluster-label" style="color:#ef9a9a;">👤 세션</span>
+          <span id="studentBadge" class="student-badge">S01</span>
+          <button class="btn btn-red btn-sm" onclick="playButtonClickSfx(); restartEntireGameFromScratch()" style="background:rgba(211,47,47,0.28); border-color:#e53935; color:#ffcdd2; font-weight:bold;" title="현재 학생의 진행 기록을 초기화하고 1단계부터 새로 시작">🔄 재시작</button>
+          <button class="btn btn-sm" onclick="playButtonClickSfx(); goToLoginPage()" title="로그인 페이지로 돌아가기">🚪 나가기</button>
+        </div>
       </div>
     </header>
 
@@ -1538,7 +1627,7 @@
     function updateBgmButtonUI() {
       var btn = document.getElementById('bgmToggleBtn');
       if (!btn) return;
-      btn.textContent = bgmEnabled ? '배경음악 정지' : '배경음악 재생';
+      btn.textContent = bgmEnabled ? '🎵 BGM 켜짐' : '🔇 BGM 꺼짐';
     }
 
     function playSfx(name, vol) {
@@ -2200,13 +2289,13 @@
       var btn = document.getElementById('controlModeBtn');
       var pruneBtn = document.getElementById('pruneBtn');
       if (state.controlMode === 'wasd') {
-        btn.textContent = '🎮 모드: WASD 액션 (클릭 불가)';
-        btn.className = 'btn btn-gold';
+        btn.textContent = '🎮 WASD 모드';
+        btn.className = 'btn btn-gold btn-sm';
         if (pruneBtn) pruneBtn.style.display = 'none';
         state.player.autoWaypoints = null;
       } else {
-        btn.textContent = '🖱️ 모드: 클릭 탐험 (마우스 지원)';
-        btn.className = 'btn btn-cyan';
+        btn.textContent = '🖱️ 마우스 클릭';
+        btn.className = 'btn btn-cyan btn-sm';
         if (pruneBtn) pruneBtn.style.display = 'inline-flex';
       }
     }
@@ -2220,7 +2309,7 @@
     function toggleCameraOverview() {
       state.wideOverview = !state.wideOverview;
       var btn = document.getElementById('camModeBtn');
-      btn.textContent = state.wideOverview ? '🔍 시점: 캐릭터 밀착 스크롤로 전환' : '🔍 시점: 전체 긴 맵 한눈에 보기';
+      btn.textContent = state.wideOverview ? '🔍 밀착 추적 시점' : '🔍 전체 맵 시점';
       playSfx('sfx_glyph', 0.45);
     }
 
@@ -2451,7 +2540,7 @@
       state.abstractSight = !state.abstractSight;
       var btn = document.getElementById('sightBtn');
       var pill = document.getElementById('sightKeyPill');
-      var txt = state.abstractSight ? '👁️ 맵 힌트 (Tab): ON (안전 루트 안내)' : '👁️ 맵 힌트 (Tab): OFF';
+      var txt = state.abstractSight ? '👁️ 맵 힌트 ON' : '👁️ 맵 힌트 OFF';
       btn.textContent = txt;
       if (pill) pill.textContent = txt;
       playSfx('sfx_glyph', 0.55);
