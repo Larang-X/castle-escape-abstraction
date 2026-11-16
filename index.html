@@ -2395,7 +2395,7 @@
           { id: 'n01', name: '심연의 사신 데스', shortTag: '💀심연의 사신 [불사신]', type: 'monster', immortal: true, dmg: 40, sprite: 'spr_death_f1', sprite2: 'spr_death_f2', x: 960, y: 200, w: 76, h: 98, origX: 960, origY: 200, vx: -1.2, vy: 0.8, origVx: -1.2, origVy: 0.8, moveMode: 'stalker', hit: false, actionState: 'stalk', actionTimer: 140, phaseTick: 0 },
           
           // 2. [정통 창월의 십자가 보스 4] 까마귀 마수 말파스 - 심연대교(G) 바로 위쪽 상공 비행 & 검은 깃털(흑우탄) 난사
-          { id: 'n02', name: '까마귀 마수 말파스', shortTag: '🪶말파스 [비행]', type: 'monster', hp: 4, maxHp: 4, dmg: 35, sprite: 'spr_malphas_f1', sprite2: 'spr_malphas_f2', spriteAtk: 'spr_malphas_atk', x: 1950, y: 640, w: 108, h: 78, origX: 1950, origY: 640, vx: -1.2, vy: 0.6, origVx: -1.2, origVy: 0.6, moveMode: 'territoryRoam', minX: 1850, maxX: 2080, minY: 570, maxY: 720, hit: false, actionState: 'hover', attackTimer: 90 },
+          { id: 'n02', name: '까마귀 마수 말파스', shortTag: '🪶말파스 [비행]', type: 'monster', hp: 5, maxHp: 5, dmg: 35, sprite: 'spr_malphas_f1', sprite2: 'spr_malphas_f2', spriteAtk: 'spr_malphas_atk', x: 1950, y: 640, w: 108, h: 78, origX: 1950, origY: 640, vx: -1.2, vy: 0.6, origVx: -1.2, origVy: 0.6, moveMode: 'territoryRoam', minX: 1850, maxX: 2080, minY: 570, maxY: 720, hit: false, actionState: 'hover', attackTimer: 90 },
 
           // 11. [정통 캐슬바니아 비행 사령] 심연 사령 레이스 - 상층 폐쇄 구역(X2) 상공 전용 비행
           { id: 'n11', name: '심연 사령 레이스', shortTag: '👻심연레이스', type: 'monster', dmg: 35, sprite: 'spr_wraith_f1', sprite2: 'spr_wraith_f2', x: 1920, y: 150, w: 76, h: 76, origX: 1920, origY: 150, vx: 1.8, vy: -1.0, origVx: 1.8, origVy: -1.0, moveMode: 'territoryRoam', minX: 1780, maxX: 2180, minY: 110, maxY: 250, hit: false },
@@ -3682,25 +3682,12 @@
             // 2단계: 도끼창 내리치기 지속 (atk2)
             nz.actionTimer--;
             if (nz.actionTimer <= 0) {
-              // 3단계: 지면 충돌 강타 (atk3) + 지진 충격파
+              // 3단계: 지면 충돌 강타 (atk3) (원거리 충격파는 삭제하고 강타 지진 및 파티클 연출과 근접 타격 유지)
               nz.actionState = 'impact';
               nz.actionTimer = 8; // 2배속 충격 홀드 (약 0.13초)
               state.screenShake = 7;
               playSfx('hit', 0.85);
               spawnParticles(nz.facingDir < 0 ? nz.x : nz.x + nz.w, nz.y + nz.h - 4, '#ba68c8', 16);
-              // 지면 충격파 발사
-              if (!state.hazardProjectiles) state.hazardProjectiles = [];
-              state.hazardProjectiles.push({
-                type: 'finalknight_wave',
-                x: nz.facingDir < 0 ? nz.x - 16 : nz.x + nz.w + 16,
-                y: nz.y + nz.h - 16,
-                vx: nz.facingDir * 7.5,
-                vy: 0,
-                r: 22,
-                dmg: 30,
-                life: 65,
-                name: '단죄의 지면 충격파'
-              });
             }
           } else if (nz.actionState === 'impact') {
             // 3단계: 지면 강타 충격 홀드 (atk3)
