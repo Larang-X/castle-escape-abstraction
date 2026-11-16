@@ -954,13 +954,13 @@
           <div style="line-height:1.6;">
             <span style="background:#1a237e; color:#fff; font-size:11px; padding:2px 7px; border-radius:3px; font-weight:bold; margin-right:6px;">[9정03-02]</span>
             <strong style="color:#fff;">문제 해결을 위한 추상화의 중요성을 이해하고, 핵심요소를 중심으로 알고리즘을 설계한다.</strong>
-            <div style="font-size:12px; color:#c5cae9; margin-left:14px; margin-top:2px;">➔ <strong>[2·3단계]</strong> 불필요한 우회로와 위험 함정을 가지치기(소거)하여 복잡성을 축약하고, 핵심 거점과 가중치 간선 기반의 최적 탈출 경로 알고리즘을 도출.</div>
+            <div style="font-size:12px; color:#c5cae9; margin-left:14px; margin-top:2px;">➔ <strong>[2·3단계]</strong> 불필요한 우회로와 위험 함정을 가지치기(소거)하여 복잡성을 축약하고, 핵심 장소와 이동 시간을 바탕으로 가장 빠른 탈출 방법(알고리즘)을 만듦.</div>
           </div>
           <div style="margin-top:8px; font-size:11.5px; color:#ffd54f; border-top:1px dashed rgba(255,213,79,0.3); padding-top:6px;">단원: III. 알고리즘과 프로그래밍 — 1. 추상화와 문제 해결 / 2. 알고리즘 (중학교 『정보』 교과서 공통)</div>
         </div>
 
         <div style="margin-bottom:14px;">
-          <div style="font-weight:900; color:#e5c378; margin-bottom:6px; font-size:14px;">📌 게임 기반 수업(GBL) 3단계 교수학습 설계 모형 (성취기준 매핑)</div>
+          <div style="font-weight:900; color:#e5c378; margin-bottom:6px; font-size:14px;">📌 게임 기반 수업 3단계 교수학습 설계 모형 (성취기준 매핑)</div>
           <table style="width:100%; border-collapse:collapse; font-size:12px; background:rgba(12, 10, 16, 0.9); border:1px solid #4a361e;">
             <thead>
               <tr style="background:#221825; color:#ffd54f; border-bottom:1px solid #5a4224;">
@@ -978,7 +978,7 @@
               <tr>
                 <td style="padding:8px; border:1px solid #4a361e; font-weight:bold; color:#80deea;">2단계: 가지치기 &amp; 핵심 추출<br/><span style="font-size:10.5px; color:#b2ebf2;">[9정03-02]</span></td>
                 <td style="padding:8px; border:1px solid #4a361e;">막다른 방, 지연 우회로, 위험 함정 배제 및 핵심 거점 소요 시간 산출</td>
-                <td style="padding:8px; border:1px solid #4a361e;">추상화의 핵심인 불필요한 요소 소거(Pruning)를 실행하고, 공간을 노드와 가중치 간선으로 모델링하여 구체적 배제 사유 논리화.</td>
+                <td style="padding:8px; border:1px solid #4a361e;">필요 없는 요소를 지우는 가지치기를 하고, 맵을 장소와 이동 시간만 남긴 노선도처럼 단순하게 바꾸어, 왜 뺐는지 이유를 말로 설명함.</td>
               </tr>
               <tr>
                 <td style="padding:8px; border:1px solid #4a361e; font-weight:bold; color:#ffd54f;">3단계: 최적 알고리즘 도출<br/><span style="font-size:10.5px; color:#fff59d;">[9정03-02]</span></td>
@@ -1008,14 +1008,14 @@
         </div>
 
         <div style="background:rgba(20, 26, 38, 0.9); border:1px solid #29b6f6; border-left:4px solid #00e5ff; padding:12px 14px; border-radius:6px; margin-bottom:14px;">
-          <div style="font-weight:900; color:#80d8ff; margin-bottom:8px; font-size:13.5px; display:flex; align-items:center; gap:6px;">
-            <span>🔍</span> <span>교수·학습 핵심 개념 및 알고리즘적 정합성 안내</span>
-          </div>
-          <div style="font-size:12px; line-height:1.75; color:#eceff1;">
-            • <strong style="color:#80d8ff;">추상화 (Abstraction)</strong>: 복잡한 문제 상황에서 불필요한 세부사항(미끼 보물방, 위험 함정, 긴 우회로)을 과감히 제거(Pruning)하고, 핵심 요소(필수 거점 및 소요 시간)만 단순화하여 추출하는 컴퓨팅 사고력의 핵심 원리입니다.<br/>
-            • <strong style="color:#80d8ff;">그래프 모델링 (Graph Modeling)</strong>: 추출한 핵심 공간을 정점(Node)으로, 연결 통로와 소요 시간을 가중치 간선(Weighted Edge)으로 구조화하여 알고리즘이 해결할 수 있는 데이터 모델로 변환합니다.<br/>
-            • <strong style="color:#ffd54f;">그리디 기반 다익스트라 (Greedy &amp; Dijkstra)</strong>: 다익스트라는 매 순간 최적의 선택을 반복하는 <em>그리디(Greedy) 전략</em>을 활용하여 가중치 그래프에서 최단 경로를 구하는 알고리즘입니다. (※ 다익스트라와 그리디를 동일한 알고리즘으로 혼용하지 않으며, '탐욕적 최적화 전략을 구체화한 최단 경로 알고리즘'으로 정확히 지도)<br/>
-            • <strong style="color:#69f0ae;">설명 가능한 최적성 (Explainable Optimality)</strong>: 학생이 단순히 화면에 표시되는 청록색 경로를 수동적으로 따라가는 것을 지양하고, <em>"왜 막다른 길 C를 배제하고 B→D 경로를 선택했을 때 6분 최적이 되는가?"</em>를 수식(1+2+2+1=6분)과 논리적 문장으로 직접 증명하도록 유도합니다.
+          <div style="font-weight:900; color:#80d8ff; margin-bottom:8px; font-size:13.5px;">🔍 수업에서 쓰는 말, 쉽게 풀어 보기</div>
+          <div style="font-size:12.5px; line-height:1.8; color:#eceff1;">
+            • <strong style="color:#80d8ff;">추상화</strong>: 복잡한 문제에서 필요 없는 것은 빼고, 꼭 필요한 것만 남기는 것입니다.<br/>
+            &nbsp;&nbsp;예) 지하철 노선도에는 건물이나 도로 모양이 없고 역 이름과 연결만 있어서 길 찾기가 쉽습니다.<br/>
+            • <strong style="color:#80d8ff;">가지치기</strong>: 정답이 될 수 없는 길(막다른 방, 너무 오래 걸리는 길, 함정)을 처음부터 지워 버리는 것입니다.<br/>
+            • <strong style="color:#80d8ff;">핵심 요소</strong>: 탈출에 꼭 필요한 장소와 그 사이를 이동하는 시간입니다.<br/>
+            • <strong style="color:#69f0ae;">가장 빠른 길 설명하기</strong>: 화면의 청록색 길을 그냥 따라가지 않고, <em>"왜 이 길이 가장 빠른가?"</em>를 시간 계산으로 직접 설명해야 합니다.<br/>
+            &nbsp;&nbsp;예) MAP 1에서 용암 우회로로 가면 1+2+4+3=10분, 청록색 길로 가면 1+2+2+1=6분이라서 청록색 길이 더 빠릅니다.
           </div>
         </div>
 
@@ -1033,188 +1033,106 @@
     </div>
   </div>
 
-  <!-- ===================================================================== -->
-  <!-- 📝 컴퓨팅 사고력 사전·사후 진단평가 및 학습 효과 실증 데이터 (#diagnosticModal) -->
-  <!-- ===================================================================== -->
+  <!-- 사전·사후 평가 모달 -->
   <div id="diagnosticModal" class="modal-backdrop hidden">
     <div class="modal-card bloodborne-gold-card" style="max-width:780px; text-align:left; border:2px solid #00e5ff; box-shadow:0 0 25px rgba(0,229,255,0.25);">
       <div style="font-size:19px; font-weight:900; color:#00e5ff; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #00838f; padding-bottom:8px;">
-        <span style="display:flex; align-items:center; gap:8px;">
-          <span>📝</span> <span>컴퓨팅 사고력 사전·사후 평가 &amp; 교육 효과 실증</span>
-        </span>
+        <span>📝 사전·사후 평가</span>
         <button class="btn" onclick="closeDiagnosticModal()" style="padding:4px 10px; font-size:12px;">✕</button>
       </div>
 
-      <!-- Tab Buttons -->
       <div style="display:flex; gap:8px; margin-bottom:14px; border-bottom:1px solid #37474f; padding-bottom:8px; flex-wrap:wrap;">
-        <button id="diagTabBtn1" class="btn btn-gold btn-sm" onclick="switchDiagnosticTab(1)" style="font-weight:bold;">📋 1. 사전 진단평가 (게임 전)</button>
-        <button id="diagTabBtn2" class="btn btn-sm" onclick="switchDiagnosticTab(2)" style="font-weight:bold;">🎯 2. 사후 성취도평가 (게임 후)</button>
-        <button id="diagTabBtn3" class="btn btn-sm" onclick="switchDiagnosticTab(3)" style="font-weight:bold; color:#00e5ff; border-color:#00e5ff;">📈 3. 교육 효과 실증 데이터 (+64%p)</button>
+        <button id="diagTabBtn1" class="btn btn-gold btn-sm" onclick="switchDiagnosticTab(1)" style="font-weight:bold;">📋 1. 사전 평가 (게임 전)</button>
+        <button id="diagTabBtn2" class="btn btn-sm" onclick="switchDiagnosticTab(2)" style="font-weight:bold;">🎯 2. 사후 평가 (게임 후)</button>
+        <button id="diagTabBtn3" class="btn btn-sm" onclick="switchDiagnosticTab(3)" style="font-weight:bold; color:#00e5ff; border-color:#00e5ff;">📈 3. 점수 비교</button>
       </div>
 
       <div style="max-height:64vh; overflow-y:auto; padding-right:8px; font-size:13px; line-height:1.7; color:#e2dbd0;">
-        
-        <!-- ================= TAB 1: 사전 진단평가 ================= -->
+
         <div id="diagTabContent1">
           <div style="background:rgba(25, 20, 15, 0.9); border:1px solid #795548; border-left:4px solid #ffb74d; padding:10px 14px; border-radius:6px; margin-bottom:14px;">
-            <div style="font-weight:bold; color:#ffb74d; font-size:13.5px;">📋 [사전 진단평가] 게임 플레이 전 추상화 오개념 진단</div>
-            <div style="font-size:12px; color:#d7ccc8; margin-top:2px;">게임 학습을 시작하기 전, 일상적 오개념과 문제 해결 방식을 자가 진단합니다.</div>
+            <div style="font-weight:bold; color:#ffb74d;">📋 사전 평가: 게임을 하기 전에 풀어 보세요</div>
+            <div style="font-size:12px; color:#d7ccc8; margin-top:2px;">지금 내가 추상화를 얼마나 알고 있는지 확인합니다. 틀려도 괜찮아요!</div>
           </div>
 
-          <!-- 사전 문항 1 -->
           <div style="background:rgba(18, 14, 22, 0.9); border:1px solid #4a361e; padding:12px; border-radius:6px; margin-bottom:12px;">
-            <div style="font-weight:bold; color:#ffd54f; margin-bottom:6px;">Q1. 정보 교과에서 말하는 '추상화(Abstraction)'의 올바른 의미는 무엇일까요?</div>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;">
-              <input type="radio" name="preQ1" value="A" style="margin-right:6px;"> ① 미술 작품처럼 내용을 난해하고 모호(Vague)하게 만들어 해석을 어렵게 하는 것
-            </label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;">
-              <input type="radio" name="preQ1" value="B" style="margin-right:6px;"> ② 문제 해결에 불필요한 세부사항을 제거하고 핵심 요소만 단순화하여 추출하는 것
-            </label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;">
-              <input type="radio" name="preQ1" value="C" style="margin-right:6px;"> ③ 미로의 벽돌 질감과 몬스터 외형 등 모든 시각적 요소를 빠짐없이 자세히 묘사하는 것
-            </label>
+            <div style="font-weight:bold; color:#ffd54f; margin-bottom:6px;">Q1. 정보 교과에서 말하는 '추상화'는 무엇일까요?</div>
+            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="preQ1" value="A" style="margin-right:6px;"> ① 내용을 어렵고 흐릿하게 만들어서 알아보기 힘들게 하는 것</label>
+            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="preQ1" value="B" style="margin-right:6px;"> ② 필요 없는 부분은 빼고, 꼭 필요한 것만 남겨서 단순하게 만드는 것</label>
+            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="preQ1" value="C" style="margin-right:6px;"> ③ 모든 모양과 색깔을 하나도 빠뜨리지 않고 자세히 그리는 것</label>
           </div>
 
-          <!-- 사전 문항 2 -->
           <div style="background:rgba(18, 14, 22, 0.9); border:1px solid #4a361e; padding:12px; border-radius:6px; margin-bottom:12px;">
-            <div style="font-weight:bold; color:#ffd54f; margin-bottom:6px;">Q2. 2,400×960 크기의 거대한 복잡 미로에서 탈출하려 할 때, 가장 먼저 취해야 할 효과적인 행동은?</div>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;">
-              <input type="radio" name="preQ2" value="A" style="margin-right:6px;"> ① 눈앞에 보이는 갈림길을 계획 없이 무작정 끝까지 뛰어가 본다.
-            </label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;">
-              <input type="radio" name="preQ2" value="B" style="margin-right:6px;"> ② 출발지와 최종 목표지를 명확히 식별하고, 막다른 방과 위험 함정을 먼저 가지치기(배제)한다.
-            </label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;">
-              <input type="radio" name="preQ2" value="C" style="margin-right:6px;"> ③ 시간이 오래 걸리더라도 맵 전체의 모든 구석을 한 번씩 다 방문한다.
-            </label>
+            <div style="font-weight:bold; color:#ffd54f; margin-bottom:6px;">Q2. 아주 복잡한 미로에서 탈출하려면 가장 먼저 무엇을 하는 것이 좋을까요?</div>
+            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="preQ2" value="A" style="margin-right:6px;"> ① 아무 길이나 골라서 끝까지 달려가 본다.</label>
+            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="preQ2" value="B" style="margin-right:6px;"> ② 출발 장소와 도착 장소를 확인하고, 막다른 길이나 함정을 먼저 지운다.</label>
+            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="preQ2" value="C" style="margin-right:6px;"> ③ 시간이 오래 걸려도 미로의 모든 곳을 한 번씩 가 본다.</label>
           </div>
 
           <div style="text-align:center; margin-top:10px;">
-            <button class="btn btn-gold btn-sm" onclick="gradePreTest()" style="padding:6px 20px; font-weight:bold;">사전 진단 결과 제출 및 피드백 확인</button>
+            <button class="btn btn-gold btn-sm" onclick="gradePreTest()" style="padding:6px 20px; font-weight:bold;">사전 평가 채점하기</button>
           </div>
-          <div id="preTestFeedback" style="margin-top:12px; display:none; padding:10px; border-radius:6px; font-size:12px; line-height:1.6;"></div>
+          <div id="preTestFeedback" style="margin-top:12px; display:none; padding:10px; border-radius:6px; font-size:12.5px; line-height:1.7;"></div>
         </div>
 
-        <!-- ================= TAB 2: 사후 성취도평가 ================= -->
         <div id="diagTabContent2" style="display:none;">
           <div style="background:rgba(15, 25, 20, 0.9); border:1px solid #2e7d32; border-left:4px solid #69f0ae; padding:10px 14px; border-radius:6px; margin-bottom:14px;">
-            <div style="font-weight:bold; color:#69f0ae; font-size:13.5px;">🎯 [사후 성취도평가] 게임 기반 학습 후 컴퓨팅 사고력 도달도 검증</div>
-            <div style="font-size:12px; color:#c8e6c9; margin-top:2px;">게임을 완료한 후, 가지치기(Pruning) 및 최적 경로 알고리즘 논증 능력을 평가합니다.</div>
+            <div style="font-weight:bold; color:#69f0ae;">🎯 사후 평가: 게임을 마친 뒤에 풀어 보세요</div>
+            <div style="font-size:12px; color:#c8e6c9; margin-top:2px;">게임에서 배운 가지치기와 가장 빠른 길 설명하기를 확인합니다.</div>
           </div>
 
-          <!-- 사후 문항 1 -->
           <div style="background:rgba(18, 14, 22, 0.9); border:1px solid #4a361e; padding:12px; border-radius:6px; margin-bottom:12px;">
-            <div style="font-weight:bold; color:#ffd54f; margin-bottom:6px;">Q1. [가지치기 &amp; 상태 공간 축약] 게임 MAP 1에서 C(상층보물실: 막다른 방)와 E(화산암우회로: 7분)를 배제(Pruning)함으로써 얻는 가장 중요한 알고리즘적 이점은?</div>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;">
-              <input type="radio" name="postQ1" value="A" style="margin-right:6px;"> ① 문제 해결에 불필요한 상태 공간(State Space)을 축약하여, 최적 탈출 경로 도출의 탐색 비용을 획기적으로 줄인다.
-            </label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;">
-              <input type="radio" name="postQ1" value="B" style="margin-right:6px;"> ② 게임 플레이 타임을 늘려 미로를 더 오랫동안 즐길 수 있게 한다.
-            </label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;">
-              <input type="radio" name="postQ1" value="C" style="margin-right:6px;"> ③ 캐릭터의 이동 속도를 2배로 증가시키는 버프 아이템을 획득한다.
-            </label>
+            <div style="font-weight:bold; color:#ffd54f; margin-bottom:6px;">Q1. MAP 1에서 막다른 보물방(C)과 느린 용암 우회로(E)를 처음부터 지우고 생각하면 어떤 점이 좋을까요?</div>
+            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="postQ1" value="A" style="margin-right:6px;"> ① 따져 볼 길이 줄어들어서, 가장 빠른 길을 더 쉽고 빠르게 찾을 수 있다.</label>
+            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="postQ1" value="B" style="margin-right:6px;"> ② 게임 시간이 길어져서 더 오래 즐길 수 있다.</label>
+            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="postQ1" value="C" style="margin-right:6px;"> ③ 캐릭터가 두 배 빨리 달릴 수 있다.</label>
           </div>
 
-          <!-- 사후 문항 2 -->
           <div style="background:rgba(18, 14, 22, 0.9); border:1px solid #4a361e; padding:12px; border-radius:6px; margin-bottom:12px;">
-            <div style="font-weight:bold; color:#ffd54f; margin-bottom:6px;">Q2. [설명 가능한 최적성] 학생이 단순히 청록색 추천 경로를 수동적으로 따라가는 것을 넘어, "A→B→D→F→G 경로가 왜 유일한 6분 최적해인가?"를 수학적·논리적으로 설명한 올바른 근거는?</div>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;">
-              <input type="radio" name="postQ2" value="A" style="margin-right:6px;"> ① 청록색 형광 라인이 다른 색상보다 화면에서 가장 눈에 잘 띄기 때문이다.
-            </label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;">
-              <input type="radio" name="postQ2" value="B" style="margin-right:6px;"> ② 우회로 E 경유 시 1+7+2+1=11분이 소요되지만, 주 경로 B→D 경유 시 가중치 합산 시간이 1+2+2+1=6분으로 모든 대안 경로 중 최소임이 수학적으로 증명되기 때문이다.
-            </label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;">
-              <input type="radio" name="postQ2" value="C" style="margin-right:6px;"> ③ 몬스터가 가장 많이 출몰하는 길이라서 스릴이 넘치기 때문이다.
-            </label>
+            <div style="font-weight:bold; color:#ffd54f; margin-bottom:6px;">Q2. 청록색 길(A→B→D→F→G)이 가장 빠르다는 것을 바르게 설명한 것은 무엇일까요?</div>
+            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="postQ2" value="A" style="margin-right:6px;"> ① 청록색이 화면에서 가장 눈에 잘 띄기 때문이다.</label>
+            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="postQ2" value="B" style="margin-right:6px;"> ② 용암 우회로로 가면 1+2+4+3=10분이 걸리지만, 이 길은 1+2+2+1=6분이라서 더 짧기 때문이다.</label>
+            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="postQ2" value="C" style="margin-right:6px;"> ③ 몬스터가 가장 많아서 더 재미있기 때문이다.</label>
           </div>
 
           <div style="text-align:center; margin-top:10px;">
-            <button class="btn btn-gold btn-sm" onclick="gradePostTest()" style="padding:6px 20px; font-weight:bold;">사후 성취도 결과 제출 및 심층 해설</button>
+            <button class="btn btn-gold btn-sm" onclick="gradePostTest()" style="padding:6px 20px; font-weight:bold;">사후 평가 채점하기</button>
           </div>
-          <div id="postTestFeedback" style="margin-top:12px; display:none; padding:10px; border-radius:6px; font-size:12px; line-height:1.6;"></div>
+          <div id="postTestFeedback" style="margin-top:12px; display:none; padding:10px; border-radius:6px; font-size:12.5px; line-height:1.7;"></div>
         </div>
 
-        <!-- ================= TAB 3: 교육 효과 실증 데이터 ================= -->
         <div id="diagTabContent3" style="display:none;">
           <div style="background:rgba(10, 24, 34, 0.9); border:1px solid #00838f; border-left:4px solid #00e5ff; padding:10px 14px; border-radius:6px; margin-bottom:14px;">
-            <div style="font-weight:bold; color:#00e5ff; font-size:13.5px;">📈 [교육 효과 실증 분석] 게임 기반 학습 전·후 학업 성취도 비교 (N=20)</div>
-            <div style="font-size:12px; color:#b2ebf2; margin-top:2px;">중학교 정보 교과 학급 20명 대상 단일집단 사전-사후 검증(Pre/Post-Test) 실증 분석 지표</div>
+            <div style="font-weight:bold; color:#00e5ff;">📈 사전·사후 점수 비교</div>
+            <div style="font-size:12px; color:#b2ebf2; margin-top:2px;">이 기기에서 채점한 나의 점수가 자동으로 표시됩니다.</div>
           </div>
 
-          <table style="width:100%; border-collapse:collapse; font-size:12px; background:rgba(12, 10, 16, 0.9); border:1px solid #4a361e; margin-bottom:14px;">
+          <table style="width:100%; border-collapse:collapse; font-size:13px; background:rgba(12, 10, 16, 0.9); border:1px solid #4a361e; margin-bottom:14px; text-align:center;">
             <thead>
-              <tr style="background:#1a2332; color:#80d8ff; border-bottom:1px solid #00838f;">
-                <th style="padding:8px; border:1px solid #37474f; width:28%;">평가 영역 (성취기준)</th>
-                <th style="padding:8px; border:1px solid #37474f; width:22%; text-align:center;">사전 진단 정답률</th>
-                <th style="padding:8px; border:1px solid #37474f; width:22%; text-align:center;">사후 성취도 정답률</th>
-                <th style="padding:8px; border:1px solid #37474f; width:28%; text-align:center;">학습 효과 향상도 (Gain)</th>
+              <tr style="background:#1a2332; color:#80d8ff;">
+                <th style="padding:8px; border:1px solid #37474f;">구분</th>
+                <th style="padding:8px; border:1px solid #37474f;">사전 평가 (게임 전)</th>
+                <th style="padding:8px; border:1px solid #37474f;">사후 평가 (게임 후)</th>
+                <th style="padding:8px; border:1px solid #37474f;">변화</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style="padding:8px; border:1px solid #37474f; font-weight:bold;">1. 추상화 개념 이해도<br/><span style="font-size:10.5px; color:#aaa;">(모호함 오개념 탈피)</span></td>
-                <td style="padding:8px; border:1px solid #37474f; text-align:center; color:#ff8a80;">35.0% (7/20명)</td>
-                <td style="padding:8px; border:1px solid #37474f; text-align:center; color:#69f0ae; font-weight:bold;">95.0% (19/20명)</td>
-                <td style="padding:8px; border:1px solid #37474f; text-align:center; color:#ffd54f; font-weight:900;">+60.0%p 향상 🚀</td>
-              </tr>
-              <tr>
-                <td style="padding:8px; border:1px solid #37474f; font-weight:bold;">2. 상태 공간 가지치기 능력<br/><span style="font-size:10.5px; color:#aaa;">(막다른 길·우회로 소거)</span></td>
-                <td style="padding:8px; border:1px solid #37474f; text-align:center; color:#ff8a80;">25.0% (5/20명)</td>
-                <td style="padding:8px; border:1px solid #37474f; text-align:center; color:#69f0ae; font-weight:bold;">90.0% (18/20명)</td>
-                <td style="padding:8px; border:1px solid #37474f; text-align:center; color:#ffd54f; font-weight:900;">+65.0%p 향상 🚀</td>
-              </tr>
-              <tr>
-                <td style="padding:8px; border:1px solid #37474f; font-weight:bold;">3. 최적 경로 논증 및 설명력<br/><span style="font-size:10.5px; color:#aaa;">(가중치 합산 수식 도출)</span></td>
-                <td style="padding:8px; border:1px solid #37474f; text-align:center; color:#ff8a80;">20.0% (4/20명)</td>
-                <td style="padding:8px; border:1px solid #37474f; text-align:center; color:#69f0ae; font-weight:bold;">85.0% (17/20명)</td>
-                <td style="padding:8px; border:1px solid #37474f; text-align:center; color:#ffd54f; font-weight:900;">+65.0%p 향상 🚀</td>
-              </tr>
-              <tr style="background:rgba(0,229,255,0.08);">
-                <td style="padding:8px; border:1px solid #37474f; font-weight:900; color:#00e5ff;">종합 컴퓨팅 사고력 평균</td>
-                <td style="padding:8px; border:1px solid #37474f; text-align:center; color:#ff8a80; font-weight:bold;">26.7%</td>
-                <td style="padding:8px; border:1px solid #37474f; text-align:center; color:#69f0ae; font-weight:900;">90.0%</td>
-                <td style="padding:8px; border:1px solid #37474f; text-align:center; color:#ffd54f; font-weight:900; font-size:13px;">+63.3%p 총체적 향상 🌟</td>
+                <td style="padding:10px; border:1px solid #37474f; font-weight:bold;">내 점수 (2점 만점)</td>
+                <td id="diagPreScore" style="padding:10px; border:1px solid #37474f;">아직 안 풀었어요</td>
+                <td id="diagPostScore" style="padding:10px; border:1px solid #37474f;">아직 안 풀었어요</td>
+                <td id="diagGain" style="padding:10px; border:1px solid #37474f; color:#ffd54f; font-weight:bold;">-</td>
               </tr>
             </tbody>
           </table>
 
-          <!-- 시각적 바 차트 -->
-          <div style="background:rgba(20, 16, 26, 0.9); border:1px solid #4a361e; padding:12px; border-radius:6px; margin-bottom:12px;">
-            <div style="font-weight:bold; color:#ffd54f; font-size:12.5px; margin-bottom:8px;">📊 사전 대비 사후 정답률 변화 시각화 (성취도 비교)</div>
-            
-            <div style="margin-bottom:8px;">
-              <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:2px;">
-                <span>사전 진단 평균 정답률 (26.7%)</span>
-                <span style="color:#ff8a80;">5.3명 / 20명</span>
-              </div>
-              <div style="background:#261820; height:14px; border-radius:7px; overflow:hidden;">
-                <div style="background:#e53935; width:26.7%; height:100%;"></div>
-              </div>
-            </div>
-
-            <div>
-              <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:2px;">
-                <span style="color:#69f0ae; font-weight:bold;">사후 성취도 평균 정답률 (90.0%)</span>
-                <span style="color:#69f0ae; font-weight:bold;">18.0명 / 20명 (+63.3%p 획기적 신장)</span>
-              </div>
-              <div style="background:#261820; height:14px; border-radius:7px; overflow:hidden;">
-                <div style="background:linear-gradient(90deg, #00b0ff, #00e676); width:90%; height:100%;"></div>
-              </div>
-            </div>
+          <div style="background:rgba(18, 28, 22, 0.9); border:1px solid #2e7d32; padding:10px 14px; border-radius:6px; font-size:12.5px; line-height:1.75; color:#e8f5e9;">
+            <div style="font-weight:bold; color:#69f0ae; margin-bottom:3px;">💡 이 평가를 쓰는 방법 (선생님용)</div>
+            1) 게임을 시작하기 전에 학생이 <strong>사전 평가</strong>를 풉니다.<br/>
+            2) 게임(1~3단계)을 마친 뒤에 같은 학생이 <strong>사후 평가</strong>를 풉니다.<br/>
+            3) 사전과 사후 점수를 비교하면 게임을 한 뒤에 추상화 이해가 얼마나 달라졌는지 알 수 있습니다.<br/>
+            4) 학생이 구글 시트에 남긴 2단계 답안(왜 그 길을 뺐는지)과 함께 보면, 스스로 판단했는지 청록색 길을 따라 했는지도 확인할 수 있습니다.
           </div>
-
-          <!-- 심사위원용 효과성 검증 요약 박스 -->
-          <div style="background:rgba(18, 28, 22, 0.9); border:1px solid #2e7d32; padding:10px 14px; border-radius:6px;">
-            <div style="font-weight:bold; color:#69f0ae; margin-bottom:3px; font-size:12.5px;">💡 심사위원을 위한 교육학적 효과성 검증 결론</div>
-            <div style="font-size:12px; line-height:1.65; color:#e8f5e9;">
-              1) <strong>자가 주도적 문제 해결</strong>: 학생들은 시스템의 청록색 안내선을 단순히 따라가지 않고, '불필요한 경로를 스스로 배제하고 최적해를 논증'하는 능력이 <strong>+65%p</strong> 급격히 향상되었습니다.<br/>
-              2) <strong>인지 부하(Cognitive Load) 경감</strong>: 2,400×960의 거대한 미로 상태 공간을 단 7~14개의 노드로 축약하여 추상화함으로써, 일반 지필 문제 대비 문제 해결 착수 속도가 <strong>3.2배</strong> 빨라졌습니다.<br/>
-              3) <strong>학습 몰입도 및 효능감</strong>: 학습 흥미도 설문 결과 <strong>4.85 / 5.0 만점</strong>을 기록하여, 게임의 재미(Gamification)와 정보 교육과정 성취기준의 내면화가 완벽히 결합되었음을 실증합니다.
-            </div>
-          </div>
-
         </div>
 
       </div>
@@ -1250,13 +1168,13 @@
         <p style="margin-bottom:12px;">
           <strong style="color:#ff8a80; font-size:13px;">3. 저작권법상 인용 및 공정이용 관련 고지</strong><br>
           본 작품은 교육 연구 목적의 저작물 이용에 관한 대한민국 <strong>저작권법 제28조(공표된 저작물의 인용) 및 제35조의5(저작물의 공정한 이용)</strong> 규정을 고려하여 제작되었습니다.<br>
-          원작 콘텐츠는 학습자의 교육적 몰입감(Gamification)을 제고하기 위한 교수·학습 메타포로서 최소한의 범위 내에서 인용되었습니다.<br>
+          원작 콘텐츠는 학습자의 교육적 몰입감을 제고하기 위한 교수·학습 메타포로서 최소한의 범위 내에서 인용되었습니다.<br>
           본 웹콘텐츠의 본질적 심사 및 평가 대상은 원작 게임 요소가 아니며, 출품자가 순수 독자 개발한 '3단계 알고리즘 추상화 시뮬레이션 엔진'과 '구글 시트 연동 실시간 형성평가 파이프라인'에 있습니다.<br>
           다만 비영리 교육 목적, 출처 표시 또는 본 고지문 자체가 저작물 이용에 대한 법적 허가나 면책을 의미하지 않으며, 개별 콘텐츠의 이용 적법성은 관련 법률과 구체적인 이용 방식에 따라 판단됩니다.
         </p>
         <p style="margin-bottom:12px;">
           <strong style="color:#ff8a80; font-size:13px;">4. 독자적 교육 시스템 및 창작물 보호</strong><br>
-          본 작품의 핵심 교육 기능인 <strong>3단계 알고리즘 추상화 노선도 시각화 엔진, 가중치 그래프 최적화 시스템, 학생 실시간 형성평가 클라우드 연동 파이프라인</strong>은 출품자가 독자적으로 설계·구현한 교육용 소프트웨어 시스템입니다.<br>
+          본 작품의 핵심 교육 기능인 <strong>3단계 알고리즘 추상화 노선도 시각화 엔진, 최적 경로 계산 시스템, 학생 실시간 형성평가 클라우드 연동 파이프라인</strong>은 출품자가 독자적으로 설계·구현한 교육용 소프트웨어 시스템입니다.<br>
           해당 시스템의 독자적인 코드, 알고리즘 구현 및 창작적 표현은 원작 게임의 지식재산권과 구분되며, 관련 법령에 따라 보호됩니다.
         </p>
         <p style="margin-bottom:0;">
@@ -1327,14 +1245,14 @@
         <p style="margin-bottom:12px;">
           <strong style="color:#ff8a80; font-size:13.5px;">3. 저작권법상 인용 및 공정이용 관련 고지</strong><br>
           본 작품은 교육 연구 목적의 저작물 이용에 관한 대한민국 <strong>저작권법 제28조(공표된 저작물의 인용) 및 제35조의5(저작물의 공정한 이용)</strong> 규정을 고려하여 제작되었습니다.<br>
-          원작 콘텐츠는 학습자의 교육적 몰입감(Gamification)을 제고하기 위한 교수·학습 메타포로서 최소한의 범위 내에서 인용되었습니다.<br>
+          원작 콘텐츠는 학습자의 교육적 몰입감을 제고하기 위한 교수·학습 메타포로서 최소한의 범위 내에서 인용되었습니다.<br>
           본 웹콘텐츠의 본질적 심사 및 평가 대상은 원작 게임 요소가 아니며, 출품자가 순수 독자 개발한 '3단계 알고리즘 추상화 시뮬레이션 엔진'과 '구글 시트 연동 실시간 형성평가 파이프라인'에 있습니다.<br>
           다만 비영리 교육 목적, 출처 표시 또는 본 고지문 자체가 저작물 이용에 대한 법적 허가나 면책을 의미하지 않으며, 개별 콘텐츠의 이용 적법성은 관련 법률과 구체적인 이용 방식에 따라 판단됩니다.
         </p>
 
         <p style="margin-bottom:12px;">
           <strong style="color:#ff8a80; font-size:13.5px;">4. 독자적 교육 시스템 및 창작물 보호</strong><br>
-          본 작품의 핵심 교육 기능인 <strong>3단계 알고리즘 추상화 노선도 시각화 엔진, 가중치 그래프 최적화 시스템, 학생 실시간 형성평가 클라우드 연동 파이프라인</strong>은 출품자가 독자적으로 설계·구현한 교육용 소프트웨어 시스템입니다.<br>
+          본 작품의 핵심 교육 기능인 <strong>3단계 알고리즘 추상화 노선도 시각화 엔진, 최적 경로 계산 시스템, 학생 실시간 형성평가 클라우드 연동 파이프라인</strong>은 출품자가 독자적으로 설계·구현한 교육용 소프트웨어 시스템입니다.<br>
           해당 시스템의 독자적인 코드, 알고리즘 구현 및 창작적 표현은 원작 게임의 지식재산권과 구분되며, 관련 법령에 따라 보호됩니다.
         </p>
 
@@ -1368,7 +1286,7 @@
         <p class="prologue-desc">
           서기 1999년, 붉은 달이 떠오른 날 밤 홀연히 나타난 고대 성채 미궁이 탈출로를 가로막았다.<br/>
           그곳에 갇혀버린 학생 탐험가! 과연 무사히 고성 미궁을 탈출할 수 있을까?<br/>
-          눈앞을 어지럽히는 현란한 장식과 위험한 미끼 함정(방해물)을 걷어내고, 오직 탈출에 꼭 필요한 핵심 경로만 찾아내는 정보 교과의 <strong>'추상화(Abstraction)'</strong> 개념을 무기 삼아 고성 미궁을 탈출해보자!
+          눈앞을 어지럽히는 현란한 장식과 위험한 미끼 함정(방해물)을 걷어내고, 오직 탈출에 꼭 필요한 핵심 경로만 찾아내는 정보 교과의 <strong>'추상화'</strong> 개념을 무기 삼아 고성 미궁을 탈출해보자!
         </p>
       </div>
 
@@ -1431,7 +1349,7 @@
         </div>
       </div>
       <div class="header-controls">
-        <!-- 1. 탐험 및 조작 클러스터 (Gameplay & View) -->
+        <!-- 1. 탐험 및 조작 클러스터 -->
         <div class="btn-cluster" title="게임 조작 및 화면 시점 설정">
           <span class="btn-cluster-label">🎮 탐험·조작</span>
           <button class="btn btn-gold btn-sm" onclick="toggleControlMode()" id="controlModeBtn">🎮 WASD 모드</button>
@@ -1440,7 +1358,7 @@
           <button class="btn btn-sm" onclick="toggleAudioBgm()" id="bgmToggleBtn">🎵 BGM</button>
         </div>
 
-        <!-- 2. 교육과정 및 평가 대시보드 클러스터 (Pedagogy & Sheets) -->
+        <!-- 2. 교육과정 및 평가 대시보드 클러스터 -->
         <div class="btn-cluster btn-cluster-edu" title="2022 개정 교육과정 정보과 지도안 및 실시간 형성평가">
           <button class="btn btn-gold btn-sm" onclick="playButtonClickSfx(); openPedagogyModal()" style="font-weight:800; border-color:#ffd54f; color:#fff3d1; background:linear-gradient(180deg,#3d2a0d 0%,#201505 100%);" title="2022 개정 교육과정 정보과 지도안 및 평가 루브릭 열기">🎓 교육·평가 지도안</button>
           <button class="btn btn-cyan btn-sm" onclick="playButtonClickSfx(); openDiagnosticModal()" style="font-weight:800; border-color:#00e5ff; color:#e0f7fa; background:linear-gradient(180deg,#006064 0%,#00363a 100%);" title="학습 효과 실증을 위한 컴퓨팅 사고력 사전·사후 진단평가">📝 사전·사후 평가</button>
@@ -1448,7 +1366,7 @@
           <button class="btn btn-sm" onclick="playButtonClickSfx(); openCopyrightModal()" title="비영리 교육 연구 목적 및 저작권 고지">⚖️ 저작권 고지</button>
         </div>
 
-        <!-- 3. 학생 세션 및 초기화 클러스터 (Session Management) -->
+        <!-- 3. 학생 세션 및 초기화 클러스터 -->
         <div class="btn-cluster btn-cluster-user" title="학생 로그인 세션 및 기록 관리">
           <span class="btn-cluster-label" style="color:#ef9a9a;">👤 세션</span>
           <span id="studentBadge" class="student-badge">S01</span>
@@ -1462,7 +1380,7 @@
       <!-- Core Pedagogical Banner -->
       <section class="concept-banner">
         <div class="concept-box">
-          <span class="concept-tag tag-wrong">❌ 일상생활에서의 오해: "추상적이다 (Vague)"</span>
+          <span class="concept-tag tag-wrong">❌ 일상생활에서의 오해: "추상적이다"</span>
           <div style="font-size:13px; color:#e0d6f5;">
             "내용이 희미하고 모호해서 무슨 말인지 잘 모르겠다"는 뜻으로 쓰이지만, <strong>정보 교과의 추상화는 정반대이다.</strong>
           </div>
@@ -1502,7 +1420,7 @@
             <span class="tex-badge"><span class="tex-swatch" style="background:#00e5ff; border:1px solid #fff;"></span>청록 문양 대교 = 최적 핵심 경로(안전·최단)</span>
             <span class="tex-badge"><span class="tex-swatch" style="background:#90a4ae; border:1px solid #cfd8dc;"></span>계단식 벽돌 층계 = 상·하층 이동 계단</span>
             <span class="tex-badge"><span class="tex-swatch" style="background:#ffd740; border:1px solid #ff9100;"></span>기어·크리스탈 승강대 / 엘리베이터</span>
-            <span class="tex-badge"><span class="tex-swatch" style="background:#7c4dff; border:1px solid #e040fb;"></span>순간이동 마법진 발판 (Warp Pad)</span>
+            <span class="tex-badge"><span class="tex-swatch" style="background:#7c4dff; border:1px solid #e040fb;"></span>순간이동 마법진 발판</span>
             <span class="tex-badge"><span class="tex-swatch" style="background:#ff7043; border:1px solid #d84315;"></span>균열 용암·가시암 = 느린 우회로(비최적)</span>
             <span class="tex-badge"><span class="tex-swatch" style="background:#ab47bc; border:1px solid #ff4081;"></span>진홍 저주 석판 = 막다른 미끼 함정(진입 금지!)</span>
             <span class="tex-badge"><span class="tex-swatch" style="background:#d50000; border:1px solid #fff;"></span>💀 즉사 구역 (HP 100% 즉사!)</span>
@@ -1543,7 +1461,7 @@
         <!-- Bottom Sub-Screen: Wide Real-time Abstraction Graph + Optimal Route Verifier -->
         <div class="screen-panel">
           <div class="screen-header" style="border-left-color:var(--cyan);">
-            <span>📡 SUB-SCREEN — 실시간 추상화(Abstraction) 노선도 & 최적 경로 검증기</span>
+            <span>📡 SUB-SCREEN — 실시간 추상화 노선도 & 최적 경로 검증기</span>
             <span id="graphStateBadge" style="color:var(--cyan-bright);">[추상화 진행률 0%]</span>
           </div>
           <div class="subscreen-grid">
@@ -1556,7 +1474,7 @@
                   🎯 왜 '탈출 방해물 가지치기(추상화)'가 '최적 탈출 경로 탐색'으로 이어질까요?
                 </div>
                 <p style="color:#d7cde8; line-height:1.5; font-size:12px;">
-                  우회로나 막다른 방에 있는 미끼 상자·장식 함정(Noise)을 먹으려고 <strong>직접 캐릭터가 걸어가면 시간이 낭비되어 최적 경로가 깨집니다!</strong><br/>
+                  우회로나 막다른 방에 있는 미끼 상자·장식 함정을 먹으려고 <strong>직접 캐릭터가 걸어가면 시간이 낭비되어 최적 경로가 깨집니다!</strong><br/>
                   불필요한 갈림길과 함정을 <strong>원격 가지치기</strong>하거나 <strong>[맵 힌트 (Tab)]</strong>로 확인한 뒤, 추출된 <strong>청록색 최단 루트</strong>로만 이동해 탈출하세요!
                 </p>
               </div>
@@ -1627,7 +1545,7 @@
           <div class="chat-log" id="chatLog">
             <div class="chat-bubble chat-ai">환영합니다, 학생 탐험가여!
 각 스테이지는 이전 맵을 탈출해야 다음 맵이 열립니다.
-주의하세요: 막다른 방이나 느린 우회로에 놓인 보물상자·함정(Noise)을 직접 몸으로 가서 부수면 시간이 낭비되어 '최적 경로'가 아니게 됩니다!
+주의하세요: 막다른 방이나 느린 우회로에 놓인 보물상자·함정을 직접 몸으로 가서 부수면 시간이 낭비되어 '최적 경로'가 아니게 됩니다!
 탈출 방해물은 [Space 검기]나 [맵 힌트]를 활용해 파악하고, 캐릭터는 추출된 '최적 핵심 발판'으로만 이동해 탈출하세요!</div>
           </div>
           <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
@@ -1696,7 +1614,7 @@
         <!-- Valmanway Legendary Weapon Reward Container (Shown if Map 4 cleared) -->
         <div id="modalValmanwayReward" style="display:none; margin-top:14px; background:linear-gradient(180deg, rgba(62,49,20,0.85) 0%, rgba(20,16,6,0.95) 100%); border:2px solid #ffd740; border-radius:8px; padding:12px; box-shadow:0 0 18px rgba(255,215,64,0.4);">
           <div style="font-size:15px; font-weight:900; color:#ffd740; display:flex; align-items:center; justify-content:center; gap:8px;">
-            ⚔️ [전설의 비검 획득] 질풍의 비검 (Secret Gale Blade)
+            ⚔️ [전설의 비검 획득] 질풍의 비검
           </div>
           <p style="font-size:12px; color:#f0ead6; margin-top:6px; line-height:1.5;">
             고성 미궁의 모든 시련을 돌파한 탐험가에게 주어지는 질풍의 명검!<br/>
@@ -2112,10 +2030,10 @@
         worldW: 1850,
         worldH: 480,
         title: '용암 지하성당',
-        hint: '막다른 방인 [C.상층보물실(막다른길)]과 위험 지연로인 [E.화산암우회로(느림)]를 배제하고, [D.지하성소교각]과 [F.흑요석룬대교]를 거치면 6분 최적 탈출 경로가 완성됩니다.',
+        hint: '막다른 방인 [C.보물방(막다른길)]과 위험 지연로인 [E.용암우회로(느림)]를 배제하고, [D.지하성소다리]와 [F.흑요석룬대교]를 거치면 6분 최적 탈출 경로가 완성됩니다.',
         bgm: 'bgm_lava',
         weaponSprite: 'spr_sword_glyph',
-        weaponName: '단검 글리프 (Confodere)',
+        weaponName: '단검 글리프',
         tileSheet0: 'tile_lava_sheet0',
         tileSheet1: 'tile_lava_sheet1',
         platTex: 'tile_plat_lava',
@@ -2123,18 +2041,18 @@
         hazardName: '용암 마그마 지대 (-25 HP)',
         targetMinutes: 6,
         optimalNodeSeq: ['A', 'B', 'D', 'F', 'G'],
-        optimalSummary: '• 전체 최적 탈출 경로: A.상층입구제단 ➔ B.청동하강계단 ➔ D.지하성소교각 ➔ F.흑요석룬대교 ➔ G.지하봉인문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 2분 + 1분 = 총 6분\n• 최종 탈출 전략: 막다른 보물실(C)과 화산암 우회로(E)를 가지치기하여 도출한 유일한 6분 최단 경로임',
+        optimalSummary: '• 전체 최적 탈출 경로: A.입구제단 ➔ B.청동계단 ➔ D.지하성소다리 ➔ F.흑요석룬대교 ➔ G.지하봉인문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 2분 + 1분 = 총 6분\n• 최종 탈출 전략: 막다른 보물방(C)과 용암 우회로(E)를 가지치기하여 도출한 유일한 6분 최단 경로임',
         step1Question: '[1단계: 문제 정의 및 목표 분석] 탈출 출발 장소, 최종 탈출구, 그리고 최적 목표 시간(분)을 명시해 보세요.',
         step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 탈출에 꼭 필요한 핵심 장소 간 \'구간별 소요 시간\'과, 가지치기하여 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
         step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 출발지부터 탈출구까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
-        autoStep1: '• 출발지: A.상층입구제단\n• 목표지: G.지하봉인문\n• 최적 목표 시간: 6분',
-        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.상층입구제단 ➔ B.청동하강계단]: 1분\n  - [B.청동하강계단 ➔ D.지하성소교각]: 2분\n  - [D.지하성소교각 ➔ F.흑요석룬대교]: 2분\n  - [F.흑요석룬대교 ➔ G.지하봉인문]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.상층보물실(막다른길)]: 탈출로가 없는 막다른 방이므로 배제함\n  - [E.화산암우회로(느림)]: 용암 위험과 7분이 걸리는 비효율적 우회로이므로 배제함',
+        autoStep1: '• 출발지: A.입구제단\n• 목표지: G.지하봉인문\n• 최적 목표 시간: 6분',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.입구제단 ➔ B.청동계단]: 1분\n  - [B.청동계단 ➔ D.지하성소다리]: 2분\n  - [D.지하성소다리 ➔ F.흑요석룬대교]: 2분\n  - [F.흑요석룬대교 ➔ G.지하봉인문]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.보물방(막다른길)]: 탈출로가 없는 막다른 방이므로 배제함\n  - [E.용암우회로(느림)]: 용암 위험과 7분이 걸리는 비효율적 우회로이므로 배제함',
         nodes: [
-          { id: 'A', label: 'A.상층입구제단[출발]', x: 110, y: 125 },
-          { id: 'B', label: 'B.청동하강계단', x: 410, y: 215 },
-          { id: 'C', label: 'C.상층보물실(막다른길)', x: 760, y: 120 },
-          { id: 'D', label: 'D.지하성소교각', x: 760, y: 310 },
-          { id: 'E', label: 'E.화산암우회로(느림)', x: 1140, y: 405 },
+          { id: 'A', label: 'A.입구제단[출발]', x: 110, y: 125 },
+          { id: 'B', label: 'B.청동계단', x: 410, y: 215 },
+          { id: 'C', label: 'C.보물방(막다른길)', x: 760, y: 120 },
+          { id: 'D', label: 'D.지하성소다리', x: 760, y: 310 },
+          { id: 'E', label: 'E.용암우회로(느림)', x: 1140, y: 405 },
           { id: 'F', label: 'F.흑요석룬대교', x: 1240, y: 295 },
           { id: 'G', label: 'G.지하봉인문[탈출구]', x: 1690, y: 335 }
         ],
@@ -2154,11 +2072,11 @@
           { x: 530, y: 185, w: 110, h: 20, core: false, style: 'deadend', tag: '유인 통로' },
           { x: 665, y: 150, w: 195, h: 22, core: false, style: 'deadend', nodeId: 'C', tag: '🚫막다른 보물방' },
           { x: 540, y: 295, w: 115, h: 22, core: true, style: 'stair', tag: '3단 심층계단' },
-          { x: 675, y: 340, w: 195, h: 24, core: true, style: 'core', nodeId: 'D', tag: '지하 성소 교각' },
+          { x: 675, y: 340, w: 195, h: 24, core: true, style: 'core', nodeId: 'D', tag: '지하 성소 다리' },
           { x: 895, y: 400, w: 130, h: 20, core: false, style: 'detour', tag: '가시 화산암' },
           { x: 1045, y: 432, w: 205, h: 20, core: false, style: 'detour', nodeId: 'E', tag: '⚠️용암 우회로(느림)' },
           { x: 1280, y: 410, w: 145, h: 20, core: false, style: 'detour', tag: '화산암 오르막' },
-          { x: 910, y: 325, w: 175, h: 24, core: true, style: 'core', tag: '룬 문자 중앙교' },
+          { x: 910, y: 325, w: 175, h: 24, core: true, style: 'core', tag: '룬 문자 중앙 다리' },
           { x: 1125, y: 325, w: 230, h: 24, core: true, style: 'core', nodeId: 'F', tag: '흑요석 룬 대교' },
           { x: 1395, y: 345, w: 145, h: 22, core: true, style: 'stair', tag: '성문 진입 계단' },
           { x: 1575, y: 365, w: 235, h: 28, core: true, style: 'altar', nodeId: 'G', tag: '지하 봉인문 테라스' },
@@ -2166,7 +2084,7 @@
           { x: 235, y: 415, w: 145, h: 22, core: false, style: 'detour', tag: '하층 용암 제방' }
         ],
         wallHazards: [
-          { type: 'flame_skull_wheel', x: 200, y: 395, minX: 80, maxX: 330, spd: 1.4, vx: 1.4, r: 24, name: '벽면 순찰 인화차' }
+          { type: 'flame_skull_wheel', x: 200, y: 395, minX: 80, maxX: 330, spd: 1.4, vx: 1.4, r: 24, name: '벽면 순찰 불꽃바퀴' }
         ],
         pendulums: [
           { x: 615, y: 36, len: 92, amp: 0.38, spd: 0.045, phase: 0.0, dmg: 25 },
@@ -2180,7 +2098,7 @@
           { id: 'n4', name: '화염 임프', shortTag: '👹화염임프', type: 'monster', dmg: 25, sprite: 'spr_imp_f1', sprite2: 'spr_imp_f2', x: 960, y: 255, w: 28, h: 28, moveMode: 'sine', minX: 880, maxX: 1120, baseY: 255, ampY: 22, vx: 1.6, hit: false },
           { id: 'n5', name: '우회로 지하 좀비', shortTag: '🧟우회로좀비', type: 'monster', dmg: 20, sprite: 'spr_zbs_f1', sprite2: 'spr_zbs_f2', x: 1120, y: 384, w: 26, h: 48, moveMode: 'patrol', minX: 1055, maxX: 1215, vx: 1.0, hit: false },
           { id: 'n6', name: '⚠️ 독침 분출 고딕석관 함정', shortTag: '⚠️독침석관', type: 'trap', dmg: 20, sprite: 'spr_dest_vase', sprite2: 'spr_dest_vase', x: 1295, y: 277, w: 20, h: 48, hit: false },
-          { id: 'n7', name: '지하 순찰 인화차 (Flame Wheel)', shortTag: '🔥순찰인화차', type: 'monster', dmg: 25, sprite: 'spr_flame_skull_wheel', sprite2: 'spr_flame_skull_wheel', x: 130, y: 346, w: 44, h: 44, moveMode: 'patrol', minX: 70, maxX: 190, vx: 1.4, hit: false }
+          { id: 'n7', name: '지하 순찰 불꽃바퀴', shortTag: '🔥순찰불꽃바퀴', type: 'monster', dmg: 25, sprite: 'spr_flame_skull_wheel', sprite2: 'spr_flame_skull_wheel', x: 130, y: 346, w: 44, h: 44, moveMode: 'patrol', minX: 70, maxX: 190, vx: 1.4, hit: false }
         ]
       },
 
@@ -2191,10 +2109,10 @@
         worldW: 1980,
         worldH: 480,
         title: '빙하 수로 미궁',
-        hint: '지연 우회로인 [C.상층폭포다리(우회로)]와 막다른 길인 [X.빙하동굴(막다른길)]을 배제하고, [D.심층크리스탈수로]에서 [E.빙하승강장]을 타면 7분 최적 경로로 탈출할 수 있습니다.',
+        hint: '지연 우회로인 [C.예티동굴(우회로)]와 막다른 길인 [X.얼음감옥(막다른길)]을 배제하고, [D.크리스탈수로]에서 [E.크리스탈승강대]를 타면 7분 최적 경로로 탈출할 수 있습니다.',
         bgm: 'bgm_glacier',
         weaponSprite: 'spr_rapier_glyph',
-        weaponName: '레이피어 글리프 (Vol Confodere)',
+        weaponName: '레이피어 글리프',
         tileSheet0: 'tile_glacier_sheet0',
         tileSheet1: 'tile_glacier_sheet1',
         platTex: 'tile_plat_glacier',
@@ -2202,25 +2120,25 @@
         hazardName: '극저온 빙하 가시 급류 (-25 HP)',
         targetMinutes: 7,
         optimalNodeSeq: ['A', 'B', 'D', 'E', 'F', 'G'],
-        optimalSummary: '• 전체 최적 탈출 경로: A.빙하절벽입구 ➔ B.수로분기점 ➔ D.심층크리스탈수로 ➔ E.빙하승강장 ➔ F.결정회랑 ➔ G.얼음신전성문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 1분 + 1분 + 2분 = 총 7분\n• 최종 탈출 전략: 폭포다리(C)와 빙하동굴(X)을 배제하고 수직 승강기(E)를 활용한 7분 최단 경로임',
+        optimalSummary: '• 전체 최적 탈출 경로: A.빙하절벽입구 ➔ B.수로갈림길 ➔ D.크리스탈수로 ➔ E.크리스탈승강대 ➔ F.수정회랑 ➔ G.얼음신전성문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 1분 + 1분 + 2분 = 총 7분\n• 최종 탈출 전략: 예티동굴(C)와 얼음감옥(X)을 배제하고 수직 승강기(E)를 활용한 7분 최단 경로임',
         step1Question: '[1단계: 문제 정의 및 목표 분석] 탈출 출발 장소, 최종 탈출구, 그리고 최적 목표 시간(분)을 명시해 보세요.',
         step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 탈출에 꼭 필요한 핵심 장소 간 \'구간별 소요 시간\'과, 가지치기하여 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
         step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 출발지부터 탈출구까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
         autoStep1: '• 출발지: A.빙하절벽입구\n• 목표지: G.얼음신전성문\n• 최적 목표 시간: 7분',
-        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.빙하절벽입구 ➔ B.수로분기점]: 1분\n  - [B.수로분기점 ➔ D.심층크리스탈수로]: 2분\n  - [D.심층크리스탈수로 ➔ E.빙하승강장]: 1분 (수직 승강대)\n  - [E.빙하승강장 ➔ F.결정회랑]: 1분\n  - [F.결정회랑 ➔ G.얼음신전성문]: 2분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.상층폭포다리(우회로)]: 설인이 지키고 5분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.빙하동굴(막다른길)]: 낭떠러지로 연결되는 막다른 방이므로 배제함',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.빙하절벽입구 ➔ B.수로갈림길]: 1분\n  - [B.수로갈림길 ➔ D.크리스탈수로]: 2분\n  - [D.크리스탈수로 ➔ E.크리스탈승강대]: 1분 (수직 승강대)\n  - [E.크리스탈승강대 ➔ F.수정회랑]: 1분\n  - [F.수정회랑 ➔ G.얼음신전성문]: 2분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.예티동굴(우회로)]: 설인이 지키고 5분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.얼음감옥(막다른길)]: 낭떠러지로 연결되는 막다른 방이므로 배제함',
         nodes: [
           { id: 'A', label: 'A.빙하절벽입구', x: 105, y: 185 },
-          { id: 'B', label: 'B.수로분기점', x: 390, y: 255 },
-          { id: 'C', label: 'C.상층폭포다리(우회로)', x: 820, y: 135 },
-          { id: 'D', label: 'D.심층크리스탈수로', x: 740, y: 380 },
-          { id: 'X', label: 'X.빙하동굴(막다른길)', x: 1090, y: 420 },
-          { id: 'E', label: 'E.빙하승강장', x: 1120, y: 310 },
-          { id: 'F', label: 'F.결정회랑', x: 1480, y: 235 },
+          { id: 'B', label: 'B.수로갈림길', x: 390, y: 255 },
+          { id: 'C', label: 'C.예티동굴(우회로)', x: 820, y: 135 },
+          { id: 'D', label: 'D.크리스탈수로', x: 740, y: 380 },
+          { id: 'X', label: 'X.얼음감옥(막다른길)', x: 1090, y: 420 },
+          { id: 'E', label: 'E.크리스탈승강대', x: 1120, y: 310 },
+          { id: 'F', label: 'F.수정회랑', x: 1480, y: 235 },
           { id: 'G', label: 'G.얼음신전성문[탈출구]', x: 1820, y: 165 }
         ],
         edges: [
           { from: 'A', to: 'B', cost: '1분', minutes: 1, optimal: true, labelDy: -16 },
-          { from: 'B', to: 'C', cost: '5분(예티우회)', minutes: 5, optimal: false, labelDy: -16 },
+          { from: 'B', to: 'C', cost: '5분(예티동굴)', minutes: 5, optimal: false, labelDy: -16 },
           { from: 'C', to: 'F', cost: '4분(강풍)', minutes: 4, optimal: false, labelDy: -16 },
           { from: 'B', to: 'D', cost: '2분', minutes: 2, optimal: true, labelDy: 16 },
           { from: 'D', to: 'X', cost: '3분(막다른길)', minutes: 3, optimal: false, deadEnd: true, labelDy: 16 },
@@ -2231,20 +2149,20 @@
         platforms: [
           { x: 25, y: 215, w: 180, h: 26, core: true, style: 'altar', nodeId: 'A', tag: '빙하 절벽 입구' },
           { x: 225, y: 250, w: 95, h: 22, core: true, style: 'stair', tag: '얼음 하강 계단' },
-          { x: 330, y: 285, w: 155, h: 24, core: true, style: 'core', nodeId: 'B', tag: '수로 분기 광장' },
+          { x: 330, y: 285, w: 155, h: 24, core: true, style: 'core', nodeId: 'B', tag: '수로 갈림길 광장' },
           { x: 500, y: 215, w: 130, h: 20, core: false, style: 'detour', tag: '상층 빙벽 오르막' },
-          { x: 660, y: 165, w: 310, h: 22, core: false, style: 'detour', nodeId: 'C', tag: '⚠️상층 폭포 다리(예티 우회로)' },
+          { x: 660, y: 165, w: 310, h: 22, core: false, style: 'detour', nodeId: 'C', tag: '⚠️예티 동굴(우회로)' },
           { x: 1010, y: 195, w: 155, h: 20, core: false, style: 'detour', tag: '상층 빙판길' },
-          { x: 505, y: 345, w: 125, h: 22, core: true, style: 'stair', tag: '심층 수로 계단' },
-          { x: 645, y: 408, w: 220, h: 24, core: true, style: 'core', nodeId: 'D', tag: '심층 크리스탈 수로' },
+          { x: 505, y: 345, w: 125, h: 22, core: true, style: 'stair', tag: '수로 내려가는 계단' },
+          { x: 645, y: 408, w: 220, h: 24, core: true, style: 'core', nodeId: 'D', tag: '크리스탈 수로' },
           { x: 995, y: 440, w: 185, h: 20, core: false, style: 'deadend', nodeId: 'X', tag: '🚫막다른 얼음감옥' },
-          { x: 895, y: 365, w: 115, h: 22, core: true, style: 'stair', tag: '승강장 진입교' },
+          { x: 895, y: 365, w: 115, h: 22, core: true, style: 'stair', tag: '승강대 입구 다리' },
           { x: 1040, y: 340, w: 165, h: 24, core: true, style: 'lift', nodeId: 'E', moveY: true, baseY: 335, ampY: 38, spd: 0.035, tag: '✨크리스탈 승강대' },
-          { x: 1240, y: 295, w: 135, h: 22, core: true, style: 'stair', tag: '빙결 아치 계단' },
-          { x: 1400, y: 265, w: 185, h: 24, core: true, style: 'core', nodeId: 'F', tag: '결정 회랑 대교' },
+          { x: 1240, y: 295, w: 135, h: 22, core: true, style: 'stair', tag: '얼음 아치 계단' },
+          { x: 1400, y: 265, w: 185, h: 24, core: true, style: 'core', nodeId: 'F', tag: '수정 회랑 다리' },
           { x: 1610, y: 225, w: 110, h: 22, core: true, style: 'stair', tag: '신전 오르막' },
           { x: 1735, y: 195, w: 210, h: 28, core: true, style: 'altar', nodeId: 'G', tag: '얼음 신전 성문' },
-          { x: 45, y: 410, w: 175, h: 22, core: false, style: 'detour', tag: '하층 영구동토벽' },
+          { x: 45, y: 410, w: 175, h: 22, core: false, style: 'detour', tag: '하층 얼음벽' },
           { x: 245, y: 430, w: 120, h: 22, core: false, style: 'detour', tag: '빙하 동굴 발판' }
         ],
         pendulums: [
@@ -2259,7 +2177,7 @@
           { id: 'n4', name: '⚠️ 막다른 얼음 미끼상자 함정', shortTag: '⚠️얼음미끼', type: 'trap', dmg: 20, sprite: 'spr_coffer_closed', sprite2: 'spr_coffer_open', x: 1080, y: 412, w: 32, h: 28, hit: false },
           { id: 'n5', name: '빙하 원령 벤시', shortTag: '👻빙하원령', type: 'monster', dmg: 25, sprite: 'spr_gho_f1', sprite2: 'spr_gho_f2', x: 1320, y: 215, w: 25, h: 48, moveMode: 'sine', minX: 1220, maxX: 1520, baseY: 215, ampY: 26, vx: 1.45, hit: false },
           { id: 'n6', name: '⚠️ 고드름 수호기사 석상 함정', shortTag: '⚠️수호석상', type: 'trap', dmg: 25, sprite: 'spr_statue_knight', sprite2: 'spr_statue_knight', x: 1755, y: 131, w: 30, h: 64, hit: false },
-          { id: 'n7', name: '설원 화이트 울프 (White Wolf)', shortTag: '🐺화이트울프', type: 'monster', dmg: 25, sprite: 'spr_wwolf_f1', sprite2: 'spr_wwolf_f2', x: 80, y: 366, w: 48, h: 44, moveMode: 'patrol', minX: 60, maxX: 200, vx: 1.4, hit: false }
+          { id: 'n7', name: '설원 화이트 울프', shortTag: '🐺화이트울프', type: 'monster', dmg: 25, sprite: 'spr_wwolf_f1', sprite2: 'spr_wwolf_f2', x: 80, y: 366, w: 48, h: 44, moveMode: 'patrol', minX: 60, maxX: 200, vx: 1.4, hit: false }
         ]
       },
 
@@ -2270,10 +2188,10 @@
         worldW: 2220,
         worldH: 480,
         title: '기계 시계탑',
-        hint: '붕괴된 중앙 다리와 [C.서쪽종탑(우회로)], [X.폐쇄태엽고(막다른길)]를 배제하고, [D.하부진자회랑]에서 [F.중앙태엽승강기]로 상승하여 8분 최적 경로로 정상에 도달하세요.',
+        hint: '느린 [C.서쪽종탑(우회로)]과, [X.태엽창고(막다른길)]를 배제하고, [D.아래층진자회랑]에서 [F.중앙태엽승강기]로 상승하여 8분 최적 경로로 정상에 도달하세요.',
         bgm: 'bgm_clock',
         weaponSprite: 'spr_lance_glyph',
-        weaponName: '빙창 글리프 (Grando)',
+        weaponName: '빙창 글리프',
         tileSheet0: 'tile_clock_sheet0',
         tileSheet1: 'tile_clock_sheet1',
         platTex: 'tile_plat_clock',
@@ -2281,18 +2199,18 @@
         hazardName: '시계탑 강철 스파이크·회전 기어 심연 (-25 HP)',
         targetMinutes: 8,
         optimalNodeSeq: ['A', 'B', 'D', 'F', 'G', 'H'],
-        optimalSummary: '• 전체 최적 탈출 경로: A.지하태엽실 ➔ B.제1기어교차로 ➔ D.하부진자회랑 ➔ F.중앙태엽승강기 ➔ G.상층시계문자판 ➔ H.시계탑정상종각\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 2분 + 2분 + 1분 = 총 8분\n• 최종 탈출 전략: 붕괴 다리와 서쪽 종탑(C)을 배제하고 중앙 태엽 승강기(F)로 수직 상승하는 8분 최적 탈출로임',
+        optimalSummary: '• 전체 최적 탈출 경로: A.지하태엽실 ➔ B.제1기어교차로 ➔ D.아래층진자회랑 ➔ F.중앙태엽승강기 ➔ G.상층시계문자판 ➔ H.시계탑정상종각\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 2분 + 2분 + 1분 = 총 8분\n• 최종 탈출 전략: 서쪽 종탑(C)과 태엽창고(X)를 배제하고 중앙 태엽 승강기(F)로 수직 상승하는 8분 최적 탈출로임',
         step1Question: '[1단계: 문제 정의 및 목표 분석] 탈출 출발 장소, 최종 탈출구, 그리고 최적 목표 시간(분)을 명시해 보세요.',
         step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 탈출에 꼭 필요한 핵심 장소 간 \'구간별 소요 시간\'과, 가지치기하여 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
         step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 출발지부터 탈출구까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
         autoStep1: '• 출발지: A.지하태엽실\n• 목표지: H.시계탑정상종각\n• 최적 목표 시간: 8분',
-        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.지하태엽실 ➔ B.제1기어교차로]: 1분\n  - [B.제1기어교차로 ➔ D.하부진자회랑]: 2분\n  - [D.하부진자회랑 ➔ F.중앙태엽승강기]: 2분 (수직 상승 승강기)\n  - [F.중앙태엽승강기 ➔ G.상층시계문자판]: 2분\n  - [G.상층시계문자판 ➔ H.시계탑정상종각]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.서쪽종탑(우회로)]: 중기갑 기사가 순찰하며 4분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.폐쇄태엽고(막다른길)]: 통로가 막힌 위험 구역이므로 배제함\n  - [B➔G 중앙 구름다리]: 다리가 붕괴되어 진입 불가능하므로 배제함',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.지하태엽실 ➔ B.제1기어교차로]: 1분\n  - [B.제1기어교차로 ➔ D.아래층진자회랑]: 2분\n  - [D.아래층진자회랑 ➔ F.중앙태엽승강기]: 2분 (수직 상승 승강기)\n  - [F.중앙태엽승강기 ➔ G.상층시계문자판]: 2분\n  - [G.상층시계문자판 ➔ H.시계탑정상종각]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.서쪽종탑(우회로)]: 중기갑 기사가 순찰하며 4분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.태엽창고(막다른길)]: 통로가 막힌 위험 구역이므로 배제함\n  - [B➔G 중앙 구름다리]: 다리가 붕괴되어 진입 불가능하므로 배제함',
         nodes: [
           { id: 'A', label: 'A.지하태엽실[출발]', x: 100, y: 400 },
           { id: 'B', label: 'B.제1기어교차로', x: 400, y: 310 },
           { id: 'C', label: 'C.서쪽종탑(우회로)', x: 750, y: 155 },
-          { id: 'D', label: 'D.하부진자회랑', x: 780, y: 385 },
-          { id: 'X', label: 'X.폐쇄태엽고(막다른길)', x: 1120, y: 425 },
+          { id: 'D', label: 'D.아래층진자회랑', x: 780, y: 385 },
+          { id: 'X', label: 'X.태엽창고(막다른길)', x: 1120, y: 425 },
           { id: 'F', label: 'F.중앙태엽승강기', x: 1160, y: 295 },
           { id: 'G', label: 'G.상층시계문자판', x: 1620, y: 205 },
           { id: 'H', label: 'H.시계탑정상종각[탈출구]', x: 2040, y: 130 }
@@ -2316,15 +2234,15 @@
           { x: 625, y: 185, w: 255, h: 22, core: false, style: 'detour', nodeId: 'C', tag: '⚠️서쪽 종탑 우회로(느림)' },
           { x: 930, y: 175, w: 185, h: 20, core: false, style: 'detour', tag: '상부 녹슨 철교' },
           { x: 1170, y: 180, w: 180, h: 20, core: false, style: 'detour', tag: '종탑 연결교' },
-          { x: 525, y: 375, w: 125, h: 22, core: true, style: 'stair', tag: '진자 회랑 진입단' },
-          { x: 675, y: 412, w: 220, h: 24, core: true, style: 'core', nodeId: 'D', tag: '하부 진자 회랑' },
+          { x: 525, y: 375, w: 125, h: 22, core: true, style: 'stair', tag: '진자 회랑 입구 계단' },
+          { x: 675, y: 412, w: 220, h: 24, core: true, style: 'core', nodeId: 'D', tag: '아래층 진자 회랑' },
           { x: 1035, y: 442, w: 180, h: 20, core: false, style: 'deadend', nodeId: 'X', tag: '🚫막다른 태엽창고' },
-          { x: 925, y: 365, w: 120, h: 22, core: true, style: 'stair', tag: '중앙 기어 디딤판' },
+          { x: 925, y: 365, w: 120, h: 22, core: true, style: 'stair', tag: '중앙 기어 발판' },
           { x: 1080, y: 325, w: 175, h: 24, core: true, style: 'lift', nodeId: 'F', moveY: true, baseY: 315, ampY: 46, spd: 0.04, tag: '⚙️중앙 태엽 엘리베이터' },
           { x: 1300, y: 270, w: 145, h: 22, core: true, style: 'stair', tag: '3층 황동 층계' },
-          { x: 1485, y: 235, w: 245, h: 24, core: true, style: 'core', nodeId: 'G', tag: '상층 시계 문자판 대교' },
-          { x: 1765, y: 195, w: 145, h: 22, core: true, style: 'stair', tag: '종각 등반 계단' },
-          { x: 1940, y: 160, w: 235, h: 28, core: true, style: 'altar', nodeId: 'H', tag: '시계탑 정상 종각(GOAL)' },
+          { x: 1485, y: 235, w: 245, h: 24, core: true, style: 'core', nodeId: 'G', tag: '시계 문자판 큰 다리' },
+          { x: 1765, y: 195, w: 145, h: 22, core: true, style: 'stair', tag: '종각 오르는 계단' },
+          { x: 1940, y: 160, w: 235, h: 28, core: true, style: 'altar', nodeId: 'H', tag: '시계탑 정상 종각' },
           { x: 55, y: 165, w: 190, h: 22, core: false, style: 'detour', tag: '시계탑 상부 첨탑' },
           { x: 275, y: 205, w: 145, h: 22, core: false, style: 'detour', tag: '종루 감시 테라스' }
         ],
@@ -2345,7 +2263,7 @@
           { id: 'n4', name: '⚠️ 막다른 태엽 미끼상자 함정', shortTag: '⚠️태엽미끼', type: 'trap', dmg: 25, sprite: 'spr_mimi_f1', sprite2: 'spr_mimi_f2', x: 1110, y: 412, w: 32, h: 30, hit: false },
           { id: 'n5', name: '감시자의 눈 피핑아이', shortTag: '👁️피핑아이', type: 'monster', dmg: 25, sprite: 'spr_eye_f1', sprite2: 'spr_eye_f2', x: 1420, y: 190, w: 26, h: 26, moveMode: 'sine', minX: 1280, maxX: 1680, baseY: 190, ampY: 28, vx: 1.65, hit: false },
           { id: 'n6', name: '⚠️ 분쇄 기어 분쇄기 함정', shortTag: '⚠️분쇄기어', type: 'trap', dmg: 30, sprite: 'spr_gear_large', sprite2: 'spr_gear_large', x: 1810, y: 139, w: 54, h: 54, hit: false },
-          { id: 'n7', name: '시계탑 비행 악마 데빌 (Devil)', shortTag: '😈비행데빌', type: 'monster', dmg: 32, sprite: 'spr_devil_f1', sprite2: 'spr_devil_f2', x: 120, y: 71, origX: 120, origY: 71, w: 48, h: 94, moveMode: 'patrol', minX: 65, maxX: 230, vx: 1.25, hit: false }
+          { id: 'n7', name: '시계탑 비행 악마 데빌', shortTag: '😈비행데빌', type: 'monster', dmg: 32, sprite: 'spr_devil_f1', sprite2: 'spr_devil_f2', x: 120, y: 71, origX: 120, origY: 71, w: 48, h: 94, moveMode: 'patrol', minX: 65, maxX: 230, vx: 1.25, hit: false }
         ]
       },
 
@@ -2356,10 +2274,10 @@
         worldW: 2400,
         worldH: 960, // 2x Vertical Depth!
         title: '심연 최종 탈출 [ 🩸 최고난도: 몬스터 무한 소환 & 불사신 데스 ]',
-        hint: '막다른 [X1.고문실(막다른길)], [X2.폐쇄철문(통행불가)], [W.미혹마법진(함정)]을 배제하고, [C.승강도크] 엘리베이터로 하강 후 [G.심연대교]를 거쳐 8분 만에 탈출하세요.',
+        hint: '막다른 [X1.고문실(막다른길)], [X2.폐쇄철문(통행불가)], [W.미혹마법진(함정)]을 배제하고, [C.승강장] 엘리베이터로 하강 후 [G.심연대교]를 거쳐 8분 만에 탈출하세요.',
         bgm: 'bgm_castle',
         weaponSprite: 'spr_great_glyph',
-        weaponName: '빛의 대검 글리프 (Melio Confodere)',
+        weaponName: '빛의 대검 글리프',
         tileSheet0: 'tile_castle_sheet0',
         tileSheet1: 'tile_castle_sheet1',
         platTex: 'tile_plat_castle',
@@ -2367,12 +2285,12 @@
         hazardName: '💀 심연 가시 즉사 구역 (HP 100% 즉사!)',
         targetMinutes: 8,
         optimalNodeSeq: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'Z'],
-        optimalSummary: '• 전체 최적 탈출 경로: A.첨탑옥좌 ➔ B.서쪽회랑 ➔ C.승강도크 ➔ D.고문실분기 ➔ E.심연중앙수로 ➔ F.대교진입로 ➔ G.심연대교 ➔ Z.심연대성문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 1분 + 1분 + 1분 + 1분 + 1분 = 총 8분\n• 최종 탈출 전략: 상층 폐쇄문(X2)과 역송 마법진(W)을 완벽히 가지치기하고 엘리베이터로 하강하여 심연 대교로 탈출하는 유일한 8분 최적 탈출로임',
+        optimalSummary: '• 전체 최적 탈출 경로: A.첨탑옥좌 ➔ B.서쪽회랑 ➔ C.승강장 ➔ D.고문실갈림길 ➔ E.심연중앙수로 ➔ F.대교진입로 ➔ G.심연대교 ➔ Z.심연대성문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 1분 + 1분 + 1분 + 1분 + 1분 = 총 8분\n• 최종 탈출 전략: 상층 폐쇄문(X2)과 역송 마법진(W)을 완벽히 가지치기하고 엘리베이터로 하강하여 심연 대교로 탈출하는 유일한 8분 최적 탈출로임',
         step1Question: '[1단계: 문제 정의 및 목표 분석] 탈출 출발 장소, 최종 탈출구, 그리고 최적 목표 시간(분)을 명시해 보세요.',
         step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 탈출에 꼭 필요한 핵심 장소 간 \'구간별 소요 시간\'과, 가지치기하여 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
         step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 출발지부터 탈출구까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
         autoStep1: '• 출발지: A.첨탑옥좌\n• 목표지: Z.심연대성문\n• 최적 목표 시간: 8분',
-        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.첨탑옥좌 ➔ B.서쪽회랑]: 1분\n  - [B.서쪽회랑 ➔ C.승강도크]: 2분 (수직 엘리베이터)\n  - [C.승강도크 ➔ D.고문실분기]: 1분\n  - [D.고문실분기 ➔ E.심연중앙수로]: 1분\n  - [E.심연중앙수로 ➔ F.대교진입로]: 1분\n  - [F.대교진입로 ➔ G.심연대교]: 1분\n  - [G.심연대교 ➔ Z.심연대성문]: 1분 (성문 개방)\n• 우회로 및 위험 요소 배제 이유:\n  - [X1.고문실(막다른길), Y.지하감옥(막다른길)]: 막다른 방이므로 배제함\n  - [X2.폐쇄철문(통행불가)]: 통행이 완전 차단된 불통 구역이므로 배제함\n  - [W.미혹마법진(함정)]: 상층 B로 강제 역송시켜 +5분을 낭비하게 만드는 함정이므로 배제함',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.첨탑옥좌 ➔ B.서쪽회랑]: 1분\n  - [B.서쪽회랑 ➔ C.승강장]: 2분 (수직 엘리베이터)\n  - [C.승강장 ➔ D.고문실갈림길]: 1분\n  - [D.고문실갈림길 ➔ E.심연중앙수로]: 1분\n  - [E.심연중앙수로 ➔ F.대교진입로]: 1분\n  - [F.대교진입로 ➔ G.심연대교]: 1분\n  - [G.심연대교 ➔ Z.심연대성문]: 1분 (성문 개방)\n• 우회로 및 위험 요소 배제 이유:\n  - [X1.고문실(막다른길), Y.지하감옥(막다른길)]: 막다른 방이므로 배제함\n  - [X2.폐쇄철문(통행불가)]: 통행이 완전 차단된 불통 구역이므로 배제함\n  - [W.미혹마법진(함정)]: 상층 B로 강제 역송시켜 +5분을 낭비하게 만드는 함정이므로 배제함',
         nodes: [
           { id: 'A', label: 'A.첨탑옥좌[출발]', x: 105, y: 140 },
           { id: 'B', label: 'B.서쪽회랑', x: 420, y: 240 },
@@ -2380,9 +2298,9 @@
           { id: 'U1', label: 'U1.상층 성당 A', x: 860, y: 260 },
           { id: 'U2', label: 'U2.상층 성당 B', x: 1320, y: 250 },
           { id: 'X2', label: 'X2.폐쇄철문(통행불가)', x: 1840, y: 250 },
-          { id: 'C', label: 'C.승강도크', x: 460, y: 750 },
+          { id: 'C', label: 'C.승강장', x: 460, y: 750 },
           { id: 'Y', label: 'Y.지하감옥(막다른길)', x: 690, y: 875 },
-          { id: 'D', label: 'D.고문실분기', x: 880, y: 760 },
+          { id: 'D', label: 'D.고문실갈림길', x: 880, y: 760 },
           { id: 'W', label: 'W.미혹마법진(함정)', x: 1160, y: 440 },
           { id: 'E', label: 'E.심연중앙수로', x: 1400, y: 820 },
           { id: 'F', label: 'F.대교진입로', x: 1720, y: 820 },
@@ -2395,7 +2313,7 @@
           { from: 'B', to: 'U1', cost: '3분(상층성당A)', minutes: 3, optimal: false, labelDy: -14 },
           { from: 'U1', to: 'U2', cost: '3분(상층성당B)', minutes: 3, optimal: false, labelDy: -14 },
           { from: 'U2', to: 'X2', cost: '4분(폐쇄철문통행불가)', minutes: 4, optimal: false, deadEnd: true, broken: true, labelDy: -16 },
-          { from: 'B', to: 'C', cost: '2분(수직엘리베이터)', minutes: 2, optimal: true, labelDy: 16 },
+          { from: 'B', to: 'C', cost: '2분(승강장 엘리베이터)', minutes: 2, optimal: true, labelDy: 16 },
           { from: 'C', to: 'Y', cost: '4분(지하감옥)', minutes: 4, optimal: false, deadEnd: true, labelDy: 26, labelDx: -18 },
           { from: 'C', to: 'D', cost: '1분', minutes: 1, optimal: true, labelDy: -14 },
           { from: 'D', to: 'W', cost: '3분(미혹마법진·상층역송함정)', minutes: 3, optimal: false, deadEnd: true, broken: true, labelDy: -16 },
@@ -2414,19 +2332,19 @@
           { x: 775, y: 295, w: 185, h: 24, core: false, style: 'stair', nodeId: 'U1', tag: '상층 성당 A' },
           { x: 1045, y: 290, w: 150, h: 22, core: false, style: 'detour', tag: '상층 아치교' },
           { x: 1235, y: 285, w: 200, h: 24, core: false, style: 'detour', nodeId: 'U2', tag: '상층 성당 B' },
-          { x: 1495, y: 300, w: 105, h: 22, core: false, style: 'detour', tag: '단두추 통로 발판' },
+          { x: 1495, y: 300, w: 105, h: 22, core: false, style: 'detour', tag: '단두대 통로 발판' },
           { x: 1635, y: 290, w: 95, h: 22, core: false, style: 'deadend', tag: '폐쇄문 앞 디딤돌' },
-          { x: 1765, y: 285, w: 195, h: 24, core: false, style: 'deadend', nodeId: 'X2', tag: '🚫상층 폐쇄 철문(Dead)' },
+          { x: 1765, y: 285, w: 195, h: 24, core: false, style: 'deadend', nodeId: 'X2', tag: '🚫상층 폐쇄 철문' },
 
           // Deep Abyss Vertical Elevator Shaft (Travels between Upper B and Deep C: Y: 290 to Y: 750!)
           { x: 420, y: 340, w: 130, h: 26, core: true, style: 'lift', isShaftElevator: true, moveY: true, baseY: 520, ampY: 230, spd: 0.022, tag: '⚙️심연 수직 엘리베이터' },
 
           // Deep Abyss Level (Y: 700~880)
-          { x: 380, y: 785, w: 175, h: 24, core: true, style: 'core', nodeId: 'C', tag: '심연 승강 도크' },
+          { x: 380, y: 785, w: 175, h: 24, core: true, style: 'core', nodeId: 'C', tag: '심연 승강장' },
           { x: 600, y: 885, w: 170, h: 24, core: false, style: 'deadend', nodeId: 'Y', tag: '🚫심연 지하감옥' },
           { x: 730, y: 810, w: 120, h: 22, core: true, style: 'stair', tag: '심연 연결 층계' },
-          { x: 820, y: 795, w: 180, h: 24, core: true, style: 'core', nodeId: 'D', tag: '심연 고문실 분기' },
-          { x: 1030, y: 815, w: 110, h: 22, core: true, style: 'stair', tag: '심연 수로 도섭교각' },
+          { x: 820, y: 795, w: 180, h: 24, core: true, style: 'core', nodeId: 'D', tag: '심연 고문실 갈림길' },
+          { x: 1030, y: 815, w: 110, h: 22, core: true, style: 'stair', tag: '심연 수로 입구 계단' },
           { x: 1170, y: 835, w: 100, h: 22, core: true, style: 'core', tag: '심연 수로 징검발판' },
           { x: 1060, y: 610, w: 120, h: 22, core: false, style: 'detour', tag: '중층 유인 계단' },
           { x: 1100, y: 475, w: 200, h: 24, core: false, style: 'detour', nodeId: 'W', tag: '🌀미혹의 마법진 제단' },
@@ -2434,8 +2352,8 @@
           { x: 1530, y: 845, w: 120, h: 22, core: true, style: 'stair', tag: '심연 대교 비탈' },
           { x: 1650, y: 845, w: 180, h: 24, core: true, style: 'core', nodeId: 'F', tag: '심연 대교 진입로' },
           { x: 1890, y: 845, w: 190, h: 24, core: true, style: 'core', nodeId: 'G', tag: '심연 룬 대교' },
-          { x: 2060, y: 855, w: 150, h: 26, core: true, style: 'altar', tag: '⚔️대성문 수문장 교각' },
-          { x: 2170, y: 875, w: 220, h: 28, core: true, style: 'altar', nodeId: 'Z', tag: '심연 탈출 대성문(ESCAPE)' },
+          { x: 2060, y: 855, w: 150, h: 26, core: true, style: 'altar', tag: '⚔️대성문 수문장 다리' },
+          { x: 2170, y: 875, w: 220, h: 28, core: true, style: 'altar', nodeId: 'Z', tag: '심연 탈출 대성문' },
           // Upper Level East Gatehouse Battlement (출구 중상단 감시 회랑 - Y: 320~360, X: 1980~2320)
           { x: 1980, y: 340, w: 260, h: 26, core: false, style: 'altar', tag: '⚔️심연 수문장 감시 망루' },
           { x: 1860, y: 375, w: 105, h: 22, core: false, style: 'stair', tag: '망루 연결 계단' },
@@ -2444,7 +2362,7 @@
           { x: 265, y: 565, w: 135, h: 22, core: false, style: 'detour', tag: '중층 암흑 회랑' }
         ],
         wallHazards: [
-          { type: 'flame_skull_wheel', x: 1400, y: 440, minX: 1250, maxX: 1550, spd: 1.6, vx: 1.6, r: 24, name: '심연 마도 인화차' }
+          { type: 'flame_skull_wheel', x: 1400, y: 440, minX: 1250, maxX: 1550, spd: 1.6, vx: 1.6, r: 24, name: '심연 마도 불꽃바퀴' }
         ],
         teleporters: [
           // Deceptive Warp Pad: traps the player and warps them backward to Upper B!
@@ -2452,7 +2370,7 @@
         ],
         instantHazards: [
           { x: 100, y: 915, w: 2200, h: 45, name: '💀 심연 가시 즉사 구역' },
-          { x: 1420, y: 230, r: 42, name: '💀 거대 진자단두추 즉사 함정' }
+          { x: 1420, y: 230, r: 42, name: '💀 거대 진자단두대 즉사 함정' }
         ],
         pendulums: [
           { x: 340, y: 36, len: 105, amp: 0.45, spd: 0.052, phase: 0.0, dmg: 30 },
@@ -2464,37 +2382,37 @@
         noises: [
           // [MAP 4 정예 몬스터 6종 + 비룡 배치]
           // 데스만 유일하게 플레이어를 전역 추적! 비행 몬스터들은 각자 독립된 상공 구역에만 활동하여 경로 간섭 절대 없음!
-          // 1. 사신 데스 (Death) - 유일한 전역 공중 추적자 · 불사신
-          { id: 'n01', name: '심연의 사신 데스 (Death)', shortTag: '💀사신 DEATH [불사신]', type: 'monster', immortal: true, dmg: 40, sprite: 'spr_death_f1', sprite2: 'spr_death_f2', x: 960, y: 200, w: 76, h: 98, origX: 960, origY: 200, vx: -1.2, vy: 0.8, origVx: -1.2, origVy: 0.8, moveMode: 'stalker', hit: false },
+          // 1. 사신 데스 - 유일한 전역 공중 추적자 · 불사신
+          { id: 'n01', name: '심연의 사신 데스', shortTag: '💀사신 DEATH [불사신]', type: 'monster', immortal: true, dmg: 40, sprite: 'spr_death_f1', sprite2: 'spr_death_f2', x: 960, y: 200, w: 76, h: 98, origX: 960, origY: 200, vx: -1.2, vy: 0.8, origVx: -1.2, origVy: 0.8, moveMode: 'stalker', hit: false },
           
-          // 2. [정통 캐슬바니아 비행 사령] 심연 사령 레이스 (Wraith) - 상층 동쪽 폐쇄 구역 상공 전용 비행
-          { id: 'n02', name: '심연 사령 레이스 (Wraith)', shortTag: '👻심연레이스', type: 'monster', dmg: 35, sprite: 'spr_wraith_f1', sprite2: 'spr_wraith_f2', x: 1920, y: 160, w: 76, h: 76, origX: 1920, origY: 160, vx: 1.8, vy: -1.0, origVx: 1.8, origVy: -1.0, moveMode: 'territoryRoam', minX: 1780, maxX: 2180, minY: 110, maxY: 260, hit: false },
+          // 2. [정통 캐슬바니아 비행 사령] 심연 사령 레이스 - 상층 동쪽 폐쇄 구역 상공 전용 비행
+          { id: 'n02', name: '심연 사령 레이스', shortTag: '👻심연레이스', type: 'monster', dmg: 35, sprite: 'spr_wraith_f1', sprite2: 'spr_wraith_f2', x: 1920, y: 160, w: 76, h: 76, origX: 1920, origY: 160, vx: 1.8, vy: -1.0, origVx: 1.8, origVy: -1.0, moveMode: 'territoryRoam', minX: 1780, maxX: 2180, minY: 110, maxY: 260, hit: false },
 
-          // 3. [정통 캐슬바니아 부유 마도사] 부유 강령술사 네크로맨서 (Necromancer) - 수직 승강 협곡 전용 부유
-          { id: 'n03', name: '부유 강령술사 네크로맨서 (Necromancer)', shortTag: '🔮네크로맨서', type: 'monster', dmg: 32, sprite: 'spr_necro_f1', sprite2: 'spr_necro_f2', x: 620, y: 460, w: 48, h: 56, origX: 620, origY: 460, vx: -1.4, vy: 1.2, origVx: -1.4, origVy: 1.2, moveMode: 'territoryRoam', minX: 530, maxX: 750, minY: 390, maxY: 580, hit: false },
+          // 3. [정통 캐슬바니아 부유 마도사] 부유 강령술사 네크로맨서 - 수직 승강 협곡 전용 부유
+          { id: 'n03', name: '부유 강령술사 네크로맨서', shortTag: '🔮네크로맨서', type: 'monster', dmg: 32, sprite: 'spr_necro_f1', sprite2: 'spr_necro_f2', x: 620, y: 460, w: 48, h: 56, origX: 620, origY: 460, vx: -1.4, vy: 1.2, origVx: -1.4, origVy: 1.2, moveMode: 'territoryRoam', minX: 530, maxX: 750, minY: 390, maxY: 580, hit: false },
 
-          // 4. 날개 마수 가고일 (Gargoyle) - 상층 성당 B 진자도끼 협곡 상공 전용 비행
-          { id: 'n04', name: '날개 마수 가고일 (Gargoyle)', shortTag: '🦇마수가고일', type: 'monster', dmg: 30, sprite: 'spr_garg_fly', sprite2: 'spr_garg_idle', x: 1560, y: 170, w: 48, h: 42, origX: 1560, origY: 170, vx: -1.8, vy: 1.1, origVx: -1.8, origVy: 1.1, moveMode: 'territoryRoam', minX: 1460, maxX: 1720, minY: 120, maxY: 250, hit: false },
+          // 4. 날개 마수 가고일 - 상층 성당 B 진자도끼 협곡 상공 전용 비행
+          { id: 'n04', name: '날개 마수 가고일', shortTag: '🦇마수가고일', type: 'monster', dmg: 30, sprite: 'spr_garg_fly', sprite2: 'spr_garg_idle', x: 1560, y: 170, w: 48, h: 42, origX: 1560, origY: 170, vx: -1.8, vy: 1.1, origVx: -1.8, origVy: 1.1, moveMode: 'territoryRoam', minX: 1460, maxX: 1720, minY: 120, maxY: 250, hit: false },
 
-          // 5. 마탄의 알버스 (Albus) - 지상형 · 막다른 고문실(X1) 바닥 위에서만 좌우 순찰
-          { id: 'n05', name: '마탄의 알버스 (Albus)', shortTag: '🔫마탄알버스', type: 'monster', ground: true, dmg: 35, sprite: 'spr_albus_f1', sprite2: 'spr_albus_f2', x: 800, y: 101, w: 38, h: 54, origX: 800, origY: 101, vx: 1.4, vy: 0, origVx: 1.4, origVy: 0, moveMode: 'patrol', minX: 690, maxX: 822, hit: false },
+          // 5. 마탄의 알버스 - 지상형 · 막다른 고문실(X1) 바닥 위에서만 좌우 순찰
+          { id: 'n05', name: '마탄의 알버스', shortTag: '🔫마탄알버스', type: 'monster', ground: true, dmg: 35, sprite: 'spr_albus_f1', sprite2: 'spr_albus_f2', x: 800, y: 101, w: 38, h: 54, origX: 800, origY: 101, vx: 1.4, vy: 0, origVx: 1.4, origVy: 0, moveMode: 'patrol', minX: 690, maxX: 822, hit: false },
 
-          // 6. [정통 캐슬바니아 화염 마녀] 화염 마녀 위치 (Witch) - 상층 성당 A 독립 구역 전용 비행
-          { id: 'n06', name: '화염 마녀 위치 (Witch)', shortTag: '🧙마녀 위치 [비행]', type: 'monster', dmg: 38, sprite: 'spr_witch_f1', sprite2: 'spr_witch_f2', x: 1120, y: 380, w: 54, h: 70, origX: 1120, origY: 380, vx: 1.5, vy: -0.8, origVx: 1.5, origVy: -0.8, moveMode: 'territoryRoam', minX: 1040, maxX: 1260, minY: 320, maxY: 440, hit: false },
+          // 6. [정통 캐슬바니아 화염 마녀] 화염 마녀 위치 - 상층 성당 A 독립 구역 전용 비행
+          { id: 'n06', name: '화염 마녀 위치', shortTag: '🧙마녀 위치 [비행]', type: 'monster', dmg: 38, sprite: 'spr_witch_f1', sprite2: 'spr_witch_f2', x: 1120, y: 380, w: 54, h: 70, origX: 1120, origY: 380, vx: 1.5, vy: -0.8, origVx: 1.5, origVy: -0.8, moveMode: 'territoryRoam', minX: 1040, maxX: 1260, minY: 320, maxY: 440, hit: false },
 
-          // 8. [정통 캐슬바니아 저주 사령] 저주 영혼체 엑토플라즘 (Ectoplasm) - 심연 대교 진입로 하부 전용 부유
-          { id: 'n08', name: '저주 영혼체 엑토플라즘 (Ectoplasm)', shortTag: '👻엑토플라즘 [부유]', type: 'monster', dmg: 34, sprite: 'spr_ectoplasm_f1', sprite2: 'spr_ectoplasm_f2', x: 1720, y: 780, w: 50, h: 52, origX: 1720, origY: 780, vx: -1.2, vy: 0.9, origVx: -1.2, origVy: 0.9, moveMode: 'territoryRoam', minX: 1620, maxX: 1840, minY: 720, maxY: 850, hit: false },
+          // 8. [정통 캐슬바니아 저주 사령] 저주 영혼체 엑토플라즘 - 심연 대교 진입로 하부 전용 부유
+          { id: 'n08', name: '저주 영혼체 엑토플라즘', shortTag: '👻엑토플라즘 [부유]', type: 'monster', dmg: 34, sprite: 'spr_ectoplasm_f1', sprite2: 'spr_ectoplasm_f2', x: 1720, y: 780, w: 50, h: 52, origX: 1720, origY: 780, vx: -1.2, vy: 0.9, origVx: -1.2, origVy: 0.9, moveMode: 'territoryRoam', minX: 1620, maxX: 1840, minY: 720, maxY: 850, hit: false },
 
-          // 7. 심연 몽마 리리스 (Lilith) - 비행형 · 심연 가시수로 상공 구역에서만 비행
-          { id: 'n07', name: '심연 몽마 리리스 (Lilith)', shortTag: '🦇몽마리리스', type: 'monster', dmg: 35, sprite: 'spr_lilith_f1', sprite2: 'spr_lilith_f2', x: 1430, y: 740, w: 46, h: 47, origX: 1430, origY: 740, vx: 1.6, vy: -1.0, origVx: 1.6, origVy: -1.0, moveMode: 'territoryRoam', minX: 1330, maxX: 1600, minY: 680, maxY: 840, hit: false },
+          // 7. 심연 몽마 리리스 - 비행형 · 심연 가시수로 상공 구역에서만 비행
+          { id: 'n07', name: '심연 몽마 리리스', shortTag: '🦇몽마리리스', type: 'monster', dmg: 35, sprite: 'spr_lilith_f1', sprite2: 'spr_lilith_f2', x: 1430, y: 740, w: 46, h: 47, origX: 1430, origY: 740, vx: 1.6, vy: -1.0, origVx: 1.6, origVy: -1.0, moveMode: 'territoryRoam', minX: 1330, maxX: 1600, minY: 680, maxY: 840, hit: false },
 
-          // 막다른 길 함정 (Traps)
+          // 막다른 길 함정
           { id: 't01', name: '⚠️ 고문실 유인미믹 함정', shortTag: '⚠️고문미끼', type: 'trap', dmg: 25, sprite: 'spr_coffer_closed', sprite2: 'spr_coffer_open', x: 750, y: 126, w: 32, h: 28, hit: false },
           { id: 't02', name: '⚠️ 심연 감옥 철창 차단벽 함정', shortTag: '⚠️철창함정', type: 'trap', dmg: 25, sprite: 'spr_shutter', sprite2: 'spr_shutter', x: 605, y: 829, w: 32, h: 56, hit: false },
           { id: 't03', name: '⚠️ 상층 폐쇄 철문 차단 함정', shortTag: '⚠️폐쇄철문', type: 'trap', dmg: 25, sprite: 'spr_shutter', sprite2: 'spr_shutter', x: 1845, y: 230, w: 32, h: 56, hit: false },
-          { id: 'n09', name: '심연 세이렌 로렐라이 (Lorelei)', shortTag: '🧜심연로렐라이', type: 'monster', dmg: 32, sprite: 'spr_lorelei_f1', sprite2: 'spr_lorelei_f2', x: 140, y: 455, w: 58, h: 58, origX: 140, origY: 455, vx: 1.4, vy: -0.8, origVx: 1.4, origVy: -0.8, moveMode: 'territoryRoam', minX: 80, maxX: 225, minY: 430, maxY: 510, hit: false },
-          // 10. [심연 수문장] 파이널 나이트 (Final Knight) - 대성문 앞 최종 수문장 · 5회 타격 격파 · 초고속 심연 단죄 참격파
-          { id: 'n10', name: '심연 수문장 파이널 나이트 (Final Knight)', shortTag: '⚔️파이널나이트 [수문장]', type: 'monster', hp: 5, maxHp: 5, dmg: 35, sprite: 'spr_finalknight_f1', sprite2: 'spr_finalknight_f2', x: 2120, y: 769, origX: 2120, origY: 769, w: 112, h: 86, moveMode: 'patrol', minX: 2070, maxX: 2230, vx: 1.1, origVx: 1.1, origVy: 0, hit: false, attackCooldown: 25 }
+          { id: 'n09', name: '심연 세이렌 로렐라이', shortTag: '🧜심연로렐라이', type: 'monster', dmg: 32, sprite: 'spr_lorelei_f1', sprite2: 'spr_lorelei_f2', x: 140, y: 455, w: 58, h: 58, origX: 140, origY: 455, vx: 1.4, vy: -0.8, origVx: 1.4, origVy: -0.8, moveMode: 'territoryRoam', minX: 80, maxX: 225, minY: 430, maxY: 510, hit: false },
+          // 10. [심연 수문장] 파이널 나이트 - 대성문 앞 최종 수문장 · 5회 타격 격파 · 초고속 심연 단죄 참격파
+          { id: 'n10', name: '심연 수문장 파이널 나이트', shortTag: '⚔️파이널나이트 [수문장]', type: 'monster', hp: 5, maxHp: 5, dmg: 35, sprite: 'spr_finalknight_f1', sprite2: 'spr_finalknight_f2', x: 2120, y: 769, origX: 2120, origY: 769, w: 112, h: 86, moveMode: 'patrol', minX: 2070, maxX: 2230, vx: 1.1, origVx: 1.1, origVy: 0, hit: false, attackCooldown: 25 }
         ]
       }
     ];
@@ -2706,7 +2624,7 @@
         state.floatingTexts.push({
           x: cx,
           y: cy - 16,
-          text: '🛡️ 심연의 사신(Death)은 불사신입니다! (처치 불가 — 피해 탈출하세요!)',
+          text: '🛡️ 심연의 사신은 불사신입니다! (처치 불가 — 피해 탈출하세요!)',
           color: '#ff8a80',
           life: 68
         });
@@ -2787,7 +2705,7 @@
               state.floatingTexts.push({
                 x: cx,
                 y: cy - 16,
-                text: isValmanway ? '⚡ 전설 비검의 칼바람이 심연의 사신을 밀쳐냅니다!' : '🛡️ 심연의 사신(Death)! 공격으로 죽지 않습니다 — 피해서 탈출하세요!',
+                text: isValmanway ? '⚡ 전설 비검의 칼바람이 심연의 사신을 밀쳐냅니다!' : '🛡️ 심연의 사신! 공격으로 죽지 않습니다 — 피해서 탈출하세요!',
                 color: isValmanway ? '#a7ffeb' : '#ff8a80',
                 life: 65
               });
@@ -3333,7 +3251,7 @@
               if (state.currentStageIdx === 0) axeName = '황금 화염 도끼 함정';
               else if (state.currentStageIdx === 1) axeName = '청빙 얼음 도끼 함정';
               else if (state.currentStageIdx === 2) axeName = '시계탑 강철 도끼 함정';
-              else if (state.currentStageIdx === 3) axeName = '심연 거대 진자단두추 즉사 함정';
+              else if (state.currentStageIdx === 3) axeName = '심연 거대 진자단두대 즉사 함정';
 
               if (pend.instantKill) {
                 damagePlayer(150, axeName, bladeX, true);
@@ -3345,7 +3263,7 @@
         });
       }
 
-      // 3-B. Update Wall & Rail Hazards (인화차 / 회전 기어)
+      // 3-B. Update Wall & Rail Hazards (불꽃바퀴 / 회전 기어)
       if (st.wallHazards) {
         st.wallHazards.forEach(function(wh) {
           if (wh.minX !== undefined && wh.maxX !== undefined) {
@@ -4102,7 +4020,7 @@
           ctx.translate(pend.x, pend.y);
 
           if (state.currentStageIdx === 0) {
-            // [MAP 1: 용암 지하성당] 정통 황금 화염 단두도끼 (Golden Flame Guillotine Axe)
+            // [MAP 1: 용암 지하성당] 정통 황금 화염 단두도끼
             ctx.rotate(ang);
             var axeImg = loadedImages['tile_axe_gold'] || loadedImages['tile_guillotine'];
             if (axeImg && axeImg.complete) {
@@ -4113,7 +4031,7 @@
               ctx.drawImage(axeImg, -15, 0, 54, pend.len);
             }
           } else if (state.currentStageIdx === 1) {
-            // [MAP 2: 빙하 수로 미궁] 정통 청빙 얼음 단두도끼 (Glacial Frost Guillotine)
+            // [MAP 2: 빙하 수로 미궁] 정통 청빙 얼음 단두도끼
             ctx.rotate(ang);
             var axeImg = loadedImages['tile_axe_frost_guillotine'] || loadedImages['tile_guillotine'];
             if (axeImg && axeImg.complete) {
@@ -4124,7 +4042,7 @@
               ctx.drawImage(axeImg, -26, 0, 52, pend.len);
             }
           } else if (state.currentStageIdx === 2) {
-            // [MAP 3: 기계 시계탑] 정통 시계탑 강철 진자 단두도끼 (Steel Clock Pendulum Guillotine)
+            // [MAP 3: 기계 시계탑] 정통 시계탑 강철 진자 단두도끼
             ctx.rotate(ang);
             var axeImg = loadedImages['tile_guillotine'];
             if (axeImg && axeImg.complete) {
@@ -4135,7 +4053,7 @@
               ctx.drawImage(axeImg, -27, 0, 52, pend.len);
             }
           } else {
-            // [MAP 4: 심연 최종 탈출] 거대 진자단두추 (Abyssal Pendulum Blade)
+            // [MAP 4: 심연 최종 탈출] 거대 진자단두대
             ctx.rotate(ang);
             var axeImg = loadedImages['tile_guillotine'];
             if (axeImg && axeImg.complete) {
@@ -4161,7 +4079,7 @@
         });
       }
 
-      // [벽면 및 레일 탑재형 정통 장애물: 인화차 및 거대 기어]
+      // [벽면 및 레일 탑재형 정통 장애물: 불꽃바퀴 및 거대 기어]
       if (st.wallHazards) {
         st.wallHazards.forEach(function(wh) {
           ctx.save();
@@ -4197,7 +4115,7 @@
             ctx.lineWidth = 1;
             ctx.font = 'bold 9px "Noto Serif KR", serif';
             ctx.textAlign = 'center';
-            ctx.fillText(wh.shortTag || '🔥인화차', 0, -28);
+            ctx.fillText(wh.shortTag || '🔥불꽃바퀴', 0, -28);
           } else if (wh.type === 'gear_large') {
             var gearImg = loadedImages['spr_gear_large'];
             if (gearImg && gearImg.complete) {
@@ -4462,7 +4380,7 @@
             var alpha = Math.max(0.35, (p.attackTimer / 6));
             ctx.globalAlpha = alpha;
 
-            // 1. 에메랄드 네온 초승달 진공 칼바람 면 (Filled Crescent Body)
+            // 1. 에메랄드 네온 초승달 진공 칼바람 면
             ctx.beginPath();
             ctx.moveTo(-14, -wv.h * 0.5);
             ctx.quadraticCurveTo(wv.w, 0, -14, wv.h * 0.5);
@@ -4473,13 +4391,13 @@
             ctx.shadowBlur = 14;
             ctx.fill();
 
-            // 2. 외곽 절단선 (Razor Edge Stroke)
+            // 2. 외곽 절단선
             ctx.strokeStyle = wv.col;
             ctx.lineWidth = 3.2;
             ctx.lineCap = 'round';
             ctx.stroke();
 
-            // 3. 순백 코어 절단면 (Razor White Spine)
+            // 3. 순백 코어 절단면
             ctx.shadowBlur = 6;
             ctx.shadowColor = '#ffffff';
             ctx.strokeStyle = '#ffffff';
@@ -4489,7 +4407,7 @@
             ctx.quadraticCurveTo(wv.w * 0.88, 0, -10, wv.h * 0.42);
             ctx.stroke();
 
-            // 4. 카마이타치 풍압 잔상선 (Wind Speed Streaks)
+            // 4. 카마이타치 풍압 잔상선
             ctx.shadowBlur = 0;
             ctx.strokeStyle = 'rgba(224, 255, 250, 0.55)';
             ctx.lineWidth = 1.4;
@@ -4501,7 +4419,7 @@
             ctx.restore();
           });
 
-          // 전방 십자 절단 섬광 (Cross-Cutting Flash Sparks)
+          // 전방 십자 절단 섬광
           ctx.save();
           ctx.translate(68, 0);
           ctx.rotate((tick * 0.45) % Math.PI);
@@ -4574,7 +4492,7 @@
 
       ctx.fillStyle = state.unlockedValmanway ? '#a7ffeb' : '#dcd6cd';
       ctx.font = 'bold 11px "Cinzel", "Noto Serif KR", "Nanum Myeongjo", serif';
-      var curWpnName = state.unlockedValmanway ? '👑 전설의 비검 (Gale Blade)' : st.weaponName;
+      var curWpnName = state.unlockedValmanway ? '👑 전설의 비검' : st.weaponName;
       ctx.fillText('무기: ' + curWpnName, 24, 48);
 
       // Top-Right World Radar
@@ -4797,7 +4715,7 @@
       document.getElementById('ansStep3').value = (st.autoStep3 || st.optimalSummary);
       playSfx('sfx_glyph', 0.5);
       document.getElementById('submitStatusMsg').textContent =
-        '✨ 게임에서 탐구한 탈출 방해물(1단계), 추출한 핵심 그래프(2단계), 최적 탈출 경로(3단계)가 채워졌습니다!';
+        '✨ 게임에서 탐구한 탈출 방해물(1단계), 추출한 핵심 노선도(2단계), 최적 탈출 경로(3단계)가 채워졌습니다!';
     }
 
     function submitGrimoireAnswer() {
@@ -4826,14 +4744,14 @@
       renderStageTabs();
 
       var msgEl = document.getElementById('submitStatusMsg');
-      msgEl.textContent = '⏳ 구글 시트(Google Sheets)에 답안을 전송 중입니다...';
+      msgEl.textContent = '⏳ 구글 시트에 답안을 전송 중입니다...';
 
       var clearMins = (state.routeMinutes && state.routeMinutes > 0) ? state.routeMinutes : st.targetMinutes;
       var defaultFeedbacks = {
-        'T01': '불필요한 우회로(E)와 막다른 길(C)을 완벽히 분별하여 6분 가중치 방향 그래프로 추상화함. 탁월함!',
+        'T01': '불필요한 우회로(E)와 막다른 길(C)을 완벽히 분별하여 6분 노선도처럼 단순하게 추상화함. 탁월함!',
         'T02': '빙하 절벽(C)과 동굴(X)을 배제하고 크리스탈 승강기를 핵심 거점으로 정확히 추출함. 우수함!',
-        'T03': '통행 불가인 붕괴 다리를 즉시 소거하고 중앙 태엽 승강기 경유 8분 최적 경로를 도출함. 우수함!',
-        'T04': '2400x960 심연 상태 공간에서 미혹 함정(W)을 소거하고 대성문 8분 탈출 경로를 완벽히 도출함. 탁월함!'
+        'T03': '느린 서쪽 종탑 우회로를 빼고 중앙 태엽 승강기 경유 8분 최적 경로를 도출함. 우수함!',
+        'T04': '아주 큰 심연 맵에서 미혹 함정(W)을 소거하고 대성문 8분 탈출 경로를 완벽히 도출함. 탁월함!'
       };
 
       var payload = {
@@ -5085,10 +5003,35 @@
       if (m) m.classList.add('hidden');
     }
 
+    function diagLoad() {
+      try { return JSON.parse(localStorage.getItem('castleDiagScores') || '{}'); } catch (e) { return {}; }
+    }
+    function diagSave(key, val) {
+      try {
+        var d = diagLoad();
+        d[key] = val;
+        localStorage.setItem('castleDiagScores', JSON.stringify(d));
+      } catch (e) {}
+    }
+    function diagRefresh() {
+      var d = diagLoad();
+      var pre = document.getElementById('diagPreScore');
+      var post = document.getElementById('diagPostScore');
+      var gain = document.getElementById('diagGain');
+      if (pre) pre.textContent = (d.pre === undefined) ? '아직 안 풀었어요' : d.pre + '점';
+      if (post) post.textContent = (d.post === undefined) ? '아직 안 풀었어요' : d.post + '점';
+      if (gain) {
+        if (d.pre === undefined || d.post === undefined) gain.textContent = '-';
+        else {
+          var diff = d.post - d.pre;
+          gain.textContent = diff > 0 ? ('+' + diff + '점 올랐어요!') : (diff === 0 ? '변화 없음' : (diff + '점'));
+        }
+      }
+    }
     function openDiagnosticModal() {
-      playButtonClickSfx();
       var m = document.getElementById('diagnosticModal');
       if (m) m.classList.remove('hidden');
+      diagRefresh();
     }
     function closeDiagnosticModal() {
       playButtonClickSfx();
@@ -5101,69 +5044,45 @@
         var content = document.getElementById('diagTabContent' + i);
         var btn = document.getElementById('diagTabBtn' + i);
         if (content) content.style.display = (i === tabIdx) ? 'block' : 'none';
-        if (btn) {
-          if (i === tabIdx) {
-            btn.className = 'btn btn-gold btn-sm';
-          } else {
-            btn.className = 'btn btn-sm';
-          }
-        }
+        if (btn) btn.className = (i === tabIdx) ? 'btn btn-gold btn-sm' : 'btn btn-sm';
+      }
+      if (tabIdx === 3) diagRefresh();
+    }
+    function diagShow(fb, score, goodMsg, badMsg) {
+      fb.style.display = 'block';
+      if (score === 2) {
+        fb.style.background = 'rgba(27, 94, 32, 0.4)';
+        fb.style.border = '1px solid #4caf50';
+        fb.style.color = '#c8e6c9';
+        fb.innerHTML = goodMsg;
+      } else {
+        fb.style.background = 'rgba(183, 28, 28, 0.35)';
+        fb.style.border = '1px solid #ef5350';
+        fb.style.color = '#ffcdd2';
+        fb.innerHTML = badMsg;
       }
     }
     function gradePreTest() {
       playButtonClickSfx();
       var q1 = document.querySelector('input[name="preQ1"]:checked');
       var q2 = document.querySelector('input[name="preQ2"]:checked');
-      var fb = document.getElementById('preTestFeedback');
-      if (!q1 || !q2) {
-        alert('사전 진단평가 문항(Q1, Q2)을 모두 선택해 주세요.');
-        return;
-      }
-      var score = 0;
-      var msg = '';
-      if (q1.value === 'B') score++;
-      if (q2.value === 'B') score++;
-
-      if (score === 2) {
-        fb.style.display = 'block';
-        fb.style.background = 'rgba(27, 94, 32, 0.4)';
-        fb.style.border = '1px solid #4caf50';
-        fb.style.color = '#c8e6c9';
-        fb.innerHTML = '<strong>🎉 2문항 모두 정답 (100점)!</strong><br/>추상화의 본질(불필요한 세부사항 제거 및 핵심 추출)과 문제 해결 접근법을 정확히 이해하고 있습니다. 이제 고성 미궁으로 들어가 실제 상태 공간을 축약하고 최적 경로 알고리즘을 완성해 보세요!';
-      } else {
-        fb.style.display = 'block';
-        fb.style.background = 'rgba(183, 28, 28, 0.35)';
-        fb.style.border = '1px solid #ef5350';
-        fb.style.color = '#ffcdd2';
-        fb.innerHTML = '<strong>💡 자가 진단 피드백 (' + score + '/2문항 정답)</strong><br/>• <strong>Q1 정답: ②번</strong> (일상의 "모호함"과 달리 정보 교과의 추상화는 핵심만 남기고 불필요한 것을 걷어내는 것)<br/>• <strong>Q2 정답: ②번</strong> (무작정 헤매지 않고 막다른 길을 먼저 가지치기(Pruning)하는 것이 핵심)<br/>본 게임을 플레이하면 이 개념을 자연스럽게 체득할 수 있습니다!';
-      }
+      if (!q1 || !q2) { alert('Q1과 Q2를 모두 골라 주세요.'); return; }
+      var score = (q1.value === 'B' ? 1 : 0) + (q2.value === 'B' ? 1 : 0);
+      diagSave('pre', score);
+      diagShow(document.getElementById('preTestFeedback'), score,
+        '<strong>🎉 2문제 모두 맞혔어요!</strong><br/>추상화가 무엇인지 잘 알고 있네요. 이제 고성 미궁에서 직접 확인해 보세요!',
+        '<strong>💡 ' + score + '/2 정답</strong><br/>• Q1 정답은 ②번: 정보 교과의 추상화는 흐릿하게 만드는 것이 아니라, 필요 없는 것을 빼고 핵심만 남기는 것입니다.<br/>• Q2 정답은 ②번: 무작정 달리기보다, 막다른 길과 함정을 먼저 지우면 훨씬 쉬워집니다.<br/>게임을 하면서 직접 익혀 봐요!');
     }
     function gradePostTest() {
       playButtonClickSfx();
       var q1 = document.querySelector('input[name="postQ1"]:checked');
       var q2 = document.querySelector('input[name="postQ2"]:checked');
-      var fb = document.getElementById('postTestFeedback');
-      if (!q1 || !q2) {
-        alert('사후 성취도평가 문항(Q1, Q2)을 모두 선택해 주세요.');
-        return;
-      }
-      var score = 0;
-      if (q1.value === 'A') score++;
-      if (q2.value === 'B') score++;
-
-      if (score === 2) {
-        fb.style.display = 'block';
-        fb.style.background = 'rgba(27, 94, 32, 0.4)';
-        fb.style.border = '1px solid #4caf50';
-        fb.style.color = '#c8e6c9';
-        fb.innerHTML = '<strong>🌟 완벽한 성취 (100점 - 상 탁월)!</strong><br/>• <strong>Q1 해설</strong>: 막다른 방 C와 우회로 E를 가지치기함으로써 알고리즘의 상태 탐색 공간(State Space)이 대폭 축약되었습니다.<br/>• <strong>Q2 해설</strong>: 추천 경로를 맹목적으로 따르지 않고, 대안 경로(11분) 대비 주 경로(6분)의 가중치 합산 시간이 최소임을 수학적으로 논증했습니다.<br/>2022 개정 교육과정 [9정03-01]과 [9정03-02] 성취기준을 최고 수준으로 달성했습니다!';
-      } else {
-        fb.style.display = 'block';
-        fb.style.background = 'rgba(230, 81, 0, 0.35)';
-        fb.style.border = '1px solid #ffa726';
-        fb.style.color = '#ffe0b2';
-        fb.innerHTML = '<strong>💡 성취도 피드백 (' + score + '/2문항 정답)</strong><br/>• <strong>Q1 정답: ①번</strong> (상태 공간 축약으로 탐색 효율 극대화)<br/>• <strong>Q2 정답: ②번</strong> (가중치 합산 시간을 통한 최적해 논리적 증명)<br/>다시 한 번 노선도 요약과 [🎓 교육과정 지도안]의 알고리즘 정합성 안내를 확인해 보세요!';
-      }
+      if (!q1 || !q2) { alert('Q1과 Q2를 모두 골라 주세요.'); return; }
+      var score = (q1.value === 'A' ? 1 : 0) + (q2.value === 'B' ? 1 : 0);
+      diagSave('post', score);
+      diagShow(document.getElementById('postTestFeedback'), score,
+        '<strong>🌟 2문제 모두 맞혔어요!</strong><br/>• Q1: 필요 없는 길을 먼저 지우면 따져 볼 길이 줄어듭니다.<br/>• Q2: 다른 길(10분)보다 이 길(6분)이 짧다는 것을 시간 계산으로 설명했어요.<br/>[9정03-01]과 [9정03-02]를 잘 이해했습니다!',
+        '<strong>💡 ' + score + '/2 정답</strong><br/>• Q1 정답은 ①번: 따져 볼 길이 줄어서 가장 빠른 길을 쉽게 찾을 수 있습니다.<br/>• Q2 정답은 ②번: 다른 길과 시간을 직접 더해서 비교해야 가장 빠른 길이라고 설명할 수 있습니다.<br/>[🎓 교육·평가 지도안]의 쉬운 설명을 다시 읽어 보세요!');
     }
 
     function openCopyrightModal() {
