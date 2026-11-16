@@ -2435,6 +2435,7 @@
       student: { code: 'S01', nickname: '민트', level: '기본' },
       unlockedValmanway: false,
       currentStageGoalReached: false,
+      doorLockFeedbackTimer: 0,
       controlMode: 'wasd', // 'wasd' (Strict action) or 'click' (Exploration)
       currentStageIdx: 0,
       abstractSight: false,
@@ -2892,9 +2893,10 @@
       var feedbackEl = document.getElementById('modalFeedbackText');
 
       if (isOpt) {
-        verdictEl.textContent = '🌟 최적 핵심 경로 완벽 탈출!';
+        verdictEl.textContent = state.abstractSight ? '🌟 최적 핵심 경로 탈출 성공!' : '👑 [자력 추상화 마스터] 최단 경로 완벽 탈출!';
         verdictEl.style.color = '#ffd740';
-        feedbackEl.innerHTML = '<strong>완벽한 정보 교과 추상화 성공!</strong><br/>불필요한 미끼와 위험한 함정을 모두 제거하고 최단 경로(' + state.routeMinutes + '분)로 완벽히 탈출했습니다.';
+        var hintNote = state.abstractSight ? '<br/><span style="color:#80deea; font-size:12px;">(💡 힌트 가이드 활용)</span>' : '<br/><span style="color:#a7ffeb; font-size:12px;">(✨ 힌트 없이 스스로 가중치를 계산하여 최단 경로를 개척했습니다!)</span>';
+        feedbackEl.innerHTML = '<strong>완벽한 정보 교과 추상화 성공!</strong><br/>불필요한 미끼와 위험한 함정을 모두 거르고 정확한 최단 경로(' + state.routeMinutes + '분)로 탈출에 성공했습니다.' + hintNote;
       } else {
         verdictEl.textContent = '⭐ 우회로 탐험 성공 (' + state.routeMinutes + '분)';
         verdictEl.style.color = '#e2c481';
@@ -2955,6 +2957,7 @@
       state.visitedNodes = [st.nodes[0].id];
       state.routeMinutes = 0;
       state.tookDetour = false;
+      state.doorLockFeedbackTimer = 0;
       state.teleportCooldown = 0;
       state.bolts = [];
 
@@ -3030,8 +3033,15 @@
 
       document.getElementById('statusHudText').textContent =
         '가지치기한 탈출 방해물: ' + stats.removed + ' / ' + stats.total + '개 ' + (state.abstractSight ? '[맵 힌트 ON]' : '');
-      document.getElementById('graphStateBadge').textContent =
-        pct >= 80 ? '✨ [추상화 완료: 최적 핵심 노선도 추출됨!]' : '[추상화 진행률 ' + pct + '%]';
+      var badgeText = '';
+      if (state.abstractSight) {
+        badgeText = '👁️ [추상화 시야: 힌트 가이드 ON]';
+      } else if (pct >= 70) {
+        badgeText = '✨ [추상화 성공: 핵심 최단 노선도 해금됨!]';
+      } else {
+        badgeText = '🧭 [자율 탐색 중: 가지치기 ' + pct + '% (70% 달성 시 최적 노선 해금)]';
+      }
+      document.getElementById('graphStateBadge').textContent = badgeText;
     }
 
     function updateRouteAnalyzerUI() {
@@ -3062,16 +3072,16 @@
       var edge = st.edges.find(function(e) {
         return (e.from === lastId && e.to === nodeId) || (e.to === lastId && e.from === nodeId);
       });
-      var addMin = edge ? (edge.minutes || 2) : 2;
+      var addMin = edge ? (edge.minutes || 1) : 5;
       state.visitedNodes.push(nodeId);
       state.routeMinutes += addMin;
 
-      if (st.optimalNodeSeq.indexOf(nodeId) === -1 || (edge && !edge.optimal)) {
+      if (!edge || st.optimalNodeSeq.indexOf(nodeId) === -1 || !edge.optimal) {
         state.tookDetour = true;
         state.floatingTexts.push({
           x: state.player.x + 16,
           y: state.player.y - 24,
-          text: '⚠️ 비최적 우회로/막다른길 진입! (+' + addMin + '분 시간 손실)',
+          text: !edge ? '⚠️ 연결 통로 없는 경로 건너뛰기! (최적 경로 이탈)' : '⚠️ 비최적 우회로/막다른길 진입! (+' + addMin + '분 시간 손실)',
           color: '#ff8a80',
           life: 65
         });
@@ -3085,6 +3095,63 @@
         });
       }
       updateRouteAnalyzerUI();
+    }
+
+    function checkOptimalRouteStatus() {
+      var st = STAGES[state.currentStageIdx];
+      var optSeq = st.optimalNodeSeq;
+
+      // 1. 비최적 우회로를 진입했는가?
+      if (state.tookDetour) {
+        return {
+          valid: false,
+          reason: '비최적 우회로 경유로 탈출구가 봉인되었습니다! (' + state.routeMinutes + '분 / 목표 ' + st.targetMinutes + '분)'
+        };
+      }
+
+      // 2. 최단 목표 시간을 초과했는가?
+      if (state.routeMinutes > st.targetMinutes) {
+        return {
+          valid: false,
+          reason: '최단 목표 시간(' + st.targetMinutes + '분)을 초과하였습니다! (소요 시간: ' + state.routeMinutes + '분)'
+        };
+      }
+
+      // 3. 최적 경로의 필수 노드들을 빠짐없이 순서대로 통과했는가?
+      if (state.visitedNodes.length !== optSeq.length) {
+        var missing = [];
+        for (var i = 0; i < optSeq.length; i++) {
+          if (state.visitedNodes.indexOf(optSeq[i]) === -1) {
+            missing.push(optSeq[i]);
+          }
+        }
+        var msg = missing.length > 0 ? ('필수 장소 [' + missing.join(', ') + '] 미경유!') : '중간 이동 순서 불일치!';
+        return {
+          valid: false,
+          reason: msg + ' (최적 경로: ' + optSeq.join(' → ') + ')'
+        };
+      }
+
+      for (var k = 0; k < optSeq.length; k++) {
+        if (state.visitedNodes[k] !== optSeq[k]) {
+          return {
+            valid: false,
+            reason: '경로 순서가 일치하지 않습니다! (최적 순서: ' + optSeq.join(' → ') + ')'
+          };
+        }
+      }
+
+      return { valid: true };
+    }
+
+    function isEdgeTraversed(ed) {
+      var v = state.visitedNodes;
+      for (var i = 0; i < v.length - 1; i++) {
+        if ((v[i] === ed.from && v[i+1] === ed.to) || (v[i] === ed.to && v[i+1] === ed.from)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     // Canvas Click Event: Strict Separation between WASD mode and Click mode!
@@ -3168,6 +3235,25 @@
       st.nodes.forEach(function(nd) {
         var nx = nd.x * scaleX, ny = nd.y * scaleY;
         if (Math.hypot(gx - nx, gy - ny) < 22) {
+          var currentId = state.visitedNodes[state.visitedNodes.length - 1];
+          if (nd.id === currentId) return;
+
+          // 현재 위치에서 직접 연결된 통로인지 확인 (임의 노드 건너뛰기 차단)
+          var edge = st.edges.find(function(e) {
+            return (e.from === currentId && e.to === nd.id) || (e.to === currentId && e.from === nd.id);
+          });
+          if (!edge) {
+            playSfx('hit', 0.85);
+            state.floatingTexts.push({
+              x: state.player.x + 16,
+              y: state.player.y - 20,
+              text: '🚫 [' + currentId + ']에서 직접 연결된 장소로만 이동할 수 있습니다!',
+              color: '#ff8a80',
+              life: 60
+            });
+            return;
+          }
+
           state.player.autoWaypoints = [{ x: nd.x, y: nd.y }];
           state.player.autoWpIdx = 0;
         }
@@ -3801,12 +3887,41 @@
         p.x = Math.max(10, Math.min(st.worldW - 42, p.x));
       }
 
+      if (state.doorLockFeedbackTimer > 0) state.doorLockFeedbackTimer--;
+
       // Check Node Visits & Goal Door
       st.nodes.forEach(function(nd, nIdx) {
         if (Math.hypot((p.x + 16) - nd.x, (p.y + 28) - nd.y) < 46) {
-          recordVisitedNode(nd.id);
-          if (nIdx === st.nodes.length - 1) {
-            onReachStageGoal();
+          var isGoal = (nIdx === st.nodes.length - 1);
+          if (isGoal) {
+            recordVisitedNode(nd.id);
+            var chk = checkOptimalRouteStatus();
+            if (chk.valid) {
+              onReachStageGoal();
+            } else {
+              // 최단 경로가 아니면 문이 절대 열리지 않고 봉인 경고 피드백
+              if (!state.doorLockFeedbackTimer || state.doorLockFeedbackTimer <= 0) {
+                state.doorLockFeedbackTimer = 85;
+                playSfx('hit', 0.85);
+                spawnParticles(nd.x, nd.y - 16, '#ff5252', 24);
+                state.floatingTexts.push({
+                  x: nd.x,
+                  y: nd.y - 50,
+                  text: '🔒 [탈출구 봉인] 최단 경로가 아니면 문이 열리지 않습니다!',
+                  color: '#ff5252',
+                  life: 80
+                });
+                state.floatingTexts.push({
+                  x: nd.x,
+                  y: nd.y - 28,
+                  text: '⚠️ ' + chk.reason,
+                  color: '#ff8a80',
+                  life: 80
+                });
+              }
+            }
+          } else {
+            recordVisitedNode(nd.id);
           }
         }
       });
@@ -4371,25 +4486,34 @@
       }
       ctx.restore();
 
-      // 4. Draw Graph Edges
+      // 4. Draw Graph Edges (추상화 비계 설정: 기본 탐색 시 정답 파란선 미노출, 통과 경로 초록 하이라이트, 70% 가지치기 또는 힌트 시에만 최적선 해금)
+      var statsForGuide = getRemovableNoiseStats ? getRemovableNoiseStats() : { removed: 0, total: 1 };
+      var pruneRatioForGuide = statsForGuide.total > 0 ? (statsForGuide.removed / statsForGuide.total) : 0;
+      var showOptimalGuide = state.abstractSight || (pruneRatioForGuide >= 0.70);
+
       st.edges.forEach(function(ed) {
         var n1 = st.nodes.find(function(n){ return n.id === ed.from; });
         var n2 = st.nodes.find(function(n){ return n.id === ed.to; });
         if (!n1 || !n2) return;
+        var traversed = isEdgeTraversed(ed);
+
         ctx.save();
         ctx.beginPath();
         ctx.moveTo(n1.x, n1.y);
         ctx.lineTo(n2.x, n2.y);
-        if (ed.broken || ed.deadEnd) {
+        if (traversed) {
+          ctx.strokeStyle = ed.optimal ? '#00e676' : '#ff8a80';
+          ctx.lineWidth = 3.6;
+        } else if (ed.broken || ed.deadEnd) {
           ctx.strokeStyle = isAbstractMode ? '#ff5252' : 'rgba(255,82,82,0.45)';
           ctx.setLineDash([7, 6]);
           ctx.lineWidth = isAbstractMode ? 3.2 : 1.8;
-        } else if (ed.optimal) {
-          ctx.strokeStyle = isAbstractMode ? '#00e5ff' : 'rgba(0,229,255,0.52)';
-          ctx.lineWidth = isAbstractMode ? 4.4 : 2.4;
+        } else if (showOptimalGuide) {
+          ctx.strokeStyle = ed.optimal ? '#00e5ff' : 'rgba(255,112,67,0.38)';
+          ctx.lineWidth = ed.optimal ? 3.8 : 1.8;
         } else {
-          ctx.strokeStyle = isAbstractMode ? 'rgba(255,112,67,0.45)' : 'rgba(176,168,194,0.28)';
-          ctx.lineWidth = 1.8;
+          ctx.strokeStyle = 'rgba(212, 175, 55, 0.40)';
+          ctx.lineWidth = 2.0;
         }
         ctx.stroke();
 
@@ -4397,12 +4521,24 @@
         var my = (n1.y + n2.y) * 0.5 + (ed.labelDy || -14);
         ctx.font = 'bold 11px "Noto Serif KR", "Nanum Myeongjo", serif';
         var tw = ctx.measureText(ed.cost).width + 12;
-        ctx.fillStyle = isAbstractMode ? 'rgba(9,7,14,0.92)' : 'rgba(9,7,14,0.82)';
-        ctx.strokeStyle = ed.optimal ? '#00e5ff' : '#8d6e32';
+        ctx.fillStyle = isAbstractMode ? 'rgba(9,7,14,0.92)' : 'rgba(9,7,14,0.85)';
+        if (traversed) {
+          ctx.strokeStyle = ed.optimal ? '#00e676' : '#ff8a80';
+        } else if (showOptimalGuide) {
+          ctx.strokeStyle = ed.optimal ? '#00e5ff' : '#8d6e32';
+        } else {
+          ctx.strokeStyle = '#8d6e32';
+        }
         ctx.lineWidth = 1;
         ctx.fillRect(mx - tw/2, my - 9, tw, 18);
         ctx.strokeRect(mx - tw/2, my - 9, tw, 18);
-        ctx.fillStyle = ed.broken || ed.deadEnd ? '#ff8a80' : (ed.optimal ? '#80deea' : '#ffe07d');
+        if (traversed) {
+          ctx.fillStyle = ed.optimal ? '#b9f6ca' : '#ff8a80';
+        } else if (showOptimalGuide) {
+          ctx.fillStyle = ed.broken || ed.deadEnd ? '#ff8a80' : (ed.optimal ? '#80deea' : '#ffe07d');
+        } else {
+          ctx.fillStyle = ed.broken || ed.deadEnd ? '#ff8a80' : '#ffe07d';
+        }
         ctx.textAlign = 'center';
         ctx.fillText(ed.cost, mx, my + 4);
         ctx.restore();
@@ -4420,11 +4556,19 @@
         if (isGoal) {
           var doorImg = loadedImages[state.currentStageGoalReached ? 'spr_door_open' : 'spr_door_closed'];
           var portalImg = loadedImages['spr_portal_f1'];
-          if (portalImg && portalImg.complete) {
+          if (state.currentStageGoalReached && portalImg && portalImg.complete) {
             ctx.drawImage(portalImg, nd.x - 32, nd.y - 22, 64, 48);
           }
           if (doorImg && doorImg.complete) {
             ctx.drawImage(doorImg, nd.x - 16, nd.y - 46, 32, 64);
+          }
+          if (!state.currentStageGoalReached) {
+            ctx.save();
+            ctx.font = 'bold 11px "Noto Serif KR", "Nanum Myeongjo", serif';
+            ctx.fillStyle = '#ff5252';
+            ctx.textAlign = 'center';
+            ctx.fillText('🔒 [봉인된 탈출문]', nd.x, nd.y - 52);
+            ctx.restore();
           }
         }
         ctx.save();
@@ -4956,6 +5100,7 @@
       var st = STAGES[state.currentStageIdx];
       var stats = getRemovableNoiseStats();
       var ratio = state.abstractSight ? 1.0 : (stats.removed / stats.total);
+      var showOptimalGuide = state.abstractSight || (ratio >= 0.70);
 
       ctx.fillStyle = '#070a12';
       ctx.fillRect(0, 0, 900, 250);
@@ -4990,7 +5135,7 @@
         }
       });
 
-      // Draw Edges
+      // Draw Edges (추상화 비계 설정)
       st.edges.forEach(function(ed) {
         var n1 = st.nodes.find(function(n){ return n.id === ed.from; });
         var n2 = st.nodes.find(function(n){ return n.id === ed.to; });
@@ -4998,20 +5143,25 @@
         var x1 = n1.x * scaleX, y1 = n1.y * scaleY;
         var x2 = n2.x * scaleX, y2 = n2.y * scaleY;
 
+        var traversed = isEdgeTraversed(ed);
+
         ctx.save();
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
-        if (ed.broken || ed.deadEnd) {
+        if (traversed) {
+          ctx.strokeStyle = ed.optimal ? '#00e676' : '#ff8a80';
+          ctx.lineWidth = 3.2;
+        } else if (ed.broken || ed.deadEnd) {
           ctx.strokeStyle = '#ff5252';
           ctx.setLineDash([5, 4]);
           ctx.lineWidth = 1.8;
-        } else if (ed.optimal) {
-          ctx.strokeStyle = ratio >= 0.5 ? '#00e676' : '#00e5ff';
-          ctx.lineWidth = ratio >= 0.5 ? 3.5 : 2.5;
+        } else if (showOptimalGuide) {
+          ctx.strokeStyle = ed.optimal ? '#00e5ff' : 'rgba(255, 112, 67, 0.40)';
+          ctx.lineWidth = ed.optimal ? 3.4 : 1.8;
         } else {
-          ctx.strokeStyle = 'rgba(255, 112, 67, 0.55)';
-          ctx.lineWidth = 1.8;
+          ctx.strokeStyle = 'rgba(212, 175, 55, 0.45)';
+          ctx.lineWidth = 2.0;
         }
         ctx.stroke();
 
@@ -5021,10 +5171,22 @@
         var tw = ctx.measureText(ed.cost).width + 12;
         ctx.fillStyle = 'rgba(7, 5, 14, 0.95)';
         ctx.fillRect(mx - tw/2, my - 8, tw, 15);
-        ctx.strokeStyle = (ed.broken || ed.deadEnd) ? '#ff5252' : (ed.optimal ? '#00e676' : '#ffa726');
+        if (traversed) {
+          ctx.strokeStyle = ed.optimal ? '#00e676' : '#ff8a80';
+        } else if (showOptimalGuide) {
+          ctx.strokeStyle = (ed.broken || ed.deadEnd) ? '#ff5252' : (ed.optimal ? '#00e5ff' : '#ffa726');
+        } else {
+          ctx.strokeStyle = (ed.broken || ed.deadEnd) ? '#ff5252' : '#8d6e32';
+        }
         ctx.lineWidth = 1;
         ctx.strokeRect(mx - tw/2, my - 8, tw, 15);
-        ctx.fillStyle = (ed.broken || ed.deadEnd) ? '#ff8a80' : (ed.optimal ? '#b9f6ca' : '#ffe082');
+        if (traversed) {
+          ctx.fillStyle = ed.optimal ? '#b9f6ca' : '#ff8a80';
+        } else if (showOptimalGuide) {
+          ctx.fillStyle = (ed.broken || ed.deadEnd) ? '#ff8a80' : (ed.optimal ? '#80deea' : '#ffe082');
+        } else {
+          ctx.fillStyle = (ed.broken || ed.deadEnd) ? '#ff8a80' : '#ffe082';
+        }
         ctx.textAlign = 'center';
         ctx.fillText(ed.cost, mx, my + 3);
         ctx.restore();
