@@ -2188,7 +2188,7 @@
         worldW: 2220,
         worldH: 480,
         title: '기계 시계탑',
-        hint: '느린 [C.서쪽종탑(우회로)]과, [X.태엽창고(막다른길)]를 배제하고, [D.아래층진자회랑]에서 [F.중앙태엽승강기]로 상승하여 8분 최적 경로로 정상에 도달하세요.',
+        hint: '느린 [C.서쪽종탑(우회로)]과, [X.태엽창고(막다른길)]를 배제하고, [D.제 2기어교차로]에서 [F.중앙태엽승강기]로 상승하여 8분 최적 경로로 정상에 도달하세요.',
         bgm: 'bgm_clock',
         weaponSprite: 'spr_lance_glyph',
         weaponName: '빙창 글리프',
@@ -2199,17 +2199,17 @@
         hazardName: '시계탑 강철 스파이크·회전 기어 심연 (-25 HP)',
         targetMinutes: 8,
         optimalNodeSeq: ['A', 'B', 'D', 'F', 'G', 'H'],
-        optimalSummary: '• 전체 최적 탈출 경로: A.지하태엽실 ➔ B.제1기어교차로 ➔ D.아래층진자회랑 ➔ F.중앙태엽승강기 ➔ G.상층시계문자판 ➔ H.시계탑정상종각\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 2분 + 2분 + 1분 = 총 8분\n• 최종 탈출 전략: 서쪽 종탑(C)과 태엽창고(X)를 배제하고 중앙 태엽 승강기(F)로 수직 상승하는 8분 최적 탈출로임',
+        optimalSummary: '• 전체 최적 탈출 경로: A.지하태엽실 ➔ B.제1기어교차로 ➔ D.제 2기어교차로 ➔ F.중앙태엽승강기 ➔ G.상층시계문자판 ➔ H.시계탑정상종각\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 2분 + 2분 + 1분 = 총 8분\n• 최종 탈출 전략: 서쪽 종탑(C)과 태엽창고(X)를 배제하고 중앙 태엽 승강기(F)로 수직 상승하는 8분 최적 탈출로임',
         step1Question: '[1단계: 문제 정의 및 목표 분석] 탈출 출발 장소, 최종 탈출구, 그리고 최적 목표 시간(분)을 명시해 보세요.',
         step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 탈출에 꼭 필요한 핵심 장소 간 \'구간별 소요 시간\'과, 가지치기하여 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
         step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 출발지부터 탈출구까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
         autoStep1: '• 출발지: A.지하태엽실\n• 목표지: H.시계탑정상종각\n• 최적 목표 시간: 8분',
-        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.지하태엽실 ➔ B.제1기어교차로]: 1분\n  - [B.제1기어교차로 ➔ D.아래층진자회랑]: 2분\n  - [D.아래층진자회랑 ➔ F.중앙태엽승강기]: 2분 (수직 상승 승강기)\n  - [F.중앙태엽승강기 ➔ G.상층시계문자판]: 2분\n  - [G.상층시계문자판 ➔ H.시계탑정상종각]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.서쪽종탑(우회로)]: 중기갑 기사가 순찰하며 4분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.태엽창고(막다른길)]: 통로가 막힌 위험 구역이므로 배제함\n  - [B➔G 중앙 구름다리]: 다리가 붕괴되어 진입 불가능하므로 배제함',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.지하태엽실 ➔ B.제1기어교차로]: 1분\n  - [B.제1기어교차로 ➔ D.제 2기어교차로]: 2분\n  - [D.제 2기어교차로 ➔ F.중앙태엽승강기]: 2분 (수직 상승 승강기)\n  - [F.중앙태엽승강기 ➔ G.상층시계문자판]: 2분\n  - [G.상층시계문자판 ➔ H.시계탑정상종각]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.서쪽종탑(우회로)]: 중기갑 기사가 순찰하며 4분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.태엽창고(막다른길)]: 통로가 막힌 위험 구역이므로 배제함\n  - [B➔G 중앙 구름다리]: 다리가 붕괴되어 진입 불가능하므로 배제함',
         nodes: [
           { id: 'A', label: 'A.지하태엽실[출발]', x: 100, y: 400 },
           { id: 'B', label: 'B.제1기어교차로', x: 400, y: 310 },
           { id: 'C', label: 'C.서쪽종탑(우회로)', x: 750, y: 155 },
-          { id: 'D', label: 'D.아래층진자회랑', x: 780, y: 385 },
+          { id: 'D', label: 'D.제 2기어교차로', x: 780, y: 385 },
           { id: 'X', label: 'X.태엽창고(막다른길)', x: 1120, y: 425 },
           { id: 'F', label: 'F.중앙태엽승강기', x: 1160, y: 295 },
           { id: 'G', label: 'G.상층시계문자판', x: 1620, y: 205 },
@@ -2234,8 +2234,8 @@
           { x: 625, y: 185, w: 255, h: 22, core: false, style: 'detour', nodeId: 'C', tag: '⚠️서쪽 종탑 우회로(느림)' },
           { x: 930, y: 175, w: 185, h: 20, core: false, style: 'detour', tag: '상부 녹슨 철교' },
           { x: 1170, y: 180, w: 180, h: 20, core: false, style: 'detour', tag: '종탑 연결교' },
-          { x: 525, y: 375, w: 125, h: 22, core: true, style: 'stair', tag: '진자 회랑 입구 계단' },
-          { x: 675, y: 412, w: 220, h: 24, core: true, style: 'core', nodeId: 'D', tag: '아래층 진자 회랑' },
+          { x: 525, y: 375, w: 125, h: 22, core: true, style: 'stair', tag: '제 2기어교차로 입구 계단' },
+          { x: 675, y: 412, w: 220, h: 24, core: true, style: 'core', nodeId: 'D', tag: '제 2기어교차로' },
           { x: 1035, y: 442, w: 180, h: 20, core: false, style: 'deadend', nodeId: 'X', tag: '🚫막다른 태엽창고' },
           { x: 925, y: 365, w: 120, h: 22, core: true, style: 'stair', tag: '중앙 기어 발판' },
           { x: 1080, y: 325, w: 175, h: 24, core: true, style: 'lift', nodeId: 'F', moveY: true, baseY: 315, ampY: 46, spd: 0.04, tag: '⚙️중앙 태엽 엘리베이터' },
@@ -3813,82 +3813,20 @@
       var topTrimCol = '#ffe07d';
 
       if (state.currentStageIdx === 0) {
-        // [MAP 1: 용암 지하성당] - 화산암 바살트 및 마그마 텍스처
-        if (plat.style === 'altar') {
-          texKey = 'tile_plat_gold_arch';
-          borderCol = '#ffd740';
-          topTrimCol = '#ffe082';
-        } else if (plat.style === 'core') {
-          texKey = 'tile_plat_lava';
-          borderCol = '#ff5722';
-          topTrimCol = '#ff8a65';
-        } else if (plat.style === 'stair') {
-          texKey = 'tile_plat_stair_brick';
-          borderCol = '#d84315';
-          topTrimCol = '#ffab91';
-        } else if (plat.style === 'detour') {
-          texKey = 'tile_plat_magma_rock';
-          borderCol = '#ff3d00';
-          topTrimCol = '#ff6e40';
-        } else if (plat.style === 'deadend') {
-          texKey = 'tile_plat_cursed_trap';
-          borderCol = '#bf360c';
-          topTrimCol = '#ff1744';
-        }
+        // [MAP 1: 용암 지하성당] - 전 발판 회색 벽돌 텍스처 통일 (tile_plat_lava)
+        texKey = 'tile_plat_lava';
+        borderCol = '#ff5722';
+        topTrimCol = '#ff8a65';
       } else if (state.currentStageIdx === 1) {
-        // [MAP 2: 빙하 수로 미궁] - 청빙 얼음 크리스탈 및 만년설 텍스처 (주황색 완전 배제!)
-        if (plat.style === 'altar') {
-          texKey = 'tile_plat_glacier';
-          borderCol = '#e0f7fa';
-          topTrimCol = '#80deea';
-        } else if (plat.style === 'core') {
-          texKey = 'tile_plat_ice_crystal';
-          borderCol = '#00e5ff';
-          topTrimCol = '#e0f7fa';
-        } else if (plat.style === 'stair') {
-          texKey = 'tile_plat_ice_crystal';
-          borderCol = '#4fc3f7';
-          topTrimCol = '#b3e5fc';
-        } else if (plat.style === 'detour') {
-          texKey = 'tile_plat_glacier';
-          borderCol = '#29b6f6';
-          topTrimCol = '#81d4fa';
-        } else if (plat.style === 'deadend') {
-          texKey = 'tile_plat_glacier';
-          borderCol = '#0288d1';
-          topTrimCol = '#4fc3f7';
-        } else if (plat.style === 'lift') {
-          texKey = 'tile_plat_ice_crystal';
-          borderCol = '#80deea';
-          topTrimCol = '#e0f7fa';
-        }
+        // [MAP 2: 빙하 수로 미궁] - 전 발판 파란색 벽돌 텍스처 통일 (tile_plat_glacier)
+        texKey = 'tile_plat_glacier';
+        borderCol = '#00e5ff';
+        topTrimCol = '#80deea';
       } else if (state.currentStageIdx === 2) {
-        // [MAP 3: 기계 시계탑] - 황동, 청동 및 강철 기어 거더 텍스처 (주황색 완전 배제!)
-        if (plat.style === 'altar') {
-          texKey = 'tile_plat_clock';
-          borderCol = '#ffd740';
-          topTrimCol = '#ffe082';
-        } else if (plat.style === 'core') {
-          texKey = 'tile_plat_iron_gear';
-          borderCol = '#ffb300';
-          topTrimCol = '#fff9c4';
-        } else if (plat.style === 'stair') {
-          texKey = 'tile_plat_clock';
-          borderCol = '#bcaaa4';
-          topTrimCol = '#d7ccc8';
-        } else if (plat.style === 'detour') {
-          texKey = 'tile_plat_clock';
-          borderCol = '#8d6e63';
-          topTrimCol = '#bcaaa4';
-        } else if (plat.style === 'deadend') {
-          texKey = 'tile_plat_clock';
-          borderCol = '#5d4037';
-          topTrimCol = '#8d6e63';
-        } else if (plat.style === 'lift') {
-          texKey = 'tile_plat_iron_gear';
-          borderCol = '#ffd740';
-          topTrimCol = '#ffab00';
-        }
+        // [MAP 3: 기계 시계탑] - 전 발판 갈색 벽돌 텍스처 통일 (tile_plat_clock)
+        texKey = 'tile_plat_clock';
+        borderCol = '#ffd740';
+        topTrimCol = '#ffe082';
       } else {
         // [MAP 4: 심연 최종 탈출] - 전 발판 고딕 황금 대리석 아치 통일 (검은색 발판 완전 제거!)
         texKey = 'tile_plat_gold_arch';
@@ -3973,7 +3911,7 @@
         }
 
         if (plat.style === 'core') {
-          ctx.fillStyle = (state.currentStageIdx === 1) ? 'rgba(0, 229, 255, 0.22)' : 'rgba(255, 215, 64, 0.18)';
+          ctx.fillStyle = (state.currentStageIdx === 0) ? 'rgba(255, 87, 34, 0.22)' : (state.currentStageIdx === 1) ? 'rgba(0, 229, 255, 0.22)' : 'rgba(255, 215, 64, 0.18)';
           ctx.fillRect(plat.x, plat.y, plat.w, 5);
           ctx.strokeStyle = borderCol;
           ctx.lineWidth = 2.2;
