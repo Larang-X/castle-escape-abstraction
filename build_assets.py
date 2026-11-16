@@ -2,7 +2,7 @@ import struct, os, wave, math, base64, json
 import numpy as np
 from PIL import Image, ImageDraw
 
-ROM_PATH = r'c:\Users\Shin hee jae\Desktop\캐슬바니아 오더 오브 에클레시아.nds'
+ROM_PATH = r'c:\Users\Shin hee jae\Desktop\캐슬바니아\캐슬바니아 오더 오브 에클레시아.nds'
 BASE_DIR = r'c:\Users\Shin hee jae\Desktop\최종 출품작(게임)'
 SPR_DIR = os.path.join(BASE_DIR, 'assets', 'sprites')
 TILE_DIR = os.path.join(BASE_DIR, 'assets', 'tiles')

@@ -2084,7 +2084,7 @@
           { x: 235, y: 415, w: 145, h: 22, core: false, style: 'detour', tag: '하층 용암 제방' }
         ],
         wallHazards: [
-          { type: 'flame_skull_wheel', x: 200, y: 395, minX: 80, maxX: 330, spd: 1.4, vx: 1.4, r: 24, name: '벽면 순찰 불꽃바퀴' }
+          { type: 'flame_skull_wheel', x: 280, y: 391, minX: 250, maxX: 365, spd: 1.4, vx: 1.4, r: 24, name: '용암 제방 불꽃바퀴' }
         ],
         pendulums: [
           { x: 615, y: 36, len: 92, amp: 0.38, spd: 0.045, phase: 0.0, dmg: 25 },
@@ -2098,7 +2098,7 @@
           { id: 'n4', name: '화염 임프', shortTag: '👹화염임프', type: 'monster', dmg: 25, sprite: 'spr_imp_f1', sprite2: 'spr_imp_f2', x: 960, y: 255, w: 28, h: 28, moveMode: 'sine', minX: 880, maxX: 1120, baseY: 255, ampY: 22, vx: 1.6, hit: false },
           { id: 'n5', name: '우회로 지하 좀비', shortTag: '🧟우회로좀비', type: 'monster', dmg: 20, sprite: 'spr_zbs_f1', sprite2: 'spr_zbs_f2', x: 1120, y: 384, w: 26, h: 48, moveMode: 'patrol', minX: 1055, maxX: 1215, vx: 1.0, hit: false },
           { id: 'n6', name: '⚠️ 독침 분출 고딕석관 함정', shortTag: '⚠️독침석관', type: 'trap', dmg: 20, sprite: 'spr_dest_vase', sprite2: 'spr_dest_vase', x: 1295, y: 277, w: 20, h: 48, hit: false },
-          { id: 'n7', name: '지하 순찰 불꽃바퀴', shortTag: '🔥순찰불꽃바퀴', type: 'monster', dmg: 25, sprite: 'spr_flame_skull_wheel', sprite2: 'spr_flame_skull_wheel', x: 130, y: 346, w: 44, h: 44, moveMode: 'patrol', minX: 70, maxX: 190, vx: 1.4, hit: false }
+          { id: 'n7', name: '하층 석실 불꽃바퀴', shortTag: '🔥석실불꽃바퀴', type: 'monster', dmg: 25, sprite: 'spr_flame_skull_wheel', sprite2: 'spr_flame_skull_wheel', x: 130, y: 346, w: 44, h: 44, moveMode: 'patrol', minX: 65, maxX: 195, vx: 1.4, hit: false }
         ]
       },
 
@@ -2382,8 +2382,8 @@
         noises: [
           // [MAP 4 정예 몬스터 6종 + 비룡 배치]
           // 데스만 유일하게 플레이어를 전역 추적! 비행 몬스터들은 각자 독립된 상공 구역에만 활동하여 경로 간섭 절대 없음!
-          // 1. 사신 데스 - 유일한 전역 공중 추적자 · 불사신
-          { id: 'n01', name: '심연의 사신 데스', shortTag: '💀사신 DEATH [불사신]', type: 'monster', immortal: true, dmg: 40, sprite: 'spr_death_f1', sprite2: 'spr_death_f2', x: 960, y: 200, w: 76, h: 98, origX: 960, origY: 200, vx: -1.2, vy: 0.8, origVx: -1.2, origVy: 0.8, moveMode: 'stalker', hit: false },
+          // 1. 사신 데스 - 유일한 전역 공중 추적자 · 불사신 (다양한 정통 보스 액션 모션 탑재)
+          { id: 'n01', name: '심연의 사신 데스', shortTag: '💀심연의 사신 [불사신]', type: 'monster', immortal: true, dmg: 40, sprite: 'spr_death_f1', sprite2: 'spr_death_f2', x: 960, y: 200, w: 76, h: 98, origX: 960, origY: 200, vx: -1.2, vy: 0.8, origVx: -1.2, origVy: 0.8, moveMode: 'stalker', hit: false, actionState: 'stalk', actionTimer: 140, phaseTick: 0 },
           
           // 2. [정통 캐슬바니아 비행 사령] 심연 사령 레이스 - 상층 동쪽 폐쇄 구역 상공 전용 비행
           { id: 'n02', name: '심연 사령 레이스', shortTag: '👻심연레이스', type: 'monster', dmg: 35, sprite: 'spr_wraith_f1', sprite2: 'spr_wraith_f2', x: 1920, y: 160, w: 76, h: 76, origX: 1920, origY: 160, vx: 1.8, vy: -1.0, origVx: 1.8, origVy: -1.0, moveMode: 'territoryRoam', minX: 1780, maxX: 2180, minY: 110, maxY: 260, hit: false },
@@ -2746,6 +2746,27 @@
       if (!hitAny && closestRemote && state.controlMode === 'click') {
         pruneSingleNoiseRemotely(closestRemote);
         hitAny = true;
+      }
+
+      // [사신의 회전 소형 낫 요격 시스템] 학생의 무기 공격으로 사신이 발사한 소형 낫을 격추/파괴 가능!
+      if (state.hazardProjectiles && state.hazardProjectiles.length > 0) {
+        for (var pi = state.hazardProjectiles.length - 1; pi >= 0; pi--) {
+          var hp = state.hazardProjectiles[pi];
+          if (hp.type === 'death_sickle') {
+            if (hp.x >= reachX - 30 && hp.x <= reachX + reachW + 30 && Math.abs(hp.y - (p.y + 20)) < 95) {
+              state.hazardProjectiles.splice(pi, 1);
+              spawnParticles(hp.x, hp.y, isValmanway ? '#00e676' : '#80deea', 18);
+              playSfx('sfx_sword', 0.6);
+              state.floatingTexts.push({
+                x: hp.x,
+                y: hp.y - 14,
+                text: isValmanway ? '⚡ 비검 격추! [소형 낫 파괴]' : '⚔️ 참격 격추! [사신의 낫 요격]',
+                color: '#80deea',
+                life: 45
+              });
+            }
+          }
+        }
       }
 
       if (hitAny) {
@@ -3334,22 +3355,177 @@
           if (nz.y <= nz.minY) { nz.y = nz.minY; nz.vy = Math.abs(nz.vy); }
           if (nz.y + nz.h >= nz.maxY) { nz.y = nz.maxY - nz.h; nz.vy = -Math.abs(nz.vy); }
         } else if (nz.moveMode === 'freeRoam' || nz.moveMode === 'stalker') {
-          if (nz.moveMode === 'stalker') {
+          if (nz.id === 'n01') {
+            // [정통 캐슬바니아 사신 데스 보스 전용 다중 액션 AI]
+            if (!nz.actionState) {
+              nz.actionState = 'stalk';
+              nz.actionTimer = 140;
+              nz.phaseTick = 0;
+            }
+            nz.phaseTick = (nz.phaseTick || 0) + 1;
+            nz.actionTimer = (nz.actionTimer || 120) - 1;
+
             var dxP = (p.x + 16) - (nz.x + nz.w * 0.5);
             var dyP = (p.y + 20) - (nz.y + nz.h * 0.5);
             var distP = Math.max(1, Math.hypot(dxP, dyP));
-            var accel = nz.immortal ? 0.12 : 0.10;
-            var maxSpd = nz.immortal ? 2.45 : 2.25;
-            nz.vx = nz.vx * 0.96 + (dxP / distP) * accel;
-            nz.vy = nz.vy * 0.96 + (dyP / distP) * accel;
-            var spd = Math.hypot(nz.vx, nz.vy);
-            if (spd > maxSpd) {
-              nz.vx = (nz.vx / spd) * maxSpd;
-              nz.vy = (nz.vy / spd) * maxSpd;
+
+            if (nz.actionState === 'stalk') {
+              // 1. 유영 추적 (Stalk): 플레이어를 향해 부유하며 비행
+              var accel = 0.12;
+              var maxSpd = 2.45;
+              nz.vx = nz.vx * 0.96 + (dxP / distP) * accel;
+              nz.vy = nz.vy * 0.96 + (dyP / distP) * accel;
+              var curSpd = Math.hypot(nz.vx, nz.vy);
+              if (curSpd > maxSpd) {
+                nz.vx = (nz.vx / curSpd) * maxSpd;
+                nz.vy = (nz.vy / curSpd) * maxSpd;
+              }
+              nz.x += nz.vx;
+              nz.y += nz.vy + Math.sin(nz.phaseTick * 0.08) * 0.45;
+
+              // 액션 전환
+              if (nz.actionTimer <= 0) {
+                var rand = Math.random();
+                if (distP > 340) {
+                  // 원거리: 회전 소형 낫 소환 마법(그림 5) 또는 대낫 기 모으기(그림 4)
+                  if (rand < 0.55) {
+                    nz.actionState = 'cast';
+                    nz.actionTimer = 75;
+                  } else {
+                    nz.actionState = 'raise';
+                    nz.actionTimer = 42;
+                  }
+                } else {
+                  // 중근거리: 대낫 수직 치켜들기 급강하(그림 4) 또는 환영 순간이동
+                  if (rand < 0.45) {
+                    nz.actionState = 'raise';
+                    nz.actionTimer = 38;
+                  } else if (rand < 0.72) {
+                    nz.actionState = 'teleport';
+                    nz.actionTimer = 30;
+                  } else {
+                    nz.actionState = 'cast';
+                    nz.actionTimer = 65;
+                  }
+                }
+              }
+            } else if (nz.actionState === 'raise') {
+              // 2. 그림 4: 대낫 수직 치켜들기 (Raise Scythe Charging)
+              nz.vx *= 0.82;
+              nz.vy = -0.55; // 서서히 상공으로 부유
+              nz.x += nz.vx;
+              nz.y += nz.vy;
+
+              if (nz.phaseTick % 3 === 0) {
+                spawnParticles(nz.x + nz.w * 0.5 + (Math.random() - 0.5) * 36, nz.y + 12, '#ea80fc', 2);
+              }
+
+              if (nz.actionTimer <= 0) {
+                // 급강하 대낫 참격 돌진 발동!
+                nz.actionState = 'dive_slash';
+                nz.actionTimer = 40;
+                var slashDir = dxP > 0 ? 1 : -1;
+                nz.vx = slashDir * 7.2;
+                nz.vy = Math.min(5.2, Math.max(2.4, dyP * 0.055));
+                playSfx('sfx_sword', 0.85);
+                state.floatingTexts.push({
+                  x: nz.x + nz.w * 0.5,
+                  y: nz.y - 20,
+                  text: '⚔️ 사신의 단죄 대낫 급강하 참격!',
+                  color: '#ff5252',
+                  life: 52
+                });
+              }
+            } else if (nz.actionState === 'dive_slash') {
+              // 3. 급강하 대낫 참격 돌진 (Dive Slash)
+              nz.x += nz.vx;
+              nz.y += nz.vy;
+              if (nz.phaseTick % 2 === 0) {
+                spawnParticles(nz.x + nz.w * 0.5, nz.y + nz.h * 0.5, '#7c4dff', 4);
+              }
+              // 참격 피격 판정
+              if (p.invulnTimer === 0 && !state.gameOver && distP < 64) {
+                damagePlayer(35, '사신의 단죄 대낫 참격', nz.x);
+              }
+              if (nz.actionTimer <= 0 || nz.y > st.worldH - 130) {
+                nz.actionState = 'stalk';
+                nz.actionTimer = 130 + Math.floor(Math.random() * 40);
+                nz.vy = -2.2;
+              }
+            } else if (nz.actionState === 'cast') {
+              // 4. 그림 5: 손을 전방으로 뻗어 회전 소형 낫 소환 (Cast Spinning Sickles)
+              nz.vx *= 0.85;
+              nz.vy *= 0.85;
+              nz.x += nz.vx;
+              nz.y += nz.vy;
+
+              if (nz.phaseTick % 4 === 0) {
+                spawnParticles(nz.x + (dxP > 0 ? nz.w + 8 : -8), nz.y + 36, '#b388ff', 3);
+              }
+
+              // 3연속 회전 소형 낫 소환
+              if (nz.actionTimer === 54 || nz.actionTimer === 38 || nz.actionTimer === 22) {
+                if (!state.hazardProjectiles) state.hazardProjectiles = [];
+                var handX = dxP > 0 ? nz.x + nz.w + 14 : nz.x - 14;
+                var handY = nz.y + 36;
+                var angleP = Math.atan2((p.y + 20) - handY, (p.x + 16) - handX) + (Math.random() - 0.5) * 0.4;
+                var sickleSpd = 3.6 + Math.random() * 0.7;
+                state.hazardProjectiles.push({
+                  type: 'death_sickle',
+                  x: handX,
+                  y: handY,
+                  vx: Math.cos(angleP) * sickleSpd,
+                  vy: Math.sin(angleP) * sickleSpd,
+                  r: 15,
+                  dmg: 15,
+                  life: 200,
+                  name: '사신의 회전 소형 낫',
+                  animTick: Math.floor(Math.random() * 8)
+                });
+                playSfx('sfx_dispel', 0.5);
+              }
+
+              if (nz.actionTimer <= 0) {
+                nz.actionState = 'stalk';
+                nz.actionTimer = 135 + Math.floor(Math.random() * 45);
+              }
+            } else if (nz.actionState === 'teleport') {
+              // 5. 환영 순간이동 (Phantom Teleport)
+              if (nz.actionTimer === 20) {
+                spawnParticles(nz.x + nz.w * 0.5, nz.y + nz.h * 0.5, '#7b1fa2', 28);
+                playSfx('sfx_dispel', 0.65);
+              }
+              if (nz.actionTimer === 10) {
+                var offsetX = (p.facing > 0 ? -1 : 1) * (190 + Math.random() * 70);
+                nz.x = Math.max(60, Math.min(st.worldW - 120, p.x + offsetX));
+                nz.y = Math.max(80, Math.min(st.worldH - 180, p.y - 50 - Math.random() * 60));
+                nz.vx = 0;
+                nz.vy = 0;
+                spawnParticles(nz.x + nz.w * 0.5, nz.y + nz.h * 0.5, '#b388ff', 24);
+              }
+              if (nz.actionTimer <= 0) {
+                nz.actionState = 'stalk';
+                nz.actionTimer = 125 + Math.floor(Math.random() * 35);
+              }
             }
+          } else {
+            if (nz.moveMode === 'stalker') {
+              var dxP = (p.x + 16) - (nz.x + nz.w * 0.5);
+              var dyP = (p.y + 20) - (nz.y + nz.h * 0.5);
+              var distP = Math.max(1, Math.hypot(dxP, dyP));
+              var accel = nz.immortal ? 0.12 : 0.10;
+              var maxSpd = nz.immortal ? 2.45 : 2.25;
+              nz.vx = nz.vx * 0.96 + (dxP / distP) * accel;
+              nz.vy = nz.vy * 0.96 + (dyP / distP) * accel;
+              var spd = Math.hypot(nz.vx, nz.vy);
+              if (spd > maxSpd) {
+                nz.vx = (nz.vx / spd) * maxSpd;
+                nz.vy = (nz.vy / spd) * maxSpd;
+              }
+            }
+            nz.x += nz.vx;
+            nz.y += nz.vy;
           }
-          nz.x += nz.vx;
-          nz.y += nz.vy;
           if (nz.x <= 25) { nz.x = 25; nz.vx = Math.abs(nz.vx); }
           if (nz.x + nz.w >= st.worldW - 25) { nz.x = st.worldW - 25 - nz.w; nz.vx = -Math.abs(nz.vx); }
           if (nz.y <= 50) { nz.y = 50; nz.vy = Math.abs(nz.vy); }
@@ -3640,31 +3816,44 @@
           topTrimCol = '#ffab00';
         }
       } else {
-        // [MAP 4: 심연 최종 탈출] - 암흑 고딕 흑요석 및 보라빛 심연 석조 텍스처
+        // [MAP 4: 심연 최종 탈출] - 그림 1, 2 고딕 황금 아치 및 대성당 석조 텍스처
         if (plat.style === 'altar') {
-          texKey = 'tile_plat_castle';
+          texKey = 'tile_plat_gold_arch';
           borderCol = '#ffd740';
-          topTrimCol = '#ea80fc';
+          topTrimCol = '#ffe082';
         } else if (plat.style === 'core') {
-          texKey = 'tile_plat_castle';
-          borderCol = '#b388ff';
-          topTrimCol = '#d1c4e9';
+          texKey = 'tile_plat_gold_arch';
+          borderCol = '#ffd740';
+          topTrimCol = '#fff9c4';
         } else if (plat.style === 'stair') {
           texKey = 'tile_plat_castle';
-          borderCol = '#7c4dff';
-          topTrimCol = '#b388ff';
+          borderCol = '#9575cd';
+          topTrimCol = '#d1c4e9';
         } else if (plat.style === 'detour') {
           texKey = 'tile_plat_castle';
-          borderCol = '#ab47bc';
-          topTrimCol = '#ce93d8';
+          borderCol = '#7e57c2';
+          topTrimCol = '#b39ddb';
         } else if (plat.style === 'deadend') {
           texKey = 'tile_plat_cursed_trap';
           borderCol = '#ff1744';
           topTrimCol = '#ff80ab';
         } else if (plat.style === 'lift') {
-          texKey = 'tile_plat_castle';
-          borderCol = '#b388ff';
-          topTrimCol = '#ffd740';
+          texKey = 'tile_plat_gold_arch';
+          borderCol = '#ffd740';
+          topTrimCol = '#fff59d';
+        }
+      }
+
+      // [그림 1: MAP 4 고딕 난간 펜스 렌더링]
+      if (st.id === 'T04' && plat.style !== 'deadend' && plat.w >= 100) {
+        var fensImg = loadedImages['spr_fens_railing'];
+        if (fensImg && fensImg.complete) {
+          ctx.save();
+          ctx.globalAlpha = isAbstractMode ? 0.25 : 0.85;
+          for (var fx = plat.x + 8; fx < plat.x + plat.w - 32; fx += 38) {
+            ctx.drawImage(fensImg, fx, plat.y - 36, 36, 40);
+          }
+          ctx.restore();
         }
       }
 
@@ -3836,7 +4025,168 @@
       var bgTile0 = loadedImages[st.tileSheet0];
       var bgTile1 = loadedImages[st.tileSheet1];
 
-      if (state.currentStageIdx === 2) {
+      if (state.currentStageIdx === 3) {
+        // [MAP 4: 심연 고성 대성당 나베 & 고딕 아치 장미창] - 그림 1 & 그림 2
+        // 1. 노을빛 심연 하늘 및 성당 천장 아치
+        var skyGrad = ctx.createLinearGradient(0, 0, 0, st.worldH);
+        skyGrad.addColorStop(0, '#0d0408');
+        skyGrad.addColorStop(0.35, '#430b1c');
+        skyGrad.addColorStop(0.7, '#75122b');
+        skyGrad.addColorStop(1, '#1a050d');
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, st.worldW, st.worldH);
+
+        // 2. 대성당 회랑 첨두 아치 (Cathedral Nave Arches)
+        var archImg = loadedImages['tile_cathedral_arch'];
+        if (archImg && archImg.complete) {
+          for (var ax = 0; ax < st.worldW; ax += 128) {
+            ctx.drawImage(archImg, ax, 30, 128, 128);
+            ctx.drawImage(archImg, ax, 160, 128, 128);
+          }
+        }
+
+        // 3. 고딕 장미창 (Rose Window - 그림 1) 및 사선 스테인드글라스 광선
+        for (var rx = 220; rx < st.worldW; rx += 460) {
+          var ry = 95;
+          // 광선 (God-rays)
+          ctx.save();
+          ctx.fillStyle = 'rgba(255, 128, 171, 0.08)';
+          ctx.beginPath();
+          ctx.moveTo(rx - 25, ry + 15);
+          ctx.lineTo(rx + 25, ry + 15);
+          ctx.lineTo(rx + 95, ry + 260);
+          ctx.lineTo(rx - 45, ry + 260);
+          ctx.closePath();
+          ctx.fill();
+
+          // 장미창 원형 프레임
+          ctx.beginPath();
+          ctx.arc(rx, ry, 42, 0, Math.PI * 2);
+          ctx.fillStyle = '#100a18';
+          ctx.fill();
+          ctx.strokeStyle = '#ffd740';
+          ctx.lineWidth = 3.5;
+          ctx.stroke();
+
+          // 꽃잎형 스테인드글라스 분할
+          for (var pIdx = 0; pIdx < 12; pIdx++) {
+            var ang = (pIdx / 12) * Math.PI * 2;
+            var petalCol = (pIdx % 2 === 0) ? '#d81b60' : '#1565c0';
+            ctx.fillStyle = petalCol;
+            ctx.beginPath();
+            ctx.arc(rx + Math.cos(ang) * 22, ry + Math.sin(ang) * 22, 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#ffd54f';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+          }
+          // 중앙 원형 메달리온
+          ctx.fillStyle = '#00e5ff';
+          ctx.beginPath();
+          ctx.arc(rx, ry, 11, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // 4. 날개 펼친 천사 석상 (Angel Statue - 그림 2)
+        var statueImg = loadedImages['spr_statue_angel'];
+        if (statueImg && statueImg.complete) {
+          for (var stx = 180; stx < st.worldW; stx += 460) {
+            // 석상 받침대
+            ctx.fillStyle = '#263238';
+            ctx.fillRect(stx - 2, 168, 36, 16);
+            ctx.strokeStyle = '#78909c';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(stx - 2, 168, 36, 16);
+            // 천사상 본체
+            ctx.drawImage(statueImg, stx, 104, 32, 64);
+            // 영롱한 성구 오브 오라
+            ctx.save();
+            ctx.fillStyle = 'rgba(224, 247, 250, 0.45)';
+            ctx.beginPath();
+            ctx.arc(stx + 16, 122, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+        }
+
+        // 5. 고성 배경 타일 시트 보강
+        if (bgTile0 && bgTile0.complete) {
+          for (var bx = 0; bx < st.worldW; bx += 256) {
+            ctx.drawImage(bgTile0, 0, 0, 128, 110, bx, 260, 128, 120);
+            if (bgTile1 && bgTile1.complete) {
+              ctx.drawImage(bgTile1, 0, 0, 128, 110, bx + 128, 260, 128, 120);
+            }
+          }
+        }
+      } else if (state.currentStageIdx === 1) {
+        // [MAP 2: 빙하 수로 미궁 & 심해 고대 화석 암반] - 그림 3
+        // 1. 심해 암청색 심연 그라데이션
+        var oceanGrad = ctx.createLinearGradient(0, 0, 0, st.worldH);
+        oceanGrad.addColorStop(0, '#00111a');
+        oceanGrad.addColorStop(0.45, '#002836');
+        oceanGrad.addColorStop(0.85, '#001724');
+        oceanGrad.addColorStop(1, '#000c14');
+        ctx.fillStyle = oceanGrad;
+        ctx.fillRect(0, 0, st.worldW, st.worldH);
+
+        // 2. 수중 파동 굴절선 (Caustic Ripples)
+        ctx.save();
+        ctx.strokeStyle = 'rgba(0, 229, 255, 0.08)';
+        ctx.lineWidth = 3;
+        for (var cY = 70; cY < st.worldH - 60; cY += 55) {
+          ctx.beginPath();
+          for (var cX = 0; cX < st.worldW; cX += 40) {
+            var waveY = cY + Math.sin((cX * 0.02) + (state.player.animTick * 0.04)) * 6;
+            if (cX === 0) ctx.moveTo(cX, waveY);
+            else ctx.lineTo(cX, waveY);
+          }
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        // 3. 해저 고대 산호초 (Underwater Reef)
+        var reefImg = loadedImages['tile_underwater_reef'];
+        if (reefImg && reefImg.complete) {
+          for (var rfx = 0; rfx < st.worldW; rfx += 128) {
+            ctx.drawImage(reefImg, rfx, 60, 128, 128);
+            ctx.drawImage(reefImg, rfx, 210, 128, 128);
+          }
+        }
+
+        // 4. 빙하 동굴 기저 암반 타일
+        if (bgTile0 && bgTile0.complete) {
+          for (var bx = 0; bx < st.worldW; bx += 256) {
+            ctx.drawImage(bgTile0, 0, 0, 128, 110, bx, 280, 128, 120);
+            if (bgTile1 && bgTile1.complete) {
+              ctx.drawImage(bgTile1, 0, 0, 128, 110, bx + 128, 280, 128, 120);
+            }
+          }
+        }
+
+        // 5. 그림 3: 심해 거대 고대 해룡 화석 척추 (Prehistoric Leviathan Fossil Spine - 산호초와 암반 위에 선명히 부유)
+        var fossilImg = loadedImages['spr_bone_fossil'];
+        if (fossilImg && fossilImg.complete) {
+          ctx.save();
+          ctx.globalAlpha = isAbstractMode ? 0.25 : 0.92;
+          for (var fbx = 40; fbx < st.worldW - 40; fbx += 42) {
+            var fby = 185 + Math.sin(fbx * 0.005 + state.player.animTick * 0.015) * 55 + Math.cos(fbx * 0.012) * 20;
+            ctx.drawImage(fossilImg, fbx, fby, 56, 32);
+          }
+          ctx.restore();
+        }
+
+        // 6. 천장 청빙 고드름 종유석 (Ice Stalactites)
+        var spkIceTop = loadedImages['tile_spikes_ice'];
+        if (spkIceTop && spkIceTop.complete) {
+          ctx.save();
+          for (var stx = 24; stx < st.worldW; stx += 84) {
+            ctx.drawImage(spkIceTop, stx, 32, 48, 24);
+          }
+          ctx.restore();
+        }
+      } else if (state.currentStageIdx === 2) {
+        // [MAP 3: 기계 시계탑]
         var clockWall = loadedImages['tile_clock_wall'];
         if (clockWall && clockWall.complete) {
           for (var cwx = 0; cwx < st.worldW; cwx += 128) {
@@ -3865,6 +4215,7 @@
           }
         }
       } else {
+        // [MAP 1: 용암 지하성당]
         for (var wx = 38; wx < st.worldW; wx += 128) {
           ctx.fillStyle = st.themeBg[1];
           ctx.fillRect(wx, 42, 82, st.worldH - 100);
@@ -3881,10 +4232,12 @@
         }
       }
 
-      var pillarImg = loadedImages['spr_pillar'];
-      if (pillarImg && pillarImg.complete) {
-        for (var px = 20; px < st.worldW; px += 260) {
-          ctx.drawImage(pillarImg, px, 130, 50, st.worldH - 180);
+      if (state.currentStageIdx === 0 || state.currentStageIdx === 3) {
+        var pillarImg = loadedImages['spr_pillar'];
+        if (pillarImg && pillarImg.complete) {
+          for (var px = 20; px < st.worldW; px += 260) {
+            ctx.drawImage(pillarImg, px, 130, 50, st.worldH - 180);
+          }
         }
       }
       ctx.restore();
@@ -4235,21 +4588,63 @@
           ctx.restore();
         }
 
-        var useFrame2 = (Math.floor(state.player.animTick / 11) % 2 === 1) && nz.sprite2;
-        var spr = loadedImages[useFrame2 ? nz.sprite2 : nz.sprite];
-        if (spr && spr.complete) {
+        if (nz.id === 'n01') {
+          // [사신 데스 전용 모션 렌더링 - 그림 4 치켜들기, 그림 5 마법 소환, 급강하 참격]
           ctx.save();
           ctx.translate(nz.x + nz.w * 0.5, nz.y + nz.h * 0.5);
-          if (nz.sprite === 'spr_flame_skull_wheel') {
-            ctx.rotate(nz.x * 0.08);
-          } else if (nz.vx && nz.vx > 0) {
-            ctx.scale(-1, 1);
+          var faceDir = (state.player.x < nz.x + nz.w * 0.5) ? -1 : 1;
+          if (faceDir > 0) ctx.scale(-1, 1);
+
+          if (nz.actionState === 'raise') {
+            // 그림 4: 대낫 수직 치켜들기 모션 (72x126)
+            var rSpr = loadedImages['spr_death_raise'];
+            if (rSpr && rSpr.complete) {
+              ctx.drawImage(rSpr, -36, -63, 72, 126);
+            }
+          } else if (nz.actionState === 'cast') {
+            // 그림 5: 전방 손 뻗기 소환 모션 (108x88)
+            var cSpr = loadedImages['spr_death_cast'];
+            if (cSpr && cSpr.complete) {
+              ctx.drawImage(cSpr, -54, -44, 108, 88);
+            }
+          } else if (nz.actionState === 'dive_slash') {
+            // 급강하 대낫 참격 모션 (90x149) + 잔상 효과
+            var slSpr = loadedImages['spr_death_slash'];
+            if (slSpr && slSpr.complete) {
+              ctx.save();
+              ctx.globalAlpha = 0.45;
+              ctx.drawImage(slSpr, -45 - (nz.vx * 1.5), -74 - (nz.vy * 1.5), 90, 149);
+              ctx.restore();
+              ctx.drawImage(slSpr, -45, -74, 90, 149);
+            }
+          } else if (nz.actionState === 'teleport' && nz.actionTimer < 20 && nz.actionTimer > 10) {
+            // 순간이동 중 소멸 상태
+          } else {
+            // 기본 유영 모션
+            var useFrame2 = (Math.floor(state.player.animTick / 11) % 2 === 1) && nz.sprite2;
+            var spr = loadedImages[useFrame2 ? nz.sprite2 : nz.sprite];
+            if (spr && spr.complete) {
+              ctx.drawImage(spr, -nz.w * 0.5, -nz.h * 0.5, nz.w, nz.h);
+            }
           }
-          ctx.drawImage(spr, -nz.w * 0.5, -nz.h * 0.5, nz.w, nz.h);
           ctx.restore();
         } else {
-          ctx.fillStyle = '#e53935';
-          ctx.fillRect(nz.x, nz.y, nz.w, nz.h);
+          var useFrame2 = (Math.floor(state.player.animTick / 11) % 2 === 1) && nz.sprite2;
+          var spr = loadedImages[useFrame2 ? nz.sprite2 : nz.sprite];
+          if (spr && spr.complete) {
+            ctx.save();
+            ctx.translate(nz.x + nz.w * 0.5, nz.y + nz.h * 0.5);
+            if (nz.sprite === 'spr_flame_skull_wheel') {
+              ctx.rotate(nz.x * 0.08);
+            } else if (nz.vx && nz.vx > 0) {
+              ctx.scale(-1, 1);
+            }
+            ctx.drawImage(spr, -nz.w * 0.5, -nz.h * 0.5, nz.w, nz.h);
+            ctx.restore();
+          } else {
+            ctx.fillStyle = '#e53935';
+            ctx.fillRect(nz.x, nz.y, nz.w, nz.h);
+          }
         }
 
         // Draw HP bar for elite 5-hit monsters
@@ -4292,24 +4687,38 @@
         ctx.restore();
       });
 
-      // 8-2. Draw Abyssal Shockwaves (심연 수문장 단죄 참격파)
+      // 8-2. Draw Abyssal Shockwaves & Death's Spinning Sickles
       if (state.hazardProjectiles && state.hazardProjectiles.length > 0) {
         state.hazardProjectiles.forEach(function(hp) {
           ctx.save();
           ctx.translate(hp.x, hp.y);
-          // Energy Core
-          ctx.fillStyle = '#ba68c8';
-          ctx.beginPath();
-          ctx.arc(0, 0, hp.r * 0.7, 0, Math.PI * 2);
-          ctx.fill();
-          // Crescent Blade Arc
-          ctx.strokeStyle = '#ea80fc';
-          ctx.lineWidth = 3.5;
-          ctx.beginPath();
-          var startA = hp.vx > 0 ? -Math.PI * 0.5 : Math.PI * 0.5;
-          var endA = hp.vx > 0 ? Math.PI * 0.5 : -Math.PI * 0.5;
-          ctx.arc(0, 0, hp.r + 2, startA, endA, hp.vx < 0);
-          ctx.stroke();
+          if (hp.type === 'death_sickle') {
+            // [정통 캐슬바니아 4프레임 회전 소형 낫]
+            var frameNum = (Math.floor(state.player.animTick / 3) + (hp.animTick || 0)) % 4 + 1;
+            var sickleSpr = loadedImages['spr_death_sickle' + frameNum];
+            if (sickleSpr && sickleSpr.complete) {
+              ctx.drawImage(sickleSpr, -18, -18, 36, 36);
+            } else {
+              ctx.fillStyle = '#b388ff';
+              ctx.beginPath();
+              ctx.arc(0, 0, 14, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          } else {
+            // Energy Core
+            ctx.fillStyle = '#ba68c8';
+            ctx.beginPath();
+            ctx.arc(0, 0, hp.r * 0.7, 0, Math.PI * 2);
+            ctx.fill();
+            // Crescent Blade Arc
+            ctx.strokeStyle = '#ea80fc';
+            ctx.lineWidth = 3.5;
+            ctx.beginPath();
+            var startA = hp.vx > 0 ? -Math.PI * 0.5 : Math.PI * 0.5;
+            var endA = hp.vx > 0 ? Math.PI * 0.5 : -Math.PI * 0.5;
+            ctx.arc(0, 0, hp.r + 2, startA, endA, hp.vx < 0);
+            ctx.stroke();
+          }
           ctx.restore();
         });
       }
