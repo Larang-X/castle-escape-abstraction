@@ -2362,7 +2362,10 @@
           { x: 265, y: 565, w: 135, h: 22, core: false, style: 'detour', tag: '중층 암흑 회랑' }
         ],
         wallHazards: [
-          { type: 'flame_skull_wheel', x: 1400, y: 440, minX: 1250, maxX: 1550, spd: 1.6, vx: 1.6, r: 24, name: '심연 마도 불꽃바퀴' }
+          { type: 'flame_skull_wheel', x: 180, y: 495, minX: 75, maxX: 250, spd: 1.5, vx: 1.5, r: 24, name: '심연 단애 인화차' },
+          { type: 'flame_skull_wheel', x: 940, y: 265, minX: 840, maxX: 1030, spd: 1.4, vx: 1.4, r: 24, name: '상층 회랑 인화차' },
+          { type: 'flame_skull_wheel', x: 1400, y: 440, minX: 1250, maxX: 1550, spd: 1.6, vx: 1.6, r: 24, name: '심연 마도 인화차' },
+          { type: 'flame_skull_wheel', x: 1420, y: 825, minX: 1320, maxX: 1500, spd: 1.5, vx: 1.5, r: 24, name: '심연 수로 인화차' }
         ],
         teleporters: [
           // Deceptive Warp Pad: traps the player and warps them backward to Upper B!
@@ -2373,11 +2376,16 @@
           { x: 1420, y: 230, r: 42, name: '💀 거대 진자단두대 즉사 함정' }
         ],
         pendulums: [
-          { x: 520, y: 36, len: 105, amp: 0.45, spd: 0.052, phase: 0.0, dmg: 30 },
-          { x: 670, y: 36, len: 110, amp: 0.48, spd: 0.056, phase: 1.2, dmg: 30 },
-          { x: 1120, y: 36, len: 105, amp: 0.46, spd: 0.054, phase: 2.4, dmg: 30 },
+          // 상층 고딕 벽 도끼
+          { x: 620, y: 36, len: 105, amp: 0.45, spd: 0.052, phase: 0.0, dmg: 30 },
+          { x: 1010, y: 36, len: 105, amp: 0.46, spd: 0.054, phase: 1.2, dmg: 30 },
           { x: 1420, y: 230, len: 125, amp: 0.52, spd: 0.060, phase: 0.5, dmg: 150, instantKill: true },
-          { x: 1980, y: 36, len: 105, amp: 0.46, spd: 0.054, phase: 1.9, dmg: 30 }
+          { x: 1720, y: 36, len: 105, amp: 0.45, spd: 0.050, phase: 2.1, dmg: 30 },
+          { x: 2080, y: 36, len: 105, amp: 0.46, spd: 0.052, phase: 0.8, dmg: 30 },
+          // 하층 심연 수로 및 협곡 벽 도끼
+          { x: 500, y: 550, len: 100, amp: 0.44, spd: 0.050, phase: 1.6, dmg: 30 },
+          { x: 920, y: 640, len: 95, amp: 0.42, spd: 0.048, phase: 2.7, dmg: 30 },
+          { x: 1780, y: 680, len: 95, amp: 0.45, spd: 0.052, phase: 1.9, dmg: 30 }
         ],
         noises: [
           // [MAP 4 정예 몬스터 6종 + 비룡 배치]
@@ -3831,18 +3839,7 @@
         }
       }
 
-      // [그림 1: MAP 4 고딕 난간 펜스 렌더링]
-      if (st.id === 'T04' && plat.style !== 'deadend' && plat.w >= 100) {
-        var fensImg = loadedImages['spr_fens_railing'];
-        if (fensImg && fensImg.complete) {
-          ctx.save();
-          ctx.globalAlpha = isAbstractMode ? 0.25 : 0.85;
-          for (var fx = plat.x + 8; fx < plat.x + plat.w - 32; fx += 38) {
-            ctx.drawImage(fensImg, fx, plat.y - 36, 36, 40);
-          }
-          ctx.restore();
-        }
-      }
+// (MAP 4 난간 제거 완료: 타일 위 검은색 깨짐 방지)
 
       var platImg = loadedImages[texKey] || loadedImages[st.platTex];
 
