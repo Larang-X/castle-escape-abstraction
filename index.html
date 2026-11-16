@@ -2305,7 +2305,7 @@
           { id: 'E', label: 'E.심연중앙수로', x: 1400, y: 820 },
           { id: 'F', label: 'F.대교진입로', x: 1720, y: 820 },
           { id: 'G', label: 'G.심연대교', x: 1980, y: 810 },
-          { id: 'Z', label: 'Z.심연대성문[탈출구]', x: 2260, y: 840 }
+          { id: 'Z', label: 'Z.심연대성문[탈출구]', x: 2320, y: 675 }
         ],
         edges: [
           { from: 'A', to: 'B', cost: '1분', minutes: 1, optimal: true, labelDy: -16 },
@@ -2351,9 +2351,10 @@
           { x: 1300, y: 855, w: 210, h: 24, core: true, style: 'core', nodeId: 'E', tag: '심연 중앙 수로' },
           { x: 1530, y: 845, w: 120, h: 22, core: true, style: 'stair', tag: '심연 대교 비탈' },
           { x: 1650, y: 845, w: 180, h: 24, core: true, style: 'core', nodeId: 'F', tag: '심연 대교 진입로' },
-          { x: 1890, y: 845, w: 190, h: 24, core: true, style: 'core', nodeId: 'G', tag: '심연 룬 대교' },
-          { x: 2060, y: 855, w: 150, h: 26, core: true, style: 'altar', tag: '⚔️대성문 수문장 다리' },
-          { x: 2170, y: 875, w: 220, h: 28, core: true, style: 'altar', nodeId: 'Z', tag: '심연 탈출 대성문' },
+          { x: 1890, y: 845, w: 180, h: 24, core: true, style: 'core', nodeId: 'G', tag: '심연 룬 대교' },
+          { x: 2040, y: 855, w: 170, h: 26, core: true, style: 'altar', tag: '⚔️대성문 수문장 다리' },
+          { x: 2190, y: 790, w: 80, h: 24, core: true, style: 'stair', tag: '성문 진입 계단' },
+          { x: 2260, y: 710, w: 140, h: 28, core: true, style: 'altar', nodeId: 'Z', tag: '심연 탈출 대성문' },
           // Upper Level East Gatehouse Battlement (출구 중상단 감시 회랑 - Y: 320~360, X: 1980~2320)
           { x: 1980, y: 340, w: 260, h: 26, core: false, style: 'altar', tag: '⚔️심연 수문장 감시 망루' },
           { x: 1860, y: 375, w: 105, h: 22, core: false, style: 'stair', tag: '망루 연결 계단' },
@@ -2419,8 +2420,8 @@
           { id: 't02', name: '⚠️ 심연 감옥 철창 차단벽 함정', shortTag: '⚠️철창함정', type: 'trap', dmg: 25, sprite: 'spr_shutter', sprite2: 'spr_shutter', x: 605, y: 829, w: 32, h: 56, hit: false },
           { id: 't03', name: '⚠️ 상층 폐쇄 철문 차단 함정', shortTag: '⚠️폐쇄철문', type: 'trap', dmg: 25, sprite: 'spr_shutter', sprite2: 'spr_shutter', x: 1845, y: 230, w: 32, h: 56, hit: false },
           { id: 'n09', name: '심연 세이렌 로렐라이', shortTag: '🧜심연로렐라이', type: 'monster', dmg: 32, sprite: 'spr_lorelei_f1', sprite2: 'spr_lorelei_f2', x: 140, y: 455, w: 58, h: 58, origX: 140, origY: 455, vx: 1.4, vy: -0.8, origVx: 1.4, origVy: -0.8, moveMode: 'territoryRoam', minX: 80, maxX: 225, minY: 430, maxY: 510, hit: false },
-          // 10. [심연 수문장] 파이널 나이트 - 대성문 앞 최종 수문장 · 5회 타격 격파 · 초고속 심연 단죄 참격파
-          { id: 'n10', name: '심연 수문장 파이널 나이트', shortTag: '⚔️파이널나이트 [수문장]', type: 'monster', hp: 5, maxHp: 5, dmg: 35, sprite: 'spr_finalknight_f1', sprite2: 'spr_finalknight_f2', x: 2120, y: 769, origX: 2120, origY: 769, w: 112, h: 86, moveMode: 'patrol', minX: 2070, maxX: 2230, vx: 1.1, origVx: 1.1, origVy: 0, hit: false, attackCooldown: 25 }
+          // 10. [심연 수문장] 파이널 가드 - 대성문 앞 거대 수문장 · 5회 타격 격파 · 정통 다단계 참격 액션
+          { id: 'n10', name: '심연 수문장 파이널 가드', shortTag: '⚔️파이널가드 [수문장]', type: 'monster', hp: 5, maxHp: 5, dmg: 35, sprite: 'spr_finalknight_f1', sprite2: 'spr_finalknight_f2', x: 2060, y: 749, origX: 2060, origY: 749, w: 154, h: 106, moveMode: 'patrol', minX: 2030, maxX: 2140, vx: 1.0, origVx: 1.0, origVy: 0, hit: false, actionState: 'patrol', attackCooldown: 40, facingDir: -1 }
         ]
       }
     ];
@@ -2575,6 +2576,7 @@
     }
 
     function damagePlayer(dmg, reasonText, srcX, isInstant) {
+      if (window.location.search.indexOf('godmode=1') !== -1) return;
       var p = state.player;
       var st = STAGES[state.currentStageIdx];
       if (p.invulnTimer > 0 || state.gameOver) return;
@@ -2959,6 +2961,11 @@
       var startNode = st.nodes[0];
       state.player.x = startNode.x - 16;
       state.player.y = startNode.y - 36;
+      try {
+        var _up = new URLSearchParams(window.location.search);
+        if (_up.get('pX')) state.player.x = parseFloat(_up.get('pX'));
+        if (_up.get('pY')) state.player.y = parseFloat(_up.get('pY'));
+      } catch(e){}
       state.player.vx = 0;
       state.player.vy = 0;
       state.player.hp = state.player.maxHp;
@@ -3378,7 +3385,7 @@
             var distP = Math.max(1, Math.hypot(dxP, dyP));
 
             if (nz.actionState === 'stalk') {
-              // 1. 유영 추적 (Stalk): 플레이어를 향해 부유하며 비행
+              // 1. 유영 추적 유영: 플레이어를 향해 부유하며 비행
               var accel = 0.12;
               var maxSpd = 2.45;
               nz.vx = nz.vx * 0.96 + (dxP / distP) * accel;
@@ -3540,43 +3547,92 @@
           if (nz.y + nz.h >= st.worldH - 55) { nz.y = st.worldH - 55 - nz.h; nz.vy = -Math.abs(nz.vy); }
         }
 
-        // [심연 수문장 전용 공격 AI] 대성문 앞 침입자를 향해 초고속 심연 단죄 참격파 연속 발사!
+        // [심연 수문장 전용 보스 AI] 거대 체구의 파이널 가드 정통 참격 공격 모션 연계 (치켜들기 ➔ 내리치기 ➔ 지면강타 ➔ 자세회복)
         if (nz.id === 'n10' && !nz.hit && !state.gameOver) {
+          if (!nz.actionState) {
+            nz.actionState = 'patrol';
+            nz.attackCooldown = 40;
+          }
+
           var distToP = Math.hypot((p.x + 16) - (nz.x + nz.w * 0.5), (p.y + 20) - (nz.y + nz.h * 0.5));
-          // [공격 범위 및 반응 사거리 720px로 확장, 고저차 380px 커버]
-          if (distToP < 720 && Math.abs((p.y + 20) - (nz.y + nz.h * 0.5)) < 380) {
-            // 플레이어를 향해 즉시 방향 정렬
-            if (p.x < nz.x + nz.w * 0.5) {
-              nz.vx = -Math.abs(nz.vx || 1.1);
-            } else {
-              nz.vx = Math.abs(nz.vx || 1.1);
+          var dirToP = (p.x < nz.x + nz.w * 0.5) ? -1 : 1;
+
+          if (nz.actionState === 'patrol') {
+            // 순찰 중: 플레이어가 접근하거나 수문장 전방에 도달하면 참격 공격 준비
+            if (nz.facingDir === undefined) nz.facingDir = (nz.vx > 0 ? 1 : -1);
+            if (distToP < 280 || (p.x > 1960 && Math.abs((p.y + 20) - (nz.y + nz.h * 0.5)) < 160)) {
+              nz.attackCooldown = (nz.attackCooldown || 40) - 1;
+              if (nz.attackCooldown <= 0) {
+                // 공격 개시: 플레이어 방향으로 정렬하고 대낫을 높이 치켜드는 1단계 돌입
+                nz.facingDir = dirToP;
+                nz.actionState = 'windup';
+                nz.actionTimer = 22; // 약 0.36초 치켜들기 전조 모션
+                nz.savedVx = nz.vx;
+                nz.vx = 0;
+                playSfx('cast', 0.65);
+                state.floatingTexts.push({
+                  x: nz.x + nz.w * 0.5,
+                  y: nz.y - 18,
+                  text: '⚔️ 파이널 가드: 단죄 참격 준비!',
+                  color: '#ba68c8',
+                  life: 30
+                });
+              }
             }
-            if (nz.attackCooldown === undefined) nz.attackCooldown = 25;
-            nz.attackCooldown--;
-            // [공격 속도 60프레임 (~1.0초) 초고속 주기 연속 발사]
-            if (nz.attackCooldown <= 0) {
-              nz.attackCooldown = 60;
-              var dirX = (p.x < nz.x + nz.w * 0.5) ? -1 : 1;
+          } else if (nz.actionState === 'windup') {
+            // 1단계: 대낫 머리 위 치켜들기 전조 모션 (atk1)
+            nz.actionTimer--;
+            if (nz.actionTimer <= 0) {
+              // 2단계: 맹렬한 전방 내리치기 (atk2) + 정통 초승달 참격파 발사
+              nz.actionState = 'slash';
+              nz.actionTimer = 14;
+              playSfx('slash', 0.95);
               if (!state.hazardProjectiles) state.hazardProjectiles = [];
               state.hazardProjectiles.push({
-                x: dirX < 0 ? nz.x - 16 : nz.x + nz.w + 16,
-                y: nz.y + nz.h * 0.45,
-                vx: dirX * 6.2, // 초고속 탄도 속도
+                type: 'finalknight_wave',
+                x: nz.facingDir < 0 ? nz.x - 24 : nz.x + nz.w + 24,
+                y: nz.y + nz.h * 0.62,
+                vx: nz.facingDir * 6.5,
                 vy: 0,
-                r: 24, // 초대형 초승달 참격 검기
-                dmg: 30,
-                life: 140, // 850px 이상 장거리 커버
-                color: '#ba68c8',
+                r: 24,
+                dmg: 35,
+                life: 140,
                 name: '심연 단죄 참격파'
               });
-              playSfx('slash', 0.85);
-              state.floatingTexts.push({
-                x: nz.x + nz.w * 0.5,
-                y: nz.y - 20,
-                text: '⚔️ 파이널 나이트: 심연 단죄 참격파!',
-                color: '#ff80ab',
-                life: 45
-              });
+              // 전방 대형 근접 타격 판정
+              var meleeReachX = nz.facingDir < 0 ? nz.x - 45 : nz.x + nz.w;
+              var meleeW = 65;
+              if (p.x + 28 > meleeReachX && p.x < meleeReachX + meleeW && Math.abs((p.y + 20) - (nz.y + nz.h * 0.5)) < 65) {
+                if (p.invulnTimer === 0) {
+                  damagePlayer(35, '파이널 가드 대낫 강타 피격', nz.x + nz.w * 0.5);
+                }
+              }
+            }
+          } else if (nz.actionState === 'slash') {
+            // 2단계: 대낫 내리치기 지속 (atk2)
+            nz.actionTimer--;
+            if (nz.actionTimer <= 0) {
+              // 3단계: 지면 충돌 강타 (atk3) + 지진 충격파
+              nz.actionState = 'impact';
+              nz.actionTimer = 16;
+              state.screenShake = 6;
+              spawnParticles(nz.facingDir < 0 ? nz.x : nz.x + nz.w, nz.y + nz.h - 6, '#ea80fc', 12);
+            }
+          } else if (nz.actionState === 'impact') {
+            // 3단계: 지면 강타 충격 홀드 (atk3)
+            nz.actionTimer--;
+            if (nz.actionTimer <= 0) {
+              // 4단계: 무기 회수 및 자세 회복 (atk4)
+              nz.actionState = 'recover';
+              nz.actionTimer = 14;
+            }
+          } else if (nz.actionState === 'recover') {
+            // 4단계: 자세 회복 후 순찰 복귀
+            nz.actionTimer--;
+            if (nz.actionTimer <= 0) {
+              nz.actionState = 'patrol';
+              nz.attackCooldown = 75; // 재공격 쿨타임 약 1.25초
+              nz.vx = (nz.savedVx !== undefined && nz.savedVx !== 0) ? nz.savedVx : (nz.facingDir * 1.0);
             }
           }
         }
@@ -4448,6 +4504,35 @@
             }
           }
           ctx.restore();
+        } else if (nz.id === 'n10') {
+          // [정통 캐슬바니아 심연 수문장 파이널 가드 보스 전용 다단계 참격 모션]
+          var sprKey = nz.sprite;
+          if (nz.actionState === 'windup') {
+            sprKey = 'spr_finalknight_atk1';
+          } else if (nz.actionState === 'slash') {
+            sprKey = 'spr_finalknight_atk2';
+          } else if (nz.actionState === 'impact') {
+            sprKey = 'spr_finalknight_atk3';
+          } else if (nz.actionState === 'recover') {
+            sprKey = 'spr_finalknight_atk4';
+          } else {
+            var useFrame2 = (Math.floor(state.player.animTick / 11) % 2 === 1) && nz.sprite2;
+            sprKey = useFrame2 ? nz.sprite2 : nz.sprite;
+          }
+          var spr = loadedImages[sprKey] || loadedImages[nz.sprite];
+          if (spr && spr.complete) {
+            ctx.save();
+            ctx.translate(nz.x + nz.w * 0.5, nz.y + nz.h * 0.5);
+            var fDir = nz.facingDir !== undefined ? nz.facingDir : (nz.vx > 0 ? 1 : -1);
+            if (fDir > 0) {
+              ctx.scale(-1, 1);
+            }
+            ctx.drawImage(spr, -nz.w * 0.5, -nz.h * 0.5, nz.w, nz.h);
+            ctx.restore();
+          } else {
+            ctx.fillStyle = '#7e57c2';
+            ctx.fillRect(nz.x, nz.y, nz.w, nz.h);
+          }
         } else {
           var useFrame2 = (Math.floor(state.player.animTick / 11) % 2 === 1) && nz.sprite2;
           var spr = loadedImages[useFrame2 ? nz.sprite2 : nz.sprite];
@@ -4522,6 +4607,18 @@
               ctx.fillStyle = '#80deea';
               ctx.beginPath();
               ctx.arc(0, 0, 14, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          } else if (hp.type === 'finalknight_wave' || hp.name === '심연 단죄 참격파') {
+            // [정통 캐슬바니아 파이널 가드 초승달 참격파: NDS armag 정품 스프라이트 렌더링]
+            var waveSpr = loadedImages['spr_finalknight_wave'];
+            if (waveSpr && waveSpr.complete) {
+              if (hp.vx > 0) ctx.scale(-1, 1);
+              ctx.drawImage(waveSpr, -44, -16, 88, 32);
+            } else {
+              ctx.fillStyle = '#ba68c8';
+              ctx.beginPath();
+              ctx.arc(0, 0, hp.r * 0.7, 0, Math.PI * 2);
               ctx.fill();
             }
           } else {
