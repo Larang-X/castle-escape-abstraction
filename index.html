@@ -2421,7 +2421,7 @@
           { id: 't03', name: '⚠️ 상층 폐쇄 철문 차단 함정', shortTag: '⚠️폐쇄철문', type: 'trap', dmg: 25, sprite: 'spr_shutter', sprite2: 'spr_shutter', x: 1845, y: 230, w: 32, h: 56, hit: false },
           { id: 'n09', name: '심연 세이렌 로렐라이', shortTag: '🧜심연로렐라이', type: 'monster', dmg: 32, sprite: 'spr_lorelei_f1', sprite2: 'spr_lorelei_f2', x: 140, y: 455, w: 58, h: 58, origX: 140, origY: 455, vx: 1.4, vy: -0.8, origVx: 1.4, origVy: -0.8, moveMode: 'territoryRoam', minX: 80, maxX: 225, minY: 430, maxY: 510, hit: false },
           // 10. [심연 수문장] 파이널 가드 - 대성문 앞 수문장 · 5회 타격 격파 · 정통 도끼창 다단계 참격 액션
-          { id: 'n10', name: '심연 수문장 파이널 가드', shortTag: '⚔️파이널가드 [수문장]', type: 'monster', hp: 5, maxHp: 5, dmg: 35, sprite: 'spr_finalknight_f1', sprite2: 'spr_finalknight_f2', x: 2070, y: 769, origX: 2070, origY: 769, w: 112, h: 86, moveMode: 'patrol', minX: 2045, maxX: 2160, vx: 1.0, origVx: 1.0, origVy: 0, hit: false, actionState: 'patrol', attackCooldown: 40, facingDir: -1 }
+          { id: 'n10', name: '심연 수문장 파이널 가드', shortTag: '⚔️파이널가드 [수문장]', type: 'monster', hp: 5, maxHp: 5, dmg: 35, sprite: 'spr_finalknight_f1', sprite2: 'spr_finalknight_f2', x: 2070, y: 769, origX: 2070, origY: 769, w: 112, h: 86, moveMode: 'patrol', minX: 2045, maxX: 2160, vx: 1.0, origVx: 1.0, origVy: 0, hit: false, actionState: 'patrol', attackCooldown: 20, facingDir: -1 }
         ]
       }
     ];
@@ -2948,7 +2948,7 @@
         n.discoveredPruned = false;
         n.respawnCooldown = undefined;
         if (n.maxHp) n.hp = n.maxHp;
-        n.attackCooldown = 60;
+        n.attackCooldown = (n.id === 'n10') ? 20 : 60;
         if (n.origX === undefined) { n.origX = n.x; n.origY = n.y; }
         if (n.origVx === undefined) n.origVx = n.vx || 0;
         if (n.origVy === undefined) n.origVy = n.vy || 0;
@@ -3555,11 +3555,11 @@
           if (nz.y + nz.h >= st.worldH - 55) { nz.y = st.worldH - 55 - nz.h; nz.vy = -Math.abs(nz.vy); }
         }
 
-        // [심연 수문장 전용 보스 AI] 파이널 가드 정통 참격 공격 모션 연계 (치켜들기 ➔ 내리치기 ➔ 지면강타 ➔ 자세회복)
+        // [심연 수문장 전용 보스 AI] 파이널 가드 정통 참격 고속 공격 연계 (치켜들기 ➔ 내리치기 ➔ 지면강타 ➔ 자세회복, 2배속)
         if (nz.id === 'n10' && !nz.hit && !state.gameOver) {
           if (!nz.actionState) {
             nz.actionState = 'patrol';
-            nz.attackCooldown = 40;
+            nz.attackCooldown = 20;
           }
 
           var distToP = Math.hypot((p.x + 16) - (nz.x + nz.w * 0.5), (p.y + 20) - (nz.y + nz.h * 0.5));
@@ -3569,21 +3569,21 @@
             // 순찰 중: 플레이어가 접근하거나 수문장 전방에 도달하면 참격 공격 준비
             if (nz.facingDir === undefined) nz.facingDir = (nz.vx > 0 ? 1 : -1);
             if (distToP < 240 || (p.x > 1980 && Math.abs((p.y + 20) - (nz.y + nz.h * 0.5)) < 150)) {
-              nz.attackCooldown = (nz.attackCooldown || 40) - 1;
+              nz.attackCooldown = (nz.attackCooldown || 20) - 1;
               if (nz.attackCooldown <= 0) {
                 // 공격 개시: 플레이어 방향으로 정렬하고 도끼창을 높이 치켜드는 1단계 돌입
                 nz.facingDir = dirToP;
                 nz.actionState = 'windup';
-                nz.actionTimer = 24; // 약 0.4초 치켜들기 전조 모션
+                nz.actionTimer = 12; // 2배속 전조 모션 (약 0.2초)
                 nz.savedVx = nz.vx;
                 nz.vx = 0;
                 playSfx('cast', 0.65);
                 state.floatingTexts.push({
                   x: nz.x + nz.w * 0.5,
                   y: nz.y - 18,
-                  text: '⚔️ 파이널 가드: 단죄의 도끼창 참격 준비!',
+                  text: '⚔️ 파이널 가드: 단죄의 도끼창 참격!',
                   color: '#ba68c8',
-                  life: 30
+                  life: 20
                 });
               }
             }
@@ -3593,7 +3593,7 @@
             if (nz.actionTimer <= 0) {
               // 2단계: 맹렬한 전방 내리치기 (atk2)
               nz.actionState = 'slash';
-              nz.actionTimer = 14;
+              nz.actionTimer = 7; // 2배속 내리베기 (약 0.12초)
               playSfx('slash', 0.95);
               // 전방 근접 타격 판정
               var meleeReachX = nz.facingDir < 0 ? nz.x - 38 : nz.x + nz.w;
@@ -3610,7 +3610,7 @@
             if (nz.actionTimer <= 0) {
               // 3단계: 지면 충돌 강타 (atk3) + 지진 충격파
               nz.actionState = 'impact';
-              nz.actionTimer = 16;
+              nz.actionTimer = 8; // 2배속 충격 홀드 (약 0.13초)
               state.screenShake = 7;
               playSfx('hit', 0.85);
               spawnParticles(nz.facingDir < 0 ? nz.x : nz.x + nz.w, nz.y + nz.h - 4, '#ba68c8', 16);
@@ -3620,11 +3620,11 @@
                 type: 'finalknight_wave',
                 x: nz.facingDir < 0 ? nz.x - 16 : nz.x + nz.w + 16,
                 y: nz.y + nz.h - 16,
-                vx: nz.facingDir * 5.5,
+                vx: nz.facingDir * 7.5,
                 vy: 0,
                 r: 22,
                 dmg: 30,
-                life: 90,
+                life: 65,
                 name: '단죄의 지면 충격파'
               });
             }
@@ -3634,14 +3634,14 @@
             if (nz.actionTimer <= 0) {
               // 4단계: 무기 회수 및 자세 회복 (atk4)
               nz.actionState = 'recover';
-              nz.actionTimer = 16;
+              nz.actionTimer = 8; // 2배속 자세 회복 (약 0.13초)
             }
           } else if (nz.actionState === 'recover') {
             // 4단계: 자세 회복 후 순찰 복귀
             nz.actionTimer--;
             if (nz.actionTimer <= 0) {
               nz.actionState = 'patrol';
-              nz.attackCooldown = 75; // 재공격 쿨타임 약 1.25초
+              nz.attackCooldown = 36; // 2배 빠른 재공격 쿨타임 (약 0.6초)
               nz.vx = (nz.savedVx !== undefined && nz.savedVx !== 0) ? nz.savedVx : (nz.facingDir * 1.0);
             }
           }
