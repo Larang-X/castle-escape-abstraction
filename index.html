@@ -4012,176 +4012,7 @@
       var bgTile0 = loadedImages[st.tileSheet0];
       var bgTile1 = loadedImages[st.tileSheet1];
 
-      if (state.currentStageIdx === 3) {
-        // [MAP 4: 심연 고성 대성당 나베 & 고딕 아치 회랑] - 눈이 편안하고 웅장한 정통 고딕 야상곡 (깨진 타일 완전 제거!)
-        // 1. 차분하고 깊은 딥 옵시디언 & 딥 버건디 고딕 하늘 그라데이션
-        var skyGrad = ctx.createLinearGradient(0, 0, 0, st.worldH);
-        skyGrad.addColorStop(0, '#060209');
-        skyGrad.addColorStop(0.35, '#16081e');
-        skyGrad.addColorStop(0.75, '#220b29');
-        skyGrad.addColorStop(1, '#0c0312');
-        ctx.fillStyle = skyGrad;
-        ctx.fillRect(0, 0, st.worldW, st.worldH);
-
-        // 2. 우아한 대성당 첨두 아치 창문 회랑 (깨지지 않는 매끄러운 고딕 아치 실루엣 렌더링)
-        ctx.save();
-        for (var ax = 120; ax < st.worldW; ax += 260) {
-          // 아치형 스테인드글라스 창문 백드롭
-          ctx.fillStyle = 'rgba(21, 10, 36, 0.75)';
-          ctx.beginPath();
-          ctx.moveTo(ax - 50, 280);
-          ctx.lineTo(ax - 50, 120);
-          ctx.quadraticCurveTo(ax - 50, 40, ax, 20);
-          ctx.quadraticCurveTo(ax + 50, 40, ax + 50, 120);
-          ctx.lineTo(ax + 50, 280);
-          ctx.closePath();
-          ctx.fill();
-          ctx.strokeStyle = '#d4af37';
-          ctx.lineWidth = 2.5;
-          ctx.stroke();
-
-          // 내부 창틀 살 (Tracery)
-          ctx.strokeStyle = 'rgba(212, 175, 55, 0.35)';
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          ctx.moveTo(ax, 20);
-          ctx.lineTo(ax, 280);
-          ctx.moveTo(ax - 50, 140);
-          ctx.lineTo(ax + 50, 140);
-          ctx.stroke();
-
-          // 부드러운 달빛 광선 (Moonlight God-rays)
-          ctx.fillStyle = 'rgba(180, 150, 255, 0.05)';
-          ctx.beginPath();
-          ctx.moveTo(ax - 30, 40);
-          ctx.lineTo(ax + 30, 40);
-          ctx.lineTo(ax + 90, 320);
-          ctx.lineTo(ax - 50, 320);
-          ctx.closePath();
-          ctx.fill();
-        }
-        ctx.restore();
-
-        // 3. 고딕 장미창 (Rose Window - 그림 1)
-        for (var rx = 250; rx < st.worldW; rx += 520) {
-          var ry = 100;
-          ctx.save();
-          // 장미창 원형 프레임
-          ctx.beginPath();
-          ctx.arc(rx, ry, 38, 0, Math.PI * 2);
-          ctx.fillStyle = '#0f081c';
-          ctx.fill();
-          ctx.strokeStyle = '#ffd740';
-          ctx.lineWidth = 3;
-          ctx.stroke();
-
-          // 꽃잎형 스테인드글라스 분할
-          for (var pIdx = 0; pIdx < 8; pIdx++) {
-            var ang = (pIdx / 8) * Math.PI * 2;
-            var petalCol = (pIdx % 2 === 0) ? '#ad1457' : '#1976d2';
-            ctx.fillStyle = petalCol;
-            ctx.beginPath();
-            ctx.arc(rx + Math.cos(ang) * 18, ry + Math.sin(ang) * 18, 9, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = '#ffe082';
-            ctx.lineWidth = 1.0;
-            ctx.stroke();
-          }
-          // 중앙 원형 푸른 메달리온
-          ctx.fillStyle = '#80deea';
-          ctx.beginPath();
-          ctx.arc(rx, ry, 9, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-        }
-
-        // 4. 날개 펼친 천사 석상 (Angel Statue - 그림 2)
-        var statueImg = loadedImages['spr_statue_angel'];
-        if (statueImg && statueImg.complete) {
-          for (var stx = 180; stx < st.worldW; stx += 520) {
-            // 석상 받침대
-            ctx.fillStyle = '#1c1b29';
-            ctx.fillRect(stx - 4, 166, 40, 18);
-            ctx.strokeStyle = '#b0bec5';
-            ctx.lineWidth = 1.5;
-            ctx.strokeRect(stx - 4, 166, 40, 18);
-            // 천사상 본체
-            ctx.drawImage(statueImg, stx, 102, 32, 64);
-            // 영롱한 성구 오브 오라
-            ctx.save();
-            ctx.fillStyle = 'rgba(224, 247, 250, 0.45)';
-            ctx.beginPath();
-            ctx.arc(stx + 16, 120, 6, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-          }
-        }
-      } else if (state.currentStageIdx === 1) {
-        // [MAP 2: 빙하 수로 미궁 & 심해 고대 화석 암반] - 그림 3 (깨진 타일 완전 제거, 부드럽고 신비로운 심해 파노라마)
-        // 1. 심해 암청색 심연 그라데이션 (시각적 피로가 전혀 없는 맑고 깊은 심해수)
-        var oceanGrad = ctx.createLinearGradient(0, 0, 0, st.worldH);
-        oceanGrad.addColorStop(0, '#00101b');
-        oceanGrad.addColorStop(0.35, '#002638');
-        oceanGrad.addColorStop(0.75, '#001928');
-        oceanGrad.addColorStop(1, '#000c14');
-        ctx.fillStyle = oceanGrad;
-        ctx.fillRect(0, 0, st.worldW, st.worldH);
-
-        // 2. 수중 파동 굴절선 (Caustic Light Ripples - 신비롭게 일렁이는 수면 광원)
-        ctx.save();
-        ctx.strokeStyle = 'rgba(0, 229, 255, 0.09)';
-        ctx.lineWidth = 2.5;
-        for (var cY = 50; cY < st.worldH - 50; cY += 50) {
-          ctx.beginPath();
-          for (var cX = 0; cX < st.worldW; cX += 35) {
-            var waveY = cY + Math.sin((cX * 0.018) + (state.player.animTick * 0.035)) * 7;
-            if (cX === 0) ctx.moveTo(cX, waveY);
-            else ctx.lineTo(cX, waveY);
-          }
-          ctx.stroke();
-        }
-        ctx.restore();
-
-        // 3. 해저 유기적 심해 암초 실루엣 (깨진 타일 대신 부드럽고 웅장한 심해 암반 실루엣)
-        ctx.save();
-        ctx.fillStyle = 'rgba(1, 24, 38, 0.65)';
-        ctx.beginPath();
-        ctx.moveTo(0, st.worldH);
-        for (var rx = 0; rx <= st.worldW; rx += 60) {
-          var ry = st.worldH - 120 + Math.sin(rx * 0.008) * 35 + Math.cos(rx * 0.02) * 15;
-          ctx.lineTo(rx, ry);
-        }
-        ctx.lineTo(st.worldW, st.worldH);
-        ctx.closePath();
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(0, 229, 255, 0.2)';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-        ctx.restore();
-
-        // 4. 그림 3: 심해 거대 고대 해룡 화석 척추 (Prehistoric Leviathan Fossil Spine - 산호초와 암반 위에 선명히 부유)
-        var fossilImg = loadedImages['spr_bone_fossil'];
-        if (fossilImg && fossilImg.complete) {
-          ctx.save();
-          ctx.globalAlpha = isAbstractMode ? 0.25 : 0.95;
-          for (var fbx = 40; fbx < st.worldW - 40; fbx += 42) {
-            var fby = 195 + Math.sin(fbx * 0.005 + state.player.animTick * 0.015) * 55 + Math.cos(fbx * 0.012) * 20;
-            ctx.drawImage(fossilImg, fbx, fby, 56, 32);
-          }
-          ctx.restore();
-        }
-
-        // 5. 천장 청빙 고드름 종유석 (Ice Stalactites)
-        var spkIceTop = loadedImages['tile_spikes_ice'];
-        if (spkIceTop && spkIceTop.complete) {
-          ctx.save();
-          for (var stx = 24; stx < st.worldW; stx += 84) {
-            ctx.drawImage(spkIceTop, stx, 32, 48, 24);
-          }
-          ctx.restore();
-        }
-      } else if (state.currentStageIdx === 2) {
-        // [MAP 3: 기계 시계탑]
+      if (state.currentStageIdx === 2) {
         var clockWall = loadedImages['tile_clock_wall'];
         if (clockWall && clockWall.complete) {
           for (var cwx = 0; cwx < st.worldW; cwx += 128) {
@@ -4210,7 +4041,6 @@
           }
         }
       } else {
-        // [MAP 1: 용암 지하성당]
         for (var wx = 38; wx < st.worldW; wx += 128) {
           ctx.fillStyle = st.themeBg[1];
           ctx.fillRect(wx, 42, 82, st.worldH - 100);
@@ -4227,12 +4057,10 @@
         }
       }
 
-      if (state.currentStageIdx === 0 || state.currentStageIdx === 3) {
-        var pillarImg = loadedImages['spr_pillar'];
-        if (pillarImg && pillarImg.complete) {
-          for (var px = 20; px < st.worldW; px += 260) {
-            ctx.drawImage(pillarImg, px, 130, 50, st.worldH - 180);
-          }
+      var pillarImg = loadedImages['spr_pillar'];
+      if (pillarImg && pillarImg.complete) {
+        for (var px = 20; px < st.worldW; px += 260) {
+          ctx.drawImage(pillarImg, px, 130, 50, st.worldH - 180);
         }
       }
       ctx.restore();
