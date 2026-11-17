@@ -4346,24 +4346,39 @@
         var platCastle = loadedImages['tile_plat_castle'];
         if (platCastle && platCastle.complete) {
           for (var cx = 0; cx < st.worldW; cx += 96) {
-            ctx.drawImage(platCastle, cx, bHazY - 10, 96, 32);
+            ctx.drawImage(platCastle, cx, bHazY - 6, 96, 32);
           }
         }
 
-        // 3. Dual-Layer Staggered Blood Spikes (고성 심연 즉사 가시)
-        var spkSteel = loadedImages['tile_spikes_steel'];
-        var spkBlood = loadedImages['tile_spikes_blood'];
-        if (spkSteel && spkSteel.complete) {
+        // 3. [정통 창월의 십자가 즉사 가시] Dual-Layer Staggered DOS Needles/Spikes (지저명부/시계탑 정통 붉은 가시)
+        var spkDos = loadedImages['tile_spikes_dos'];
+        if (spkDos && spkDos.complete) {
+          // Depth shadow layer (staggered offset)
           ctx.save();
-          ctx.globalAlpha = 0.55;
-          for (var ssx = 32; ssx < st.worldW; ssx += 64) {
-            ctx.drawImage(spkSteel, ssx, bHazY - 32, 64, 26);
+          ctx.globalAlpha = 0.65;
+          for (var ssx = 8; ssx < st.worldW; ssx += 64) {
+            ctx.drawImage(spkDos, ssx, bHazY - 38, 64, 32);
           }
           ctx.restore();
-        }
-        if (spkBlood && spkBlood.complete) {
+          // Front lethal spike layer
           for (var bsx = 0; bsx < st.worldW; bsx += 64) {
-            ctx.drawImage(spkBlood, bsx, bHazY - 24, 64, 24);
+            ctx.drawImage(spkDos, bsx, bHazY - 32, 64, 32);
+          }
+        } else {
+          var spkSteel = loadedImages['tile_spikes_steel'];
+          var spkBlood = loadedImages['tile_spikes_blood'];
+          if (spkSteel && spkSteel.complete) {
+            ctx.save();
+            ctx.globalAlpha = 0.55;
+            for (var ssx = 32; ssx < st.worldW; ssx += 64) {
+              ctx.drawImage(spkSteel, ssx, bHazY - 32, 64, 26);
+            }
+            ctx.restore();
+          }
+          if (spkBlood && spkBlood.complete) {
+            for (var bsx = 0; bsx < st.worldW; bsx += 64) {
+              ctx.drawImage(spkBlood, bsx, bHazY - 24, 64, 24);
+            }
           }
         }
 
@@ -4598,21 +4613,58 @@
         var isGoal = (nIdx === st.nodes.length - 1);
         var isStart = (nIdx === 0);
         if (isGoal) {
-          var doorImg = loadedImages[state.currentStageGoalReached ? 'spr_door_open' : 'spr_door_closed'];
-          var portalImg = loadedImages['spr_portal_f1'];
-          if (state.currentStageGoalReached && portalImg && portalImg.complete) {
-            ctx.drawImage(portalImg, nd.x - 32, nd.y - 22, 64, 48);
-          }
-          if (doorImg && doorImg.complete) {
-            ctx.drawImage(doorImg, nd.x - 16, nd.y - 46, 32, 64);
-          }
-          if (!state.currentStageGoalReached) {
-            ctx.save();
-            ctx.font = 'bold 11px "Noto Serif KR", "Nanum Myeongjo", serif';
-            ctx.fillStyle = '#ff5252';
-            ctx.textAlign = 'center';
-            ctx.fillText('🔒 [봉인된 탈출문]', nd.x, nd.y - 52);
-            ctx.restore();
+          if (state.currentStageIdx === 3) {
+            // [MAP 4: 심연 최종 탈출] 천사 세이브 포인트 (Angel Save Point 탈출구)
+            var angelImg = loadedImages[state.currentStageGoalReached ? 'spr_angel_save_active' : 'spr_angel_save'];
+            var aW = 56;
+            var aH = 112;
+            // 플랫폼 상단 y = 710에 원형 받침대가 완벽히 밀착 안착 (nd.y = 675 -> 675 + 35 = 710)
+            var aX = nd.x - aW * 0.5;
+            var aY = nd.y + 35 - aH;
+
+            // 최단 탈출 성공 시 천사 성소 신성한 오라 및 방사광 연출
+            if (state.currentStageGoalReached) {
+              ctx.save();
+              var auraAlpha = 0.45 + Math.sin(state.player.animTick * 0.08) * 0.15;
+              var radAura = ctx.createRadialGradient(nd.x, aY + aH * 0.5, 12, nd.x, aY + aH * 0.5, 75);
+              radAura.addColorStop(0, 'rgba(128, 222, 234, ' + auraAlpha + ')');
+              radAura.addColorStop(0.45, 'rgba(255, 215, 64, ' + (auraAlpha * 0.6) + ')');
+              radAura.addColorStop(1, 'rgba(0, 229, 255, 0)');
+              ctx.fillStyle = radAura;
+              ctx.beginPath();
+              ctx.arc(nd.x, aY + aH * 0.5, 75, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
+
+            if (angelImg && angelImg.complete) {
+              ctx.drawImage(angelImg, aX, aY, aW, aH);
+            }
+            if (!state.currentStageGoalReached) {
+              ctx.save();
+              ctx.font = 'bold 11px "Noto Serif KR", "Nanum Myeongjo", serif';
+              ctx.fillStyle = '#80deea';
+              ctx.textAlign = 'center';
+              ctx.fillText('🔒 [봉인된 천사 성소]', nd.x, aY - 8);
+              ctx.restore();
+            }
+          } else {
+            var doorImg = loadedImages[state.currentStageGoalReached ? 'spr_door_open' : 'spr_door_closed'];
+            var portalImg = loadedImages['spr_portal_f1'];
+            if (state.currentStageGoalReached && portalImg && portalImg.complete) {
+              ctx.drawImage(portalImg, nd.x - 32, nd.y - 22, 64, 48);
+            }
+            if (doorImg && doorImg.complete) {
+              ctx.drawImage(doorImg, nd.x - 16, nd.y - 46, 32, 64);
+            }
+            if (!state.currentStageGoalReached) {
+              ctx.save();
+              ctx.font = 'bold 11px "Noto Serif KR", "Nanum Myeongjo", serif';
+              ctx.fillStyle = '#ff5252';
+              ctx.textAlign = 'center';
+              ctx.fillText('🔒 [봉인된 탈출문]', nd.x, nd.y - 52);
+              ctx.restore();
+            }
           }
         }
         ctx.save();
@@ -4627,7 +4679,7 @@
         // [심사위원 시인성 개선] 노드 라벨 폰트 크기 확대 및 위치 자동 보정 (플랫폼/천장과 겹침 방지)
         ctx.font = 'bold 12.5px "Noto Serif KR", "Nanum Myeongjo", serif';
         var ntw = ctx.measureText(nd.label).width + 16;
-        var labelY = (nd.labelDy != null) ? (nd.y + nd.labelDy) : (nd.y - 20);
+        var labelY = (nd.labelDy != null) ? (nd.y + nd.labelDy) : (isGoal && state.currentStageIdx === 3 ? (nd.y - 120) : (nd.y - 20));
         ctx.fillStyle = 'rgba(8, 6, 14, 0.95)';
         ctx.strokeStyle = isGoal ? '#ff4081' : (isStart ? '#ffd740' : '#80deea');
         ctx.lineWidth = 1.3;
