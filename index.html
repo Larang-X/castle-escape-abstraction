@@ -76,12 +76,12 @@
       padding: 24px;
       position: relative;
       background:
-        radial-gradient(circle at 50% 50%, rgba(18, 10, 16, 0.32) 0%, rgba(6, 4, 8, 0.80) 100%),
+        radial-gradient(circle at 50% 50%, rgba(18, 10, 16, 0.22) 0%, rgba(6, 4, 8, 0.72) 100%),
         url('assets/bg/bg_bloodmoon_castle_pixel.png') center center / cover no-repeat;
       image-rendering: pixelated;
     }
     .login-page-card {
-      background: radial-gradient(circle at 50% 10%, rgba(26, 17, 24, 0.94) 0%, rgba(12, 9, 14, 0.96) 85%);
+      background: radial-gradient(circle at 50% 10%, rgba(26, 17, 24, 0.88) 0%, rgba(12, 9, 14, 0.92) 85%);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 2px solid #5a4224;
@@ -5716,7 +5716,7 @@
         var b64 = window.NDS_ASSETS.bg_bloodmoon_castle;
         var lp = document.getElementById('loginPageView');
         var cr = document.getElementById('copyrightScreenView');
-        if (lp) lp.style.backgroundImage = 'radial-gradient(circle at 50% 50%, rgba(18, 10, 16, 0.32) 0%, rgba(6, 4, 8, 0.80) 100%), url("' + b64 + '")';
+        if (lp) lp.style.backgroundImage = 'radial-gradient(circle at 50% 50%, rgba(18, 10, 16, 0.22) 0%, rgba(6, 4, 8, 0.72) 100%), url("' + b64 + '")';
         if (cr) cr.style.backgroundImage = 'radial-gradient(circle at 50% 50%, rgba(183, 28, 28, 0.22) 0%, rgba(10, 4, 8, 0.92) 100%), url("' + b64 + '")';
       }
     }
