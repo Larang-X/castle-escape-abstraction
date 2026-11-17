@@ -972,7 +972,7 @@
             <tbody>
               <tr>
                 <td style="padding:8px; border:1px solid #4a361e; font-weight:bold; color:#ff80ab;">1단계: 문제 정의 및 구조화<br/><span style="font-size:10.5px; color:#ffcdd2;">[9정03-01]</span></td>
-                <td style="padding:8px; border:1px solid #4a361e;">출발 성소(A), 최종 탈출문(G/Z), 맵 전체 제한 시간 식별</td>
+                <td style="padding:8px; border:1px solid #4a361e;">출발 지점(A), 최종 탈출구(G/Z), 맵 전체 제한 시간 식별</td>
                 <td style="padding:8px; border:1px solid #4a361e;">문제의 초기 상태(출발지)와 목표 상태(탈출구)를 명확히 정의하고, 수행 가능한 문제 해결 조건으로 구조화함.</td>
               </tr>
               <tr>
@@ -1417,7 +1417,7 @@
             <span class="tex-badge"><span class="tex-swatch" style="background:#d4af37; border:1px solid #fff;"></span>황금 룬 석조 = 출발·성문 제단</span>
             <span class="tex-badge"><span class="tex-swatch" style="background:#00e5ff; border:1px solid #fff;"></span>청록 문양 대교 = 최적 핵심 경로(안전·최단)</span>
             <span class="tex-badge"><span class="tex-swatch" style="background:#90a4ae; border:1px solid #cfd8dc;"></span>계단식 벽돌 층계 = 상·하층 이동 계단</span>
-            <span class="tex-badge"><span class="tex-swatch" style="background:#ffd740; border:1px solid #ff9100;"></span>기어·크리스탈 승강대 / 엘리베이터</span>
+            <span class="tex-badge"><span class="tex-swatch" style="background:#ffd740; border:1px solid #ff9100;"></span>기어·수정 승강기 / 수직 승강기</span>
             <span class="tex-badge"><span class="tex-swatch" style="background:#7c4dff; border:1px solid #e040fb;"></span>순간이동 마법진 발판</span>
             <span class="tex-badge"><span class="tex-swatch" style="background:#ff7043; border:1px solid #d84315;"></span>균열 용암·가시암 = 느린 우회로(비최적)</span>
             <span class="tex-badge"><span class="tex-swatch" style="background:#ab47bc; border:1px solid #ff4081;"></span>진홍 저주 석판 = 막다른 미끼 함정(진입 금지!)</span>
@@ -2028,7 +2028,7 @@
         worldW: 1850,
         worldH: 480,
         title: '용암 지하성당',
-        hint: '막다른 방인 [C.보물방(막다른길)]과 위험 지연로인 [E.용암우회로(느림)]를 배제하고, [D.지하성소다리]와 [F.흑요석룬대교]를 거치면 6분 최적 탈출 경로가 완성됩니다.',
+        hint: '막다른 길인 [C.보물방]과 위험 지연로인 [E.용암우회로]를 배제하고, [D.지하성당다리]와 [F.흑요석대교]를 거치면 6분 최단 탈출 경로가 완성됩니다.',
         bgm: 'bgm_lava',
         weaponSprite: 'spr_sword_glyph',
         weaponName: '단검 글리프',
@@ -2039,19 +2039,19 @@
         hazardName: '용암 마그마 지대 (-25 HP)',
         targetMinutes: 6,
         optimalNodeSeq: ['A', 'B', 'D', 'F', 'G'],
-        optimalSummary: '• 전체 최적 탈출 경로: A.입구제단 ➔ B.청동계단 ➔ D.지하성소다리 ➔ F.흑요석룬대교 ➔ G.지하봉인문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 2분 + 1분 = 총 6분\n• 최종 탈출 전략: 막다른 보물방(C)과 용암 우회로(E)를 가지치기하여 도출한 유일한 6분 최단 경로임',
+        optimalSummary: '• 전체 최적 탈출 경로: A.입구제단 ➔ B.청동계단 ➔ D.지하성당다리 ➔ F.흑요석대교 ➔ G.지하봉인문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 2분 + 1분 = 총 6분\n• 최종 탈출 전략: 막다른 길인 보물방(C)과 용암 우회로(E)를 가지치기하여 도출한 유일한 6분 최단 경로임',
         step1Question: '[1단계: 문제 정의 및 목표 분석] 탈출 출발 장소, 최종 탈출구, 그리고 최적 목표 시간(분)을 명시해 보세요.',
         step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 탈출에 꼭 필요한 핵심 장소 간 \'구간별 소요 시간\'과, 가지치기하여 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
         step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 출발지부터 탈출구까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
         autoStep1: '• 출발지: A.입구제단\n• 목표지: G.지하봉인문\n• 최적 목표 시간: 6분',
-        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.입구제단 ➔ B.청동계단]: 1분\n  - [B.청동계단 ➔ D.지하성소다리]: 2분\n  - [D.지하성소다리 ➔ F.흑요석룬대교]: 2분\n  - [F.흑요석룬대교 ➔ G.지하봉인문]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.보물방(막다른길)]: 탈출로가 없는 막다른 방이므로 배제함\n  - [E.용암우회로(느림)]: 용암 위험과 7분이 걸리는 비효율적 우회로이므로 배제함',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.입구제단 ➔ B.청동계단]: 1분\n  - [B.청동계단 ➔ D.지하성당다리]: 2분\n  - [D.지하성당다리 ➔ F.흑요석대교]: 2분\n  - [F.흑요석대교 ➔ G.지하봉인문]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.보물방]: 탈출로가 없는 막다른 길이므로 배제함\n  - [E.용암우회로]: 용암 위험과 7분이 걸리는 비효율적 우회로이므로 배제함',
         nodes: [
           { id: 'A', label: 'A.입구제단[출발]', x: 110, y: 125 },
           { id: 'B', label: 'B.청동계단', x: 410, y: 215 },
-          { id: 'C', label: 'C.보물방(막다른길)', x: 760, y: 120 },
-          { id: 'D', label: 'D.지하성소다리', x: 760, y: 310 },
-          { id: 'E', label: 'E.용암우회로(느림)', x: 1140, y: 405 },
-          { id: 'F', label: 'F.흑요석룬대교', x: 1240, y: 295 },
+          { id: 'C', label: 'C.보물방', x: 760, y: 120 },
+          { id: 'D', label: 'D.지하성당다리', x: 760, y: 310 },
+          { id: 'E', label: 'E.용암우회로', x: 1140, y: 405 },
+          { id: 'F', label: 'F.흑요석대교', x: 1240, y: 295 },
           { id: 'G', label: 'G.지하봉인문[탈출구]', x: 1690, y: 335 }
         ],
         edges: [
@@ -2064,18 +2064,18 @@
           { from: 'F', to: 'G', cost: '1분', minutes: 1, optimal: true, labelDy: -16 }
         ],
         platforms: [
-          { x: 30, y: 155, w: 190, h: 26, core: true, style: 'altar', nodeId: 'A', tag: '출발 성소' },
+          { x: 30, y: 155, w: 190, h: 26, core: true, style: 'altar', nodeId: 'A', tag: '출발 제단' },
           { x: 245, y: 195, w: 105, h: 22, core: true, style: 'stair', tag: '1단 하강계단' },
           { x: 355, y: 245, w: 160, h: 24, core: true, style: 'stair', nodeId: 'B', tag: '2단 청동층계' },
           { x: 530, y: 185, w: 110, h: 20, core: false, style: 'deadend', tag: '유인 통로' },
-          { x: 665, y: 150, w: 195, h: 22, core: false, style: 'deadend', nodeId: 'C', tag: '🚫막다른 보물방' },
+          { x: 665, y: 150, w: 195, h: 22, core: false, style: 'deadend', nodeId: 'C', tag: '🚫보물방' },
           { x: 540, y: 295, w: 115, h: 22, core: true, style: 'stair', tag: '3단 심층계단' },
-          { x: 675, y: 340, w: 195, h: 24, core: true, style: 'core', nodeId: 'D', tag: '지하 성소 다리' },
+          { x: 675, y: 340, w: 195, h: 24, core: true, style: 'core', nodeId: 'D', tag: '지하 성당 다리' },
           { x: 895, y: 400, w: 130, h: 20, core: false, style: 'detour', tag: '가시 화산암' },
-          { x: 1045, y: 432, w: 205, h: 20, core: false, style: 'detour', nodeId: 'E', tag: '⚠️용암 우회로(느림)' },
+          { x: 1045, y: 432, w: 205, h: 20, core: false, style: 'detour', nodeId: 'E', tag: '⚠️용암 우회로' },
           { x: 1280, y: 410, w: 145, h: 20, core: false, style: 'detour', tag: '화산암 오르막' },
           { x: 910, y: 325, w: 175, h: 24, core: true, style: 'core', tag: '룬 문자 중앙 다리' },
-          { x: 1125, y: 325, w: 230, h: 24, core: true, style: 'core', nodeId: 'F', tag: '흑요석 룬 대교' },
+          { x: 1125, y: 325, w: 230, h: 24, core: true, style: 'core', nodeId: 'F', tag: '흑요석 대교' },
           { x: 1395, y: 345, w: 145, h: 22, core: true, style: 'stair', tag: '성문 진입 계단' },
           { x: 1575, y: 365, w: 235, h: 28, core: true, style: 'altar', nodeId: 'G', tag: '지하 봉인문 테라스' },
           { x: 50, y: 390, w: 160, h: 22, core: false, style: 'detour', tag: '폐쇄된 하층 석실' },
@@ -2107,7 +2107,7 @@
         worldW: 1980,
         worldH: 480,
         title: '빙하 수로 미궁',
-        hint: '지연 우회로인 [C.예티동굴(우회로)]와 막다른 길인 [X.얼음감옥(막다른길)]을 배제하고, [D.크리스탈수로]에서 [E.크리스탈승강대]를 타면 7분 최적 경로로 탈출할 수 있습니다.',
+        hint: '지연 우회로인 [C.예티동굴]과 막다른 길인 [X.얼음감옥]을 배제하고, [D.수정수로]에서 [E.수정승강기]를 타면 7분 최단 경로로 탈출할 수 있습니다.',
         bgm: 'bgm_glacier',
         weaponSprite: 'spr_rapier_glyph',
         weaponName: '레이피어 글리프',
@@ -2118,21 +2118,21 @@
         hazardName: '극저온 빙하 가시 급류 (-25 HP)',
         targetMinutes: 7,
         optimalNodeSeq: ['A', 'B', 'D', 'E', 'F', 'G'],
-        optimalSummary: '• 전체 최적 탈출 경로: A.빙하절벽입구 ➔ B.수로갈림길 ➔ D.크리스탈수로 ➔ E.크리스탈승강대 ➔ F.수정회랑 ➔ G.얼음신전성문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 1분 + 1분 + 2분 = 총 7분\n• 최종 탈출 전략: 예티동굴(C)와 얼음감옥(X)을 배제하고 수직 승강기(E)를 활용한 7분 최단 경로임',
+        optimalSummary: '• 전체 최적 탈출 경로: A.빙하절벽입구 ➔ B.수로갈림길 ➔ D.수정수로 ➔ E.수정승강기 ➔ F.수정복도 ➔ G.얼음성문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 1분 + 1분 + 2분 = 총 7분\n• 최종 탈출 전략: 지연 우회로인 예티동굴(C)과 막다른 길인 얼음감옥(X)을 배제하고 수직 승강기(E)를 활용한 7분 최단 경로임',
         step1Question: '[1단계: 문제 정의 및 목표 분석] 탈출 출발 장소, 최종 탈출구, 그리고 최적 목표 시간(분)을 명시해 보세요.',
         step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 탈출에 꼭 필요한 핵심 장소 간 \'구간별 소요 시간\'과, 가지치기하여 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
         step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 출발지부터 탈출구까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
-        autoStep1: '• 출발지: A.빙하절벽입구\n• 목표지: G.얼음신전성문\n• 최적 목표 시간: 7분',
-        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.빙하절벽입구 ➔ B.수로갈림길]: 1분\n  - [B.수로갈림길 ➔ D.크리스탈수로]: 2분\n  - [D.크리스탈수로 ➔ E.크리스탈승강대]: 1분 (수직 승강대)\n  - [E.크리스탈승강대 ➔ F.수정회랑]: 1분\n  - [F.수정회랑 ➔ G.얼음신전성문]: 2분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.예티동굴(우회로)]: 설인이 지키고 5분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.얼음감옥(막다른길)]: 낭떠러지로 연결되는 막다른 방이므로 배제함',
+        autoStep1: '• 출발지: A.빙하절벽입구\n• 목표지: G.얼음성문\n• 최적 목표 시간: 7분',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.빙하절벽입구 ➔ B.수로갈림길]: 1분\n  - [B.수로갈림길 ➔ D.수정수로]: 2분\n  - [D.수정수로 ➔ E.수정승강기]: 1분 (수직 승강대)\n  - [E.수정승강기 ➔ F.수정복도]: 1분\n  - [F.수정복도 ➔ G.얼음성문]: 2분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.예티동굴]: 설인이 지키고 5분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.얼음감옥]: 낭떠러지로 연결되는 막다른 방이므로 배제함',
         nodes: [
           { id: 'A', label: 'A.빙하절벽입구', x: 105, y: 185 },
           { id: 'B', label: 'B.수로갈림길', x: 390, y: 255 },
-          { id: 'C', label: 'C.예티동굴(우회로)', x: 820, y: 135 },
-          { id: 'D', label: 'D.크리스탈수로', x: 740, y: 380 },
-          { id: 'X', label: 'X.얼음감옥(막다른길)', x: 1090, y: 420 },
-          { id: 'E', label: 'E.크리스탈승강대', x: 1120, y: 310 },
-          { id: 'F', label: 'F.수정회랑', x: 1480, y: 235 },
-          { id: 'G', label: 'G.얼음신전성문[탈출구]', x: 1820, y: 165 }
+          { id: 'C', label: 'C.예티동굴', x: 820, y: 135 },
+          { id: 'D', label: 'D.수정수로', x: 740, y: 380 },
+          { id: 'X', label: 'X.얼음감옥', x: 1090, y: 420 },
+          { id: 'E', label: 'E.수정승강기', x: 1120, y: 310 },
+          { id: 'F', label: 'F.수정복도', x: 1480, y: 235 },
+          { id: 'G', label: 'G.얼음성문[탈출구]', x: 1820, y: 165 }
         ],
         edges: [
           { from: 'A', to: 'B', cost: '1분', minutes: 1, optimal: true, labelDy: -16 },
@@ -2149,17 +2149,17 @@
           { x: 225, y: 250, w: 95, h: 22, core: true, style: 'stair', tag: '얼음 하강 계단' },
           { x: 330, y: 285, w: 155, h: 24, core: true, style: 'core', nodeId: 'B', tag: '수로 갈림길 광장' },
           { x: 500, y: 215, w: 130, h: 20, core: false, style: 'detour', tag: '상층 빙벽 오르막' },
-          { x: 660, y: 165, w: 310, h: 22, core: false, style: 'detour', nodeId: 'C', tag: '⚠️예티 동굴(우회로)' },
+          { x: 660, y: 165, w: 310, h: 22, core: false, style: 'detour', nodeId: 'C', tag: '⚠️예티 동굴' },
           { x: 1010, y: 195, w: 155, h: 20, core: false, style: 'detour', tag: '상층 빙판길' },
           { x: 505, y: 345, w: 125, h: 22, core: true, style: 'stair', tag: '수로 내려가는 계단' },
-          { x: 645, y: 408, w: 220, h: 24, core: true, style: 'core', nodeId: 'D', tag: '크리스탈 수로' },
-          { x: 995, y: 440, w: 185, h: 20, core: false, style: 'deadend', nodeId: 'X', tag: '🚫막다른 얼음감옥' },
+          { x: 645, y: 408, w: 220, h: 24, core: true, style: 'core', nodeId: 'D', tag: '수정 수로' },
+          { x: 995, y: 440, w: 185, h: 20, core: false, style: 'deadend', nodeId: 'X', tag: '🚫얼음감옥' },
           { x: 895, y: 365, w: 115, h: 22, core: true, style: 'stair', tag: '승강대 입구 다리' },
-          { x: 1040, y: 340, w: 165, h: 24, core: true, style: 'lift', nodeId: 'E', moveY: true, baseY: 335, ampY: 38, spd: 0.035, tag: '✨크리스탈 승강대' },
+          { x: 1040, y: 340, w: 165, h: 24, core: true, style: 'lift', nodeId: 'E', moveY: true, baseY: 335, ampY: 38, spd: 0.035, tag: '✨수정 승강기' },
           { x: 1240, y: 295, w: 135, h: 22, core: true, style: 'stair', tag: '얼음 아치 계단' },
-          { x: 1400, y: 265, w: 185, h: 24, core: true, style: 'core', nodeId: 'F', tag: '수정 회랑 다리' },
+          { x: 1400, y: 265, w: 185, h: 24, core: true, style: 'core', nodeId: 'F', tag: '수정 복도 다리' },
           { x: 1610, y: 225, w: 110, h: 22, core: true, style: 'stair', tag: '신전 오르막' },
-          { x: 1735, y: 195, w: 210, h: 28, core: true, style: 'altar', nodeId: 'G', tag: '얼음 신전 성문' },
+          { x: 1735, y: 195, w: 210, h: 28, core: true, style: 'altar', nodeId: 'G', tag: '얼음 성문' },
           { x: 45, y: 410, w: 175, h: 22, core: false, style: 'detour', tag: '하층 얼음벽' },
           { x: 245, y: 430, w: 120, h: 22, core: false, style: 'detour', tag: '빙하 동굴 발판' }
         ],
@@ -2186,7 +2186,7 @@
         worldW: 2220,
         worldH: 480,
         title: '기계 시계탑',
-        hint: '느린 [C.서쪽종탑(우회로)]과, [X.태엽창고(막다른길)]를 배제하고, [D.제 2기어교차로]에서 [F.중앙태엽승강기]로 상승하여 8분 최적 경로로 정상에 도달하세요.',
+        hint: '지연 우회로인 [C.서쪽종탑]과 막다른 길인 [X.태엽창고]를 배제하고, [D.제2기어교차로]에서 [F.중앙태엽승강기]를 타고 이동하여 8분 최단 경로로 정상에 도달하세요.',
         bgm: 'bgm_clock',
         weaponSprite: 'spr_lance_glyph',
         weaponName: '빙창 글리프',
@@ -2197,21 +2197,21 @@
         hazardName: '시계탑 강철 스파이크·회전 기어 심연 (-25 HP)',
         targetMinutes: 8,
         optimalNodeSeq: ['A', 'B', 'D', 'F', 'G', 'H'],
-        optimalSummary: '• 전체 최적 탈출 경로: A.지하태엽실 ➔ B.제1기어교차로 ➔ D.제 2기어교차로 ➔ F.중앙태엽승강기 ➔ G.상층시계문자판 ➔ H.시계탑정상종각\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 2분 + 2분 + 1분 = 총 8분\n• 최종 탈출 전략: 서쪽 종탑(C)과 태엽창고(X)를 배제하고 중앙 태엽 승강기(F)로 수직 상승하는 8분 최적 탈출로임',
+        optimalSummary: '• 전체 최적 탈출 경로: A.지하태엽실 ➔ B.제1기어교차로 ➔ D.제2기어교차로 ➔ F.중앙태엽승강기 ➔ G.상층시계판 ➔ H.시계탑정상\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 2분 + 2분 + 1분 = 총 8분\n• 최종 탈출 전략: 서쪽 종탑(C)과 태엽창고(X)를 배제하고 중앙 태엽 승강기(F)로 수직 상승하는 8분 최적 탈출로임',
         step1Question: '[1단계: 문제 정의 및 목표 분석] 탈출 출발 장소, 최종 탈출구, 그리고 최적 목표 시간(분)을 명시해 보세요.',
         step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 탈출에 꼭 필요한 핵심 장소 간 \'구간별 소요 시간\'과, 가지치기하여 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
         step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 출발지부터 탈출구까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
-        autoStep1: '• 출발지: A.지하태엽실\n• 목표지: H.시계탑정상종각\n• 최적 목표 시간: 8분',
-        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.지하태엽실 ➔ B.제1기어교차로]: 1분\n  - [B.제1기어교차로 ➔ D.제 2기어교차로]: 2분\n  - [D.제 2기어교차로 ➔ F.중앙태엽승강기]: 2분 (수직 상승 승강기)\n  - [F.중앙태엽승강기 ➔ G.상층시계문자판]: 2분\n  - [G.상층시계문자판 ➔ H.시계탑정상종각]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.서쪽종탑(우회로)]: 중기갑 기사가 순찰하며 4분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.태엽창고(막다른길)]: 통로가 막힌 위험 구역이므로 배제함\n  - [B➔G 중앙 구름다리]: 다리가 붕괴되어 진입 불가능하므로 배제함',
+        autoStep1: '• 출발지: A.지하태엽실\n• 목표지: H.시계탑정상\n• 최적 목표 시간: 8분',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.지하태엽실 ➔ B.제1기어교차로]: 1분\n  - [B.제1기어교차로 ➔ D.제2기어교차로]: 2분\n  - [D.제2기어교차로 ➔ F.중앙태엽승강기]: 2분 (수직 상승 승강기)\n  - [F.중앙태엽승강기 ➔ G.상층시계판]: 2분\n  - [G.상층시계판 ➔ H.시계탑정상]: 1분\n• 우회로 및 위험 요소 배제 이유:\n  - [C.서쪽종탑]: 중기갑 기사가 순찰하며 4분이 지연되는 비효율적 우회로이므로 배제함\n  - [X.태엽창고]: 통로가 막힌 위험 구역이므로 배제함\n  - [B➔G 중앙 구름다리]: 다리가 붕괴되어 진입 불가능하므로 배제함',
         nodes: [
           { id: 'A', label: 'A.지하태엽실[출발]', x: 100, y: 400 },
           { id: 'B', label: 'B.제1기어교차로', x: 400, y: 310 },
-          { id: 'C', label: 'C.서쪽종탑(우회로)', x: 750, y: 155 },
-          { id: 'D', label: 'D.제 2기어교차로', x: 780, y: 385 },
-          { id: 'X', label: 'X.태엽창고(막다른길)', x: 1120, y: 425 },
+          { id: 'C', label: 'C.서쪽종탑', x: 750, y: 155 },
+          { id: 'D', label: 'D.제2기어교차로', x: 780, y: 385 },
+          { id: 'X', label: 'X.태엽창고', x: 1120, y: 425 },
           { id: 'F', label: 'F.중앙태엽승강기', x: 1160, y: 295 },
-          { id: 'G', label: 'G.상층시계문자판', x: 1620, y: 205 },
-          { id: 'H', label: 'H.시계탑정상종각[탈출구]', x: 2040, y: 130 }
+          { id: 'G', label: 'G.상층시계판', x: 1620, y: 205 },
+          { id: 'H', label: 'H.시계탑정상[탈출구]', x: 2040, y: 130 }
         ],
         edges: [
           { from: 'A', to: 'B', cost: '1분', minutes: 1, optimal: true, labelDy: -16 },
@@ -2219,7 +2219,7 @@
           { from: 'B', to: 'C', cost: '4분(종탑우회)', minutes: 4, optimal: false, labelDy: -16 },
           { from: 'C', to: 'G', cost: '5분(강철가시)', minutes: 5, optimal: false, labelDy: -16 },
           { from: 'B', to: 'D', cost: '2분', minutes: 2, optimal: true, labelDy: 16 },
-          { from: 'D', to: 'X', cost: '3분(막다른방)', minutes: 3, optimal: false, deadEnd: true, labelDy: 16 },
+          { from: 'D', to: 'X', cost: '3분(막다른길)', minutes: 3, optimal: false, deadEnd: true, labelDy: 16 },
           { from: 'D', to: 'F', cost: '2분', minutes: 2, optimal: true, labelDy: -14 },
           { from: 'F', to: 'G', cost: '2분(태엽승강)', minutes: 2, optimal: true, labelDy: -16 },
           { from: 'G', to: 'H', cost: '1분', minutes: 1, optimal: true, labelDy: -16 }
@@ -2227,20 +2227,20 @@
         platforms: [
           { x: 20, y: 430, w: 175, h: 26, core: true, style: 'altar', nodeId: 'A', tag: '시계탑 지하 입구' },
           { x: 215, y: 380, w: 105, h: 22, core: true, style: 'stair', tag: '1층 황동 계단' },
-          { x: 330, y: 338, w: 165, h: 24, core: true, style: 'lift', nodeId: 'B', moveY: true, baseY: 338, ampY: 36, spd: 0.035, phase: 0.0, tag: '⚙️제1 기어 교차로' },
+          { x: 330, y: 338, w: 165, h: 24, core: true, style: 'lift', nodeId: 'B', moveY: true, baseY: 338, ampY: 36, spd: 0.035, phase: 0.0, tag: '⚙️제1기어교차로' },
           { x: 480, y: 255, w: 120, h: 20, core: false, style: 'detour', tag: '서쪽 종탑 계단' },
-          { x: 625, y: 185, w: 255, h: 22, core: false, style: 'detour', nodeId: 'C', tag: '⚠️서쪽 종탑 우회로(느림)' },
+          { x: 625, y: 185, w: 255, h: 22, core: false, style: 'detour', nodeId: 'C', tag: '⚠️서쪽 종탑 우회로' },
           { x: 930, y: 175, w: 185, h: 20, core: false, style: 'detour', tag: '상부 녹슨 철교' },
           { x: 1170, y: 180, w: 180, h: 20, core: false, style: 'detour', tag: '종탑 연결교' },
-          { x: 525, y: 375, w: 125, h: 22, core: true, style: 'stair', tag: '제 2기어교차로 입구 계단' },
-          { x: 675, y: 412, w: 220, h: 24, core: true, style: 'lift', nodeId: 'D', moveY: true, baseY: 412, ampY: 40, spd: 0.038, phase: 2.1, tag: '⚙️제 2기어교차로' },
-          { x: 1035, y: 442, w: 180, h: 20, core: false, style: 'deadend', nodeId: 'X', tag: '🚫막다른 태엽창고' },
+          { x: 525, y: 375, w: 125, h: 22, core: true, style: 'stair', tag: '제2기어교차로 입구 계단' },
+          { x: 675, y: 412, w: 220, h: 24, core: true, style: 'lift', nodeId: 'D', moveY: true, baseY: 412, ampY: 40, spd: 0.038, phase: 2.1, tag: '⚙️제2기어교차로' },
+          { x: 1035, y: 442, w: 180, h: 20, core: false, style: 'deadend', nodeId: 'X', tag: '🚫태엽창고' },
           { x: 925, y: 365, w: 120, h: 22, core: true, style: 'stair', tag: '중앙 기어 발판' },
-          { x: 1080, y: 325, w: 175, h: 24, core: true, style: 'lift', nodeId: 'F', moveY: true, baseY: 315, ampY: 46, spd: 0.04, phase: 4.2, tag: '⚙️중앙 태엽 엘리베이터' },
+          { x: 1080, y: 325, w: 175, h: 24, core: true, style: 'lift', nodeId: 'F', moveY: true, baseY: 315, ampY: 46, spd: 0.04, phase: 4.2, tag: '⚙️중앙 태엽 승강기' },
           { x: 1300, y: 270, w: 145, h: 22, core: true, style: 'stair', tag: '3층 황동 층계' },
-          { x: 1485, y: 235, w: 245, h: 24, core: true, style: 'core', nodeId: 'G', tag: '시계 문자판 큰 다리' },
-          { x: 1765, y: 195, w: 145, h: 22, core: true, style: 'stair', tag: '종각 오르는 계단' },
-          { x: 1940, y: 160, w: 235, h: 28, core: true, style: 'altar', nodeId: 'H', tag: '시계탑 정상 종각' },
+          { x: 1485, y: 235, w: 245, h: 24, core: true, style: 'core', nodeId: 'G', tag: '상층 시계판 큰 다리' },
+          { x: 1765, y: 195, w: 145, h: 22, core: true, style: 'stair', tag: '정상 오르는 계단' },
+          { x: 1940, y: 160, w: 235, h: 28, core: true, style: 'altar', nodeId: 'H', tag: '시계탑 정상' },
           { x: 55, y: 165, w: 190, h: 22, core: false, style: 'detour', tag: '시계탑 상부 첨탑' },
           { x: 275, y: 205, w: 145, h: 22, core: false, style: 'detour', tag: '종루 감시 테라스' }
         ],
@@ -2272,7 +2272,7 @@
         worldW: 2400,
         worldH: 960, // 2x Vertical Depth!
         title: '심연 최종 탈출 [ 🩸 최고난도: 몬스터 무한 소환 & 불사신 데스 ]',
-        hint: '막다른 [X1.고문실(막다른길)], [X2.폐쇄철문(통행불가)], [W.미혹마법진(함정)]을 배제하고, [C.승강장] 엘리베이터로 하강 후 [G.심연대교]를 거쳐 8분 만에 탈출하세요.',
+        hint: '막다른 길인 [X1.고문실], 통행 불가인 [X2.폐쇄철문], 역송 함정인 [W.함정마법진]을 배제하고, [C.승강장] 승강기로 하강 후 [G.심연대교]를 거쳐 8분 만에 탈출하세요.',
         bgm: 'bgm_castle',
         weaponSprite: 'spr_great_glyph',
         weaponName: '빛의 대검 글리프',
@@ -2283,38 +2283,38 @@
         hazardName: '💀 심연 가시 즉사 구역 (HP 100% 즉사!)',
         targetMinutes: 8,
         optimalNodeSeq: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'Z'],
-        optimalSummary: '• 전체 최적 탈출 경로: A.첨탑옥좌 ➔ B.서쪽회랑 ➔ C.승강장 ➔ D.고문실갈림길 ➔ E.심연중앙수로 ➔ F.대교진입로 ➔ G.심연대교 ➔ Z.심연대성문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 1분 + 1분 + 1분 + 1분 + 1분 = 총 8분\n• 최종 탈출 전략: 상층 폐쇄문(X2)과 역송 마법진(W)을 완벽히 가지치기하고 엘리베이터로 하강하여 심연 대교로 탈출하는 유일한 8분 최적 탈출로임',
+        optimalSummary: '• 전체 최적 탈출 경로: A.첨탑옥좌 ➔ B.서쪽복도 ➔ C.승강장 ➔ D.고문실갈림길 ➔ E.중앙수로 ➔ F.대교입구 ➔ G.심연대교 ➔ Z.심연대성문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 1분 + 1분 + 1분 + 1분 + 1분 = 총 8분\n• 최종 탈출 전략: 상층 폐쇄철문(X2)과 함정마법진(W)을 완벽히 가지치기하고 승강기로 하강하여 심연대교로 탈출하는 유일한 8분 최단 경로임',
         step1Question: '[1단계: 문제 정의 및 목표 분석] 탈출 출발 장소, 최종 탈출구, 그리고 최적 목표 시간(분)을 명시해 보세요.',
         step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 탈출에 꼭 필요한 핵심 장소 간 \'구간별 소요 시간\'과, 가지치기하여 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
         step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 출발지부터 탈출구까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
         autoStep1: '• 출발지: A.첨탑옥좌\n• 목표지: Z.심연대성문\n• 최적 목표 시간: 8분',
-        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.첨탑옥좌 ➔ B.서쪽회랑]: 1분\n  - [B.서쪽회랑 ➔ C.승강장]: 2분 (수직 엘리베이터)\n  - [C.승강장 ➔ D.고문실갈림길]: 1분\n  - [D.고문실갈림길 ➔ E.심연중앙수로]: 1분\n  - [E.심연중앙수로 ➔ F.대교진입로]: 1분\n  - [F.대교진입로 ➔ G.심연대교]: 1분\n  - [G.심연대교 ➔ Z.심연대성문]: 1분 (성문 개방)\n• 우회로 및 위험 요소 배제 이유:\n  - [X1.고문실(막다른길), Y.지하감옥(막다른길)]: 막다른 방이므로 배제함\n  - [X2.폐쇄철문(통행불가)]: 통행이 완전 차단된 불통 구역이므로 배제함\n  - [W.미혹마법진(함정)]: 상층 B로 강제 역송시켜 +5분을 낭비하게 만드는 함정이므로 배제함',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.첨탑옥좌 ➔ B.서쪽복도]: 1분\n  - [B.서쪽복도 ➔ C.승강장]: 2분 (수직 승강기)\n  - [C.승강장 ➔ D.고문실갈림길]: 1분\n  - [D.고문실갈림길 ➔ E.중앙수로]: 1분\n  - [E.중앙수로 ➔ F.대교입구]: 1분\n  - [F.대교입구 ➔ G.심연대교]: 1분\n  - [G.심연대교 ➔ Z.심연대성문]: 1분 (성문 개방)\n• 우회로 및 위험 요소 배제 이유:\n  - [X1.고문실, Y.지하감옥]: 탈출로가 없는 막다른 길이므로 배제함\n  - [X2.폐쇄철문]: 통행이 완전히 차단된 불통 구역이므로 배제함\n  - [W.함정마법진]: 상층 복도로 강제 역송시켜 시간을 낭비하게 만드는 함정이므로 배제함',
         nodes: [
           { id: 'A', label: 'A.첨탑옥좌[출발]', x: 105, y: 140 },
-          { id: 'B', label: 'B.서쪽회랑', x: 420, y: 240 },
-          { id: 'X1', label: 'X1.고문실(막다른길)', x: 760, y: 130 },
+          { id: 'B', label: 'B.서쪽복도', x: 420, y: 240 },
+          { id: 'X1', label: 'X1.고문실', x: 760, y: 130 },
           { id: 'U1', label: 'U1.상층 성당 A', x: 860, y: 260 },
           { id: 'U2', label: 'U2.상층 성당 B', x: 1320, y: 250 },
-          { id: 'X2', label: 'X2.폐쇄철문(통행불가)', x: 1840, y: 250 },
+          { id: 'X2', label: 'X2.폐쇄철문', x: 1840, y: 250 },
           { id: 'C', label: 'C.승강장', x: 460, y: 750 },
-          { id: 'Y', label: 'Y.지하감옥(막다른길)', x: 690, y: 875 },
+          { id: 'Y', label: 'Y.지하감옥', x: 690, y: 875 },
           { id: 'D', label: 'D.고문실갈림길', x: 880, y: 760 },
-          { id: 'W', label: 'W.미혹마법진(함정)', x: 1160, y: 440 },
-          { id: 'E', label: 'E.심연중앙수로', x: 1400, y: 820 },
-          { id: 'F', label: 'F.대교진입로', x: 1720, y: 820 },
+          { id: 'W', label: 'W.함정마법진', x: 1160, y: 440 },
+          { id: 'E', label: 'E.중앙수로', x: 1400, y: 820 },
+          { id: 'F', label: 'F.대교입구', x: 1720, y: 820 },
           { id: 'G', label: 'G.심연대교', x: 1980, y: 810 },
           { id: 'Z', label: 'Z.심연대성문[탈출구]', x: 2320, y: 675 }
         ],
         edges: [
           { from: 'A', to: 'B', cost: '1분', minutes: 1, optimal: true, labelDy: -16 },
-          { from: 'B', to: 'X1', cost: '3분(막다른고문실)', minutes: 3, optimal: false, deadEnd: true, labelDy: -16 },
+          { from: 'B', to: 'X1', cost: '3분(막다른길)', minutes: 3, optimal: false, deadEnd: true, labelDy: -16 },
           { from: 'B', to: 'U1', cost: '3분(상층성당A)', minutes: 3, optimal: false, labelDy: -14 },
           { from: 'U1', to: 'U2', cost: '3분(상층성당B)', minutes: 3, optimal: false, labelDy: -14 },
-          { from: 'U2', to: 'X2', cost: '4분(폐쇄철문통행불가)', minutes: 4, optimal: false, deadEnd: true, broken: true, labelDy: -16 },
-          { from: 'B', to: 'C', cost: '2분(승강장 엘리베이터)', minutes: 2, optimal: true, labelDy: 16 },
-          { from: 'C', to: 'Y', cost: '4분(지하감옥)', minutes: 4, optimal: false, deadEnd: true, labelDy: 26, labelDx: -18 },
+          { from: 'U2', to: 'X2', cost: '4분(통행불가)', minutes: 4, optimal: false, deadEnd: true, broken: true, labelDy: -16 },
+          { from: 'B', to: 'C', cost: '2분(수직승강기)', minutes: 2, optimal: true, labelDy: 16 },
+          { from: 'C', to: 'Y', cost: '4분(막다른길)', minutes: 4, optimal: false, deadEnd: true, labelDy: 26, labelDx: -18 },
           { from: 'C', to: 'D', cost: '1분', minutes: 1, optimal: true, labelDy: -14 },
-          { from: 'D', to: 'W', cost: '3분(미혹마법진·상층역송함정)', minutes: 3, optimal: false, deadEnd: true, broken: true, labelDy: -16 },
+          { from: 'D', to: 'W', cost: '3분(상층역송함정)', minutes: 3, optimal: false, deadEnd: true, broken: true, labelDy: -16 },
           { from: 'D', to: 'E', cost: '1분', minutes: 1, optimal: true, labelDy: 14 },
           { from: 'E', to: 'F', cost: '1분', minutes: 1, optimal: true, labelDy: -14 },
           { from: 'F', to: 'G', cost: '1분', minutes: 1, optimal: true, labelDy: -14 },
@@ -2324,41 +2324,41 @@
           // Upper Level (Y: 100~300)
           { x: 25, y: 170, w: 185, h: 26, core: true, style: 'altar', nodeId: 'A', tag: '첨탑 옥좌실' },
           { x: 235, y: 215, w: 110, h: 22, core: true, style: 'stair', tag: '첨탑 하강 계단' },
-          { x: 360, y: 275, w: 175, h: 24, core: true, style: 'core', nodeId: 'B', tag: '서쪽 회랑' },
+          { x: 360, y: 275, w: 175, h: 24, core: true, style: 'core', nodeId: 'B', tag: '서쪽 복도' },
           { x: 550, y: 195, w: 110, h: 20, core: false, style: 'deadend', tag: '고문실 계단' },
-          { x: 685, y: 155, w: 180, h: 22, core: false, style: 'deadend', nodeId: 'X1', tag: '🚫막다른 고문실' },
+          { x: 685, y: 155, w: 180, h: 22, core: false, style: 'deadend', nodeId: 'X1', tag: '🚫고문실' },
           { x: 775, y: 295, w: 185, h: 24, core: false, style: 'stair', nodeId: 'U1', tag: '상층 성당 A' },
           { x: 1045, y: 290, w: 150, h: 22, core: false, style: 'detour', tag: '상층 아치교' },
           { x: 1235, y: 285, w: 200, h: 24, core: false, style: 'detour', nodeId: 'U2', tag: '상층 성당 B' },
           { x: 1495, y: 300, w: 105, h: 22, core: false, style: 'detour', tag: '단두대 통로 발판' },
           { x: 1635, y: 290, w: 95, h: 22, core: false, style: 'deadend', tag: '폐쇄문 앞 디딤돌' },
-          { x: 1765, y: 285, w: 195, h: 24, core: false, style: 'deadend', nodeId: 'X2', tag: '🚫상층 폐쇄 철문' },
+          { x: 1765, y: 285, w: 195, h: 24, core: false, style: 'deadend', nodeId: 'X2', tag: '🚫폐쇄 철문' },
 
           // Deep Abyss Vertical Elevator Shaft (Travels between Upper B and Deep C: Y: 290 to Y: 750!)
-          { x: 420, y: 340, w: 130, h: 26, core: true, style: 'lift', isShaftElevator: true, moveY: true, baseY: 520, ampY: 230, spd: 0.022, tag: '⚙️심연 수직 엘리베이터' },
+          { x: 420, y: 340, w: 130, h: 26, core: true, style: 'lift', isShaftElevator: true, moveY: true, baseY: 520, ampY: 230, spd: 0.022, tag: '⚙️수직 승강기' },
 
           // Deep Abyss Level (Y: 700~880)
-          { x: 380, y: 785, w: 175, h: 24, core: true, style: 'core', nodeId: 'C', tag: '심연 승강장' },
-          { x: 600, y: 885, w: 170, h: 24, core: false, style: 'deadend', nodeId: 'Y', tag: '🚫심연 지하감옥' },
+          { x: 380, y: 785, w: 175, h: 24, core: true, style: 'core', nodeId: 'C', tag: '승강장' },
+          { x: 600, y: 885, w: 170, h: 24, core: false, style: 'deadend', nodeId: 'Y', tag: '🚫지하감옥' },
           { x: 730, y: 810, w: 120, h: 22, core: true, style: 'stair', tag: '심연 연결 층계' },
           { x: 820, y: 795, w: 180, h: 24, core: true, style: 'core', nodeId: 'D', tag: '심연 고문실 갈림길' },
           { x: 1030, y: 815, w: 110, h: 22, core: true, style: 'stair', tag: '심연 수로 입구 계단' },
           { x: 1170, y: 835, w: 100, h: 22, core: true, style: 'core', tag: '심연 수로 징검발판' },
           { x: 1060, y: 610, w: 120, h: 22, core: false, style: 'detour', tag: '중층 유인 계단' },
-          { x: 1100, y: 475, w: 200, h: 24, core: false, style: 'detour', nodeId: 'W', tag: '🌀미혹의 마법진 제단' },
-          { x: 1300, y: 855, w: 210, h: 24, core: true, style: 'core', nodeId: 'E', tag: '심연 중앙 수로' },
+          { x: 1100, y: 475, w: 200, h: 24, core: false, style: 'detour', nodeId: 'W', tag: '🌀함정 마법진 제단' },
+          { x: 1300, y: 855, w: 210, h: 24, core: true, style: 'core', nodeId: 'E', tag: '중앙 수로' },
           { x: 1530, y: 845, w: 120, h: 22, core: true, style: 'stair', tag: '심연 대교 비탈' },
-          { x: 1650, y: 845, w: 180, h: 24, core: true, style: 'core', nodeId: 'F', tag: '심연 대교 진입로' },
-          { x: 1890, y: 845, w: 180, h: 24, core: true, style: 'core', nodeId: 'G', tag: '심연 룬 대교' },
+          { x: 1650, y: 845, w: 180, h: 24, core: true, style: 'core', nodeId: 'F', tag: '대교 입구' },
+          { x: 1890, y: 845, w: 180, h: 24, core: true, style: 'core', nodeId: 'G', tag: '심연 대교' },
           { x: 2040, y: 855, w: 170, h: 26, core: true, style: 'altar', tag: '⚔️대성문 수문장 다리' },
           { x: 2190, y: 790, w: 80, h: 24, core: true, style: 'stair', tag: '성문 진입 계단' },
           { x: 2260, y: 710, w: 140, h: 28, core: true, style: 'altar', nodeId: 'Z', tag: '심연 탈출 대성문' },
-          // Upper Level East Gatehouse Battlement (출구 중상단 감시 회랑 - Y: 320~360, X: 1980~2320)
+          // Upper Level East Gatehouse Battlement (출구 중상단 감시 망루 - Y: 320~360, X: 1980~2320)
           { x: 1980, y: 340, w: 260, h: 26, core: false, style: 'altar', tag: '⚔️심연 수문장 감시 망루' },
           { x: 1860, y: 375, w: 105, h: 22, core: false, style: 'stair', tag: '망루 연결 계단' },
           { x: 2265, y: 320, w: 105, h: 22, core: false, style: 'detour', tag: '성문 상층 테라스' },
           { x: 65, y: 520, w: 175, h: 22, core: false, style: 'detour', tag: '심연 단애 감시탑' },
-          { x: 265, y: 565, w: 135, h: 22, core: false, style: 'detour', tag: '중층 암흑 회랑' }
+          { x: 265, y: 565, w: 135, h: 22, core: false, style: 'detour', tag: '중층 암흑 복도' }
         ],
         wallHazards: [
           { type: 'flame_skull_wheel', x: 180, y: 495, minX: 75, maxX: 250, spd: 1.5, vx: 1.5, r: 24, name: '화차', shortTag: '🔥화차' },
@@ -2368,7 +2368,7 @@
         ],
         teleporters: [
           // Deceptive Warp Pad: traps the player and warps them backward to Upper B!
-          { x: 1160, y: 452, w: 50, h: 24, targetX: 420, targetY: 230, isTrap: true, label: '🌀미혹의 마법진 [상층 서쪽회랑 역송 함정]' }
+          { x: 1160, y: 452, w: 50, h: 24, targetX: 420, targetY: 230, isTrap: true, label: '🌀함정 마법진 [상층 서쪽복도 역송 함정]' }
         ],
         instantHazards: [
           { x: 100, y: 915, w: 2200, h: 45, name: '💀 심연 가시 즉사 구역' },
@@ -4088,7 +4088,7 @@
           // 다층 구조 맵(MAP 4 등)에서 기둥이 허공이나 아래층 방을 꿰뚫지 않도록 바로 아래 발판까지의 높이로 제한
           var maxPillarY = plat.y + plat.h + 90; // 기본 고딕 받침 브래킷 높이
           if (plat.y + plat.h > st.worldH - 120) {
-            // 최하층 바닥 성소인 경우 바닥 경계선까지 연장
+            // 최하층 바닥 제단인 경우 바닥 경계선까지 연장
             maxPillarY = st.worldH - 35;
           }
           var pillarH = Math.max(24, Math.min(130, maxPillarY - (plat.y + plat.h)));
@@ -4622,7 +4622,7 @@
             var aX = nd.x - aW * 0.5;
             var aY = nd.y + 35 - aH;
 
-            // 최단 탈출 성공 시 천사 성소 신성한 오라 및 방사광 연출
+            // 최단 탈출 성공 시 천사상 신성한 오라 및 방사광 연출
             if (state.currentStageGoalReached) {
               ctx.save();
               var auraAlpha = 0.45 + Math.sin(state.player.animTick * 0.08) * 0.15;
@@ -4645,7 +4645,7 @@
               ctx.font = 'bold 11px "Noto Serif KR", "Nanum Myeongjo", serif';
               ctx.fillStyle = '#80deea';
               ctx.textAlign = 'center';
-              ctx.fillText('🔒 [봉인된 천사 성소]', nd.x, aY - 8);
+              ctx.fillText('🔒 [봉인된 천사상]', nd.x, aY - 8);
               ctx.restore();
             }
           } else {
@@ -5395,9 +5395,9 @@
       var clearMins = (state.routeMinutes && state.routeMinutes > 0) ? state.routeMinutes : st.targetMinutes;
       var defaultFeedbacks = {
         'T01': '불필요한 우회로(E)와 막다른 길(C)을 완벽히 분별하여 6분 노선도처럼 단순하게 추상화함. 탁월함!',
-        'T02': '빙하 절벽(C)과 동굴(X)을 배제하고 크리스탈 승강기를 핵심 거점으로 정확히 추출함. 우수함!',
-        'T03': '느린 서쪽 종탑 우회로를 빼고 중앙 태엽 승강기 경유 8분 최적 경로를 도출함. 우수함!',
-        'T04': '아주 큰 심연 맵에서 미혹 함정(W)을 소거하고 대성문 8분 탈출 경로를 완벽히 도출함. 탁월함!'
+        'T02': '빙하 우회로(C)와 얼음감옥(X)을 배제하고 수정승강기를 핵심 거점으로 정확히 추출함. 우수함!',
+        'T03': '느린 서쪽 종탑 우회로와 막다른 태엽창고를 배제하고 중앙태엽승강기 경유 8분 최단 경로를 도출함. 우수함!',
+        'T04': '아주 큰 심연 맵에서 함정 마법진(W)을 소거하고 대성문 8분 최단 탈출 경로를 완벽히 도출함. 탁월함!'
       };
 
       var payload = {
