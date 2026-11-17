@@ -45,12 +45,16 @@
       align-items: center;
       justify-content: center;
       padding: 24px;
+      position: relative;
       background:
-        radial-gradient(circle at 50% 15%, rgba(183, 28, 28, 0.38) 0%, transparent 65%),
-        radial-gradient(circle at 50% 85%, rgba(32, 8, 14, 0.95) 0%, #060204 100%);
+        radial-gradient(circle at 50% 50%, rgba(183, 28, 28, 0.22) 0%, rgba(10, 4, 8, 0.92) 100%),
+        url('assets/bg/bg_bloodmoon_castle_pixel.png') center center / cover no-repeat;
+      image-rendering: pixelated;
     }
     .copyright-screen-card {
-      background: radial-gradient(circle at 50% 10%, #1e0a12 0%, #0d0407 88%);
+      background: radial-gradient(circle at 50% 10%, rgba(30, 10, 18, 0.95) 0%, rgba(13, 4, 7, 0.96) 88%);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 2px solid #b71c1c;
       outline: 1px solid rgba(229, 57, 53, 0.45);
       outline-offset: -6px;
@@ -70,20 +74,24 @@
       align-items: center;
       justify-content: center;
       padding: 24px;
+      position: relative;
       background:
-        radial-gradient(circle at 50% 15%, rgba(138, 28, 28, 0.25) 0%, transparent 55%),
-        radial-gradient(circle at 50% 85%, rgba(158, 122, 50, 0.15) 0%, #06070a 80%);
+        radial-gradient(circle at 50% 50%, rgba(18, 10, 16, 0.32) 0%, rgba(6, 4, 8, 0.80) 100%),
+        url('assets/bg/bg_bloodmoon_castle_pixel.png') center center / cover no-repeat;
+      image-rendering: pixelated;
     }
     .login-page-card {
-      background: radial-gradient(circle at 50% 10%, #1c1219 0%, #0c090e 85%);
+      background: radial-gradient(circle at 50% 10%, rgba(26, 17, 24, 0.94) 0%, rgba(12, 9, 14, 0.96) 85%);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 2px solid #5a4224;
-      outline: 1px solid rgba(138, 28, 28, 0.45);
+      outline: 1px solid rgba(197, 160, 89, 0.35);
       outline-offset: -5px;
       border-radius: 8px;
       max-width: 680px;
       width: 100%;
       padding: 32px 28px;
-      box-shadow: 0 0 70px rgba(0, 0, 0, 0.98), 0 0 35px rgba(90, 18, 26, 0.35), inset 0 0 45px rgba(0, 0, 0, 0.85);
+      box-shadow: 0 0 70px rgba(0, 0, 0, 0.98), 0 0 40px rgba(110, 20, 24, 0.35), inset 0 0 45px rgba(0, 0, 0, 0.85);
       text-align: center;
       position: relative;
     }
@@ -113,15 +121,15 @@
     }
     .login-subtitle {
       font-size: 13px;
-      color: var(--text-muted);
+      color: #e2dbd0;
       margin-bottom: 16px;
       line-height: 1.5;
     }
 
     .prologue-card {
-      background: rgba(14, 16, 22, 0.94);
-      border: 1px solid var(--border-metal);
-      border-left: 4px solid var(--gold);
+      background: rgba(20, 14, 22, 0.92);
+      border: 1px solid #4a3622;
+      border-left: 4px solid #c5a059;
       border-radius: 8px;
       padding: 14px 18px;
       margin-bottom: 18px;
@@ -132,7 +140,6 @@
       font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif;
       font-size: 13.5px;
       font-weight: 900;
-      color: var(--gold-bright);
       margin-bottom: 6px;
       display: flex;
       align-items: center;
@@ -141,8 +148,33 @@
     }
     .prologue-desc {
       font-size: 12.5px;
-      color: #cfc8be;
+      color: #e2dbd0;
       line-height: 1.65;
+    }
+
+    /* Simplified, Unified Control Mode Card */
+    .login-mode-card {
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: rgba(18, 13, 20, 0.88);
+      border: 1px solid #4a3622;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+    .login-mode-card:hover {
+      border-color: #8c6f3d;
+      background: rgba(26, 18, 28, 0.95);
+    }
+    .login-mode-card.active {
+      background: rgba(36, 24, 20, 0.96);
+      border: 2px solid #c5a059;
+      box-shadow: 0 0 14px rgba(197, 160, 89, 0.3);
     }
 
     /* Top Header */
@@ -1308,7 +1340,7 @@
 
 <section id="loginPageView" class="login-page-wrap hidden">
     <div class="login-page-card">
-      <h1 class="login-title">맵 탈출 게임으로 추상화 배워보기</h1>
+      <h1 class="login-title"><span class="text-grad-gold">맵 탈출 게임으로 추상화 배워보기</span></h1>
       <p class="login-subtitle">
         중학교 『정보』 III. 알고리즘과 프로그래밍 — [9정03-01] 문제 상태 구조화 &amp; [9정03-02] 추상화와 최적 알고리즘 설계
       </p>
@@ -1316,56 +1348,56 @@
       <!-- Prologue Narrative Card -->
       <div class="prologue-card">
         <div class="prologue-title">
-          <span>🌕 PROLOGUE — 붉은 달과 고성 미궁</span>
+          <span>🌕 <span class="text-grad-gold">PROLOGUE — 붉은 달과 고성 미궁</span></span>
         </div>
         <p class="prologue-desc">
           서기 1999년, 붉은 달이 떠오른 날 밤 홀연히 나타난 고대 성채 미궁이 탈출로를 가로막았다.<br/>
           그곳에 갇혀버린 학생 탐험가! 과연 무사히 고성 미궁을 탈출할 수 있을까?<br/>
-          눈앞을 어지럽히는 현란한 장식과 위험한 미끼 함정(방해물)을 걷어내고, 오직 탈출에 꼭 필요한 핵심 경로만 찾아내는 정보 교과의 <strong>'추상화'</strong> 개념을 무기 삼아 고성 미궁을 탈출해보자!
+          눈앞을 어지럽히는 현란한 장식과 위험한 미끼 함정을 걷어내고, 오직 탈출에 꼭 필요한 핵심 경로만 찾아내는 정보 교과의 <strong class="text-grad-gold">'추상화'</strong> 개념을 무기 삼아 고성 미궁을 탈출해보자!
         </p>
       </div>
 
       <!-- Compact Code Selector & Mode Chooser -->
       <div style="display:flex; flex-direction:column; gap:12px; max-width:480px; margin:0 auto;">
         <div style="text-align:left;">
-          <label style="display:block; font-size:12.5px; font-weight:800; color:var(--gold-bright); margin-bottom:5px;">
-            📋 학급 코드 선택 (S01 ~ S20)
+          <label style="display:block; font-size:12.5px; font-weight:800; margin-bottom:6px;">
+            📋 <span class="text-grad-silver">학급 코드 선택 (S01 ~ S20)</span>
           </label>
-          <select id="studentCodeSelect" onchange="playButtonClickSfx();" onclick="playButtonClickSfx();" style="width:100%; background:#0e0918; border:2px solid var(--gold); color:#fff; padding:10px 14px; border-radius:8px; font-size:15px; font-weight:800; cursor:pointer; outline:none;">
+          <select id="studentCodeSelect" onchange="playButtonClickSfx();" onclick="playButtonClickSfx();" style="width:100%; background:rgba(18, 12, 22, 0.95); border:2px solid #5a4224; color:#e2dbd0; padding:10px 14px; border-radius:6px; font-size:15px; font-weight:800; cursor:pointer; outline:none; box-shadow:inset 0 2px 6px rgba(0,0,0,0.6);">
           </select>
         </div>
 
         <div style="text-align:left;">
-          <label style="display:block; font-size:12.5px; font-weight:800; color:var(--cyan-bright); margin-bottom:5px;">
-            🎮 조작 모드 선택
+          <label style="display:block; font-size:12.5px; font-weight:800; margin-bottom:6px;">
+            🎮 <span class="text-grad-silver">조작 모드 선택</span>
           </label>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-            <label style="cursor:pointer; display:flex; align-items:flex-start; gap:8px; background:#181126; border:2px solid #5e35b1; padding:10px; border-radius:8px; font-size:12px; font-weight:700;">
-              <input type="radio" name="loginControlMode" value="wasd" checked style="margin-top:2px;" onclick="playButtonClickSfx();" />
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <label id="modeCardWasd" class="login-mode-card active" onclick="playButtonClickSfx(); updateLoginModeUI('wasd');">
+              <input type="radio" name="loginControlMode" value="wasd" checked style="margin-top:2px; accent-color:#c5a059;" />
               <span>
-                <strong style="color:#ffe07d; display:block;">WASD 액션 모드</strong>
-                <span style="color:#b0a8c2; font-size:12.5px;">(정통 컨트롤 도전 / 마우스 클릭 편법 차단)</span>
+                <strong id="modeTitleWasd" class="text-grad-gold" style="display:block; font-size:13px; margin-bottom:3px;">WASD 액션 모드</strong>
+                <span style="color:#e2dbd0; font-size:11.5px; opacity:0.85; line-height:1.4; display:block;">정통 컨트롤 도전 (키보드 조작)</span>
               </span>
             </label>
-            <label style="cursor:pointer; display:flex; align-items:flex-start; gap:8px; background:#181126; border:2px solid #00838f; padding:10px; border-radius:8px; font-size:12px; font-weight:700;">
-              <input type="radio" name="loginControlMode" value="click" style="margin-top:2px;" onclick="playButtonClickSfx();" />
+            <label id="modeCardClick" class="login-mode-card" onclick="playButtonClickSfx(); updateLoginModeUI('click');">
+              <input type="radio" name="loginControlMode" value="click" style="margin-top:2px; accent-color:#c5a059;" />
               <span>
-                <strong style="color:#80deea; display:block;">클릭 탐험 모드</strong>
-                <span style="color:#b0a8c2; font-size:12.5px;">(초보자 / 마우스 클릭 이동 & 원격 소거 허용)</span>
+                <strong id="modeTitleClick" class="text-grad-silver" style="display:block; font-size:13px; margin-bottom:3px;">클릭 탐험 모드</strong>
+                <span style="color:#e2dbd0; font-size:11.5px; opacity:0.85; line-height:1.4; display:block;">초보자 추천 (마우스 이동 및 소거)</span>
               </span>
             </label>
           </div>
         </div>
 
-        <button class="btn btn-gold" style="font-size:16px; padding:12px 24px; justify-content:center; margin-top:8px; font-weight:900;" onpointerdown="playButtonClickSfx();" onclick="confirmStudentLogin()">
+        <button class="btn btn-gold" style="font-size:16px; padding:13px 24px; justify-content:center; margin-top:8px; font-weight:900;" onpointerdown="playButtonClickSfx();" onclick="confirmStudentLogin()">
           🏰 <span class="text-grad-gold">고성 미궁 탈출 시작하기 ▸</span>
         </button>
-        <button type="button" class="btn" onclick="playButtonClickSfx(); resetSelectedStudentData()" style="font-size:12px; margin-top:8px; padding:6px 14px; justify-content:center; border:1px dashed #7986cb; color:#c5cae9; background:rgba(26,35,126,0.25);" title="선택한 학생의 진행 기록을 초기화하여 1단계부터 새로 시작합니다">
-          ↻ 선택한 학생 진행 기록 초기화 (1단계부터 새로 시작)
+        <button type="button" class="btn" onclick="playButtonClickSfx(); resetSelectedStudentData()" style="font-size:12px; margin-top:6px; padding:7px 14px; justify-content:center; border:1px solid #423224; color:#a89f91; background:rgba(20,15,22,0.7);" title="선택한 학생의 진행 기록을 초기화하여 1단계부터 새로 시작합니다">
+          ↺ 선택한 학생 진행 기록 초기화 (1단계부터 새로 시작)
         </button>
-              <!-- Educational Non-profit Copyright & Statutory Legal Disclaimer -->
-                        <div style="margin-top:16px; text-align:center;">
-          <a href="javascript:void(0)" onclick="returnToCopyrightScreen()" style="color:#ef9a9a; font-size:12px; text-decoration:underline; opacity:0.88; letter-spacing:0.02em;">
+        <!-- Educational Non-profit Copyright & Statutory Legal Disclaimer -->
+        <div style="margin-top:14px; text-align:center;">
+          <a href="javascript:void(0)" onclick="returnToCopyrightScreen()" style="color:#a89f91; font-size:11.5px; text-decoration:none; opacity:0.85; letter-spacing:0.02em;">
             ⚖️ [비영리 교육 연구 목적 및 저작권 고지문] 전체 화면으로 다시 보기
           </a>
         </div>
@@ -5678,6 +5710,15 @@
         html += '<option value="' + c + '">' + c + '번 (' + nick + ')</option>';
       }
       sel.innerHTML = html;
+
+      // Ensure fine pixel background fallback from bundle
+      if (window.NDS_ASSETS && window.NDS_ASSETS.bg_bloodmoon_castle) {
+        var b64 = window.NDS_ASSETS.bg_bloodmoon_castle;
+        var lp = document.getElementById('loginPageView');
+        var cr = document.getElementById('copyrightScreenView');
+        if (lp) lp.style.backgroundImage = 'radial-gradient(circle at 50% 50%, rgba(18, 10, 16, 0.32) 0%, rgba(6, 4, 8, 0.80) 100%), url("' + b64 + '")';
+        if (cr) cr.style.backgroundImage = 'radial-gradient(circle at 50% 50%, rgba(183, 28, 28, 0.22) 0%, rgba(10, 4, 8, 0.92) 100%), url("' + b64 + '")';
+      }
     }
     initLoginDropdown();
 
@@ -5758,7 +5799,30 @@
       });
     }
 
-        function confirmCopyrightAndEnterLogin() {
+    function updateLoginModeUI(mode) {
+      var wasdCard = document.getElementById('modeCardWasd');
+      var clickCard = document.getElementById('modeCardClick');
+      var wasdTitle = document.getElementById('modeTitleWasd');
+      var clickTitle = document.getElementById('modeTitleClick');
+      var radios = document.getElementsByName('loginControlMode');
+      for (var r = 0; r < radios.length; r++) {
+        if (radios[r].value === mode) radios[r].checked = true;
+      }
+      if (!wasdCard || !clickCard) return;
+      if (mode === 'wasd') {
+        wasdCard.className = 'login-mode-card active';
+        clickCard.className = 'login-mode-card';
+        if (wasdTitle) wasdTitle.className = 'text-grad-gold';
+        if (clickTitle) clickTitle.className = 'text-grad-silver';
+      } else {
+        wasdCard.className = 'login-mode-card';
+        clickCard.className = 'login-mode-card active';
+        if (wasdTitle) wasdTitle.className = 'text-grad-silver';
+        if (clickTitle) clickTitle.className = 'text-grad-gold';
+      }
+    }
+
+    function confirmCopyrightAndEnterLogin() {
       playButtonClickSfx();
       playLoginBgm();
       var cr = document.getElementById('copyrightScreenView');
