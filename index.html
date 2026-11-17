@@ -2257,7 +2257,7 @@
         noises: [
           { id: 'n1', name: '파동 메두사 헤드', shortTag: '🐍메두사헤드', type: 'monster', dmg: 25, sprite: 'spr_medusa_f1', sprite2: 'spr_medusa_f2', x: 380, y: 250, w: 26, h: 26, moveMode: 'sine', minX: 240, maxX: 580, baseY: 250, ampY: 32, vx: 1.8, hit: false },
           { id: 'n2', name: '종탑 우회로 도끼아머', shortTag: '🪓도끼아머(우회)', type: 'monster', dmg: 30, sprite: 'spr_axarm_f1', sprite2: 'spr_axarm_f2', x: 735, y: 127, w: 36, h: 58, moveMode: 'patrol', minX: 640, maxX: 840, vx: 1.2, hit: false },
-          { id: 'n3', name: '심연 악마 데몬 로드', shortTag: '😈데몬로드', type: 'monster', dmg: 30, sprite: 'spr_arcdemon_f1', sprite2: 'spr_arcdemon_f2', x: 800, y: 300, w: 88, h: 70, moveMode: 'sine', minX: 720, maxX: 930, baseY: 300, ampY: 18, vx: 1.3, hit: false },
+          { id: 'n3', name: '심연 악마 데몬 로드', shortTag: '😈데몬로드', type: 'monster', dmg: 30, sprite: 'spr_arcdemon_f1', sprite2: 'spr_arcdemon_f2', x: 800, y: 300, w: 88, h: 70, moveMode: 'sine', minX: 720, maxX: 930, baseY: 300, ampY: 18, vx: 1.3, hit: false, actionState: 'patrol', attackTimer: 90 },
           { id: 'n4', name: '⚠️ 막다른 태엽 미끼상자 함정', shortTag: '⚠️태엽미끼', type: 'trap', dmg: 25, sprite: 'spr_mimi_f1', sprite2: 'spr_mimi_f2', x: 1110, y: 412, w: 32, h: 30, hit: false },
           { id: 'n5', name: '감시자의 눈 피핑아이', shortTag: '👁️피핑아이', type: 'monster', dmg: 25, sprite: 'spr_eye_f1', sprite2: 'spr_eye_f2', x: 1420, y: 190, w: 26, h: 26, moveMode: 'sine', minX: 1280, maxX: 1680, baseY: 190, ampY: 28, vx: 1.65, hit: false },
           { id: 'n6', name: '⚠️ 분쇄 기어 분쇄기 함정', shortTag: '⚠️분쇄기어', type: 'trap', dmg: 30, sprite: 'spr_gear_large', sprite2: 'spr_gear_large', x: 1810, y: 139, w: 54, h: 54, hit: false },
@@ -2787,6 +2787,19 @@
                 y: hp.y - 14,
                 text: isValmanway ? '⚡ 비검 격추! [흑우탄 요격]' : '⚔️ 참격 격추! [까마귀 깃털 파괴]',
                 color: '#ba68c8',
+                life: 45
+              });
+            }
+          } else if (hp.type === 'demonlord_orb') {
+            if (hp.x >= reachX - 30 && hp.x <= reachX + reachW + 30 && Math.abs(hp.y - (p.y + 20)) < 85) {
+              state.hazardProjectiles.splice(pi, 1);
+              spawnParticles(hp.x, hp.y, isValmanway ? '#00e676' : '#ea80fc', 18);
+              playSfx('sfx_sword', 0.6);
+              state.floatingTexts.push({
+                x: hp.x,
+                y: hp.y - 14,
+                text: isValmanway ? '⚡ 비검 격추! [암흑탄 요격]' : '⚔️ 참격 격추! [암흑 지옥탄 파괴]',
+                color: '#ea80fc',
                 life: 45
               });
             }
@@ -3755,6 +3768,69 @@
               nz.attackTimer = 100 + Math.floor(Math.random() * 45);
               nz.vx = (Math.random() > 0.5 ? 1 : -1) * (1.1 + Math.random() * 0.4);
               nz.vy = (Math.random() > 0.5 ? 1 : -1) * (0.6 + Math.random() * 0.4);
+            }
+          }
+        }
+
+        // [정통 오더 오브 에클레시아 심연 악마 데몬 로드: 날개짓 비행 & 암흑 지옥탄 영창 사격 AI]
+        if (nz.id === 'n3' && !nz.hit && !state.gameOver) {
+          if (!nz.actionState) {
+            nz.actionState = 'patrol';
+            nz.attackTimer = 90;
+          }
+          var dxToP = (p.x + 16) - (nz.x + nz.w * 0.5);
+          var dyToP = (p.y + 20) - (nz.y + nz.h * 0.5);
+          var distToP = Math.hypot(dxToP, dyToP);
+
+          nz.attackTimer = (nz.attackTimer || 90) - 1;
+
+          if (nz.actionState === 'patrol') {
+            // 플레이어가 380px 이내 접근 시 암흑 마법 기운을 모으며 영창 돌입
+            if (distToP < 380 && nz.attackTimer <= 0) {
+              nz.actionState = 'prepare';
+              nz.actionTimer = 24; // 마력 집중 및 영창 시간
+            }
+          } else if (nz.actionState === 'prepare') {
+            nz.actionTimer--;
+            // 영창 중 주변 암흑 마력 입자 응집 (보라색/자주색 스파크)
+            if (Math.random() < 0.45 && state.particles) {
+              var ang = Math.random() * Math.PI * 2;
+              var rDist = 22 + Math.random() * 18;
+              state.particles.push({
+                x: (nz.x + nz.w * 0.5) + Math.cos(ang) * rDist,
+                y: (nz.y + nz.h * 0.5) + Math.sin(ang) * rDist,
+                vx: -Math.cos(ang) * 1.6,
+                vy: -Math.sin(ang) * 1.6,
+                color: Math.random() < 0.5 ? '#ea80fc' : '#ba68c8',
+                size: 2.5,
+                life: 14
+              });
+            }
+            if (nz.actionTimer <= 0) {
+              nz.actionState = 'fire';
+              nz.actionTimer = 20; // 발사 후 경직/여운
+              if (!state.hazardProjectiles) state.hazardProjectiles = [];
+              var angle = Math.atan2(dyToP, dxToP);
+              var spd = 3.2;
+              state.hazardProjectiles.push({
+                type: 'demonlord_orb',
+                name: '심연 암흑 지옥탄',
+                dmg: 28,
+                r: 10,
+                x: nz.x + nz.w * 0.5,
+                y: nz.y + nz.h * 0.5,
+                vx: Math.cos(angle) * spd,
+                vy: Math.sin(angle) * spd,
+                life: 150
+              });
+              spawnParticles(nz.x + nz.w * 0.5, nz.y + nz.h * 0.5, '#ea80fc', 16);
+              playSfx('sfx_magic', 0.55);
+            }
+          } else if (nz.actionState === 'fire') {
+            nz.actionTimer--;
+            if (nz.actionTimer <= 0) {
+              nz.actionState = 'patrol';
+              nz.attackTimer = 160 + Math.floor(Math.random() * 50); // 2.7 - 3.5초 쿨다운
             }
           }
         }
@@ -4753,6 +4829,54 @@
             }
           }
           ctx.restore();
+        } else if (nz.id === 'n3') {
+          // [정통 오더 오브 에클레시아 심연 악마 데몬 로드 비행 및 암흑 마법 영창 렌더링]
+          ctx.save();
+          ctx.translate(nz.x + nz.w * 0.5, nz.y + nz.h * 0.5);
+
+          // 영창 또는 발사 시에는 플레이어 방향을 응시, 평상시에는 이동 방향
+          var fDir = (nz.actionState === 'prepare' || nz.actionState === 'fire')
+            ? ((state.player.x < nz.x + nz.w * 0.5) ? -1 : 1)
+            : (nz.vx > 0 ? 1 : -1);
+          if (fDir > 0) {
+            ctx.scale(-1, 1);
+          }
+
+          // 영창 집중 오라 (Feature 2)
+          if (nz.actionState === 'prepare') {
+            var pulse = 0.5 + 0.5 * Math.sin((24 - (nz.actionTimer || 0)) * 0.45);
+            var auraGrad = ctx.createRadialGradient(0, 0, 10, 0, 0, nz.w * 0.58 + pulse * 6);
+            auraGrad.addColorStop(0, 'rgba(234, 128, 252, 0.45)');
+            auraGrad.addColorStop(0.5, 'rgba(123, 31, 162, 0.3)');
+            auraGrad.addColorStop(1, 'rgba(74, 20, 140, 0)');
+            ctx.fillStyle = auraGrad;
+            ctx.beginPath();
+            ctx.arc(0, 0, nz.w * 0.58 + pulse * 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 마법 집중 룬 링
+            ctx.strokeStyle = 'rgba(234, 128, 252, ' + (0.45 + pulse * 0.45) + ')';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(0, 0, 24 + pulse * 5, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+
+          // 비행 날개짓 애니메이션 (Feature 3):
+          // 평상시 10틱 주기로 Frame 1(날개 솟음)과 Frame 2(날개 내림) 교대
+          // 영창 및 발사 시에는 위엄있게 날개를 활짝 펼침(Frame 1)
+          var useF2 = (nz.actionState === 'prepare' || nz.actionState === 'fire')
+            ? false
+            : ((Math.floor(state.player.animTick / 10) % 2 === 1) && nz.sprite2);
+          var sprKey = useF2 ? nz.sprite2 : nz.sprite;
+          var spr = loadedImages[sprKey] || loadedImages[nz.sprite];
+          if (spr && spr.complete) {
+            ctx.drawImage(spr, -nz.w * 0.5, -nz.h * 0.5, nz.w, nz.h);
+          } else {
+            ctx.fillStyle = '#4a148c';
+            ctx.fillRect(-nz.w * 0.5, -nz.h * 0.5, nz.w, nz.h);
+          }
+          ctx.restore();
         } else if (nz.id === 'n02') {
           // [정통 창월의 십자가 보스 4 까마귀 마수 말파스 날개짓 비행 & 검은 깃털 사격 모션]
           var sprKey = nz.sprite;
@@ -4881,6 +5005,34 @@
               ctx.arc(0, 0, 14, 0, Math.PI * 2);
               ctx.fill();
             }
+          } else if (hp.type === 'demonlord_orb') {
+            // [정통 오더 오브 에클레시아 데몬 로드 심연 암흑 지옥탄]
+            ctx.save();
+            var g = ctx.createRadialGradient(0, 0, 2, 0, 0, 14);
+            g.addColorStop(0, '#ffffff');
+            g.addColorStop(0.3, '#f3e5f5');
+            g.addColorStop(0.6, '#ea80fc');
+            g.addColorStop(0.85, '#7b1fa2');
+            g.addColorStop(1, 'rgba(49, 27, 146, 0)');
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(0, 0, 14, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#4a148c';
+            ctx.beginPath();
+            ctx.arc(0, 0, 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            var sparkAngle = (state.player.animTick * 0.15);
+            for (var spk = 0; spk < 3; spk++) {
+              var a = sparkAngle + (spk * Math.PI * 2 / 3);
+              var sx = Math.cos(a) * 9;
+              var sy = Math.sin(a) * 9;
+              ctx.fillStyle = '#e1bee7';
+              ctx.fillRect(sx - 1.5, sy - 1.5, 3, 3);
+            }
+            ctx.restore();
           } else if (hp.type === 'malphas_feather') {
             // [정통 창월의 십자가 말파스 검은 깃털 투사체 렌더링]
             var fSpr = loadedImages['spr_malphas_feather'];
