@@ -1145,11 +1145,11 @@
 
     <div id="copyrightModal" class="modal-backdrop hidden">
     <div class="modal-card" style="max-width:700px; max-height:88vh; overflow-y:auto; border:2px solid #e53935; background:linear-gradient(180deg,#1c0a10 0%,#100508 100%);">
-      <div style="font-size:18px; font-weight:900; color:#ff5252; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; border-bottom:1px solid rgba(229,57,53,0.3); padding-bottom:8px;">
-        <span style="display:flex; align-items:center; gap:8px;">
+      <div style="font-size:18px; font-weight:900; color:#ff5252; margin-bottom:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:6px; border-bottom:1px solid rgba(229,57,53,0.3); padding-bottom:8px;">
+        <span style="display:flex; align-items:center; justify-content:center; gap:8px;">
           <span>⚖️</span> <span>[비영리 교육 연구 목적 및 저작권 고지]</span>
         </span>
-        <span style="background:#b71c1c; color:#ffffff; font-size:10.5px; padding:2px 8px; border-radius:3px; font-weight:bold;">Non-Commercial Educational Research &amp; Copyright Notice</span>
+        <span style="background:#b71c1c; color:#ffffff; font-size:10.5px; padding:2px 10px; border-radius:3px; font-weight:bold;">Non-Commercial Educational Research &amp; Copyright Notice</span>
       </div>
       <div style="font-size:12.5px; line-height:1.75; color:#ffebee; background:rgba(32,10,14,0.7); padding:16px; border-radius:8px; border:1px solid rgba(229,57,53,0.35);">
         <p style="margin-bottom:12px;">
@@ -1207,22 +1207,20 @@
     <!-- 0. FULL-SCREEN DEDICATED COPYRIGHT NOTICE VIEW (#copyrightScreenView) -->
   <section id="copyrightScreenView" class="copyright-screen-wrap">
     <div class="copyright-screen-card">
-      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px; border-bottom:2px solid #b71c1c; padding-bottom:12px;">
-        <div>
-          <div style="font-size:21px; font-weight:900; color:#ff5252; display:flex; align-items:center; gap:8px; font-family:'Cinzel', serif;">
-            <span>⚖️</span> <span>[비영리 교육 연구 목적 및 저작권 고지]</span>
-          </div>
-          <div style="font-size:12px; color:#ffcdd2; margin-top:3px; letter-spacing:0.05em; font-weight:bold;">
-            NON-COMMERCIAL EDUCATIONAL RESEARCH &amp; COPYRIGHT NOTICE
-          </div>
+      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:8px; margin-bottom:16px; border-bottom:2px solid #b71c1c; padding-bottom:14px;">
+        <div style="font-size:22px; font-weight:900; color:#ff5252; display:flex; align-items:center; justify-content:center; gap:8px; font-family:'Cinzel', serif;">
+          <span>⚖️</span> <span>[비영리 교육 연구 목적 및 저작권 고지]</span>
         </div>
-        <div style="text-align:right;">
-          <span style="background:#b71c1c; color:#ffffff; font-size:11px; padding:4px 10px; border-radius:4px; font-weight:bold; letter-spacing:0.03em;">
+        <div style="font-size:12px; color:#ffcdd2; letter-spacing:0.05em; font-weight:bold;">
+          NON-COMMERCIAL EDUCATIONAL RESEARCH &amp; COPYRIGHT NOTICE
+        </div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:4px;">
+          <span style="background:#b71c1c; color:#ffffff; font-size:11px; padding:4px 12px; border-radius:4px; font-weight:bold; letter-spacing:0.03em;">
             홍익대학교 사범대학 2026 교육용 웹콘텐츠 개발 경연대회 출품작
           </span>
-          <div style="font-size:11px; color:#ef9a9a; margin-top:4px;">
+          <span style="font-size:11.5px; color:#ef9a9a;">
             대한민국 저작권법 제28조 · 제35조의5 준수
-          </div>
+          </span>
         </div>
       </div>
 
@@ -2084,7 +2082,8 @@
           { x: 235, y: 415, w: 145, h: 22, core: false, style: 'detour', tag: '하층 용암 제방' }
         ],
         wallHazards: [
-          { type: 'flame_skull_wheel', x: 280, y: 391, minX: 250, maxX: 365, spd: 1.4, vx: 1.4, r: 24, name: '용암 제방 불꽃바퀴' }
+          { type: 'flame_skull_wheel', x: 280, y: 391, minX: 250, maxX: 365, spd: 1.4, vx: 1.4, r: 24, name: '화차', shortTag: '🔥화차' },
+          { type: 'flame_skull_wheel', x: 130, y: 346, minX: 65, maxX: 195, spd: 1.4, vx: 1.4, r: 24, name: '화차', shortTag: '🔥화차' }
         ],
         pendulums: [
           { x: 615, y: 36, len: 92, amp: 0.38, spd: 0.045, phase: 0.0, dmg: 25 },
@@ -2097,8 +2096,7 @@
           { id: 'n3', name: '⚠️ 가짜 미믹 유인상자 함정', shortTag: '⚠️유인미믹', type: 'trap', dmg: 25, sprite: 'spr_mimi_f1', sprite2: 'spr_mimi_f2', x: 755, y: 120, w: 32, h: 30, hit: false },
           { id: 'n4', name: '화염 임프', shortTag: '👹화염임프', type: 'monster', dmg: 25, sprite: 'spr_imp_f1', sprite2: 'spr_imp_f2', x: 960, y: 255, w: 28, h: 28, moveMode: 'sine', minX: 880, maxX: 1120, baseY: 255, ampY: 22, vx: 1.6, hit: false },
           { id: 'n5', name: '우회로 지하 좀비', shortTag: '🧟우회로좀비', type: 'monster', dmg: 20, sprite: 'spr_zbs_f1', sprite2: 'spr_zbs_f2', x: 1120, y: 384, w: 26, h: 48, moveMode: 'patrol', minX: 1055, maxX: 1215, vx: 1.0, hit: false },
-          { id: 'n6', name: '⚠️ 독침 분출 고딕석관 함정', shortTag: '⚠️독침석관', type: 'trap', dmg: 20, sprite: 'spr_dest_vase', sprite2: 'spr_dest_vase', x: 1295, y: 277, w: 20, h: 48, hit: false },
-          { id: 'n7', name: '하층 석실 불꽃바퀴', shortTag: '🔥석실불꽃바퀴', type: 'monster', dmg: 25, sprite: 'spr_flame_skull_wheel', sprite2: 'spr_flame_skull_wheel', x: 130, y: 346, w: 44, h: 44, moveMode: 'patrol', minX: 65, maxX: 195, vx: 1.4, hit: false }
+          { id: 'n6', name: '⚠️ 독침 분출 고딕석관 함정', shortTag: '⚠️독침석관', type: 'trap', dmg: 20, sprite: 'spr_dest_vase', sprite2: 'spr_dest_vase', x: 1295, y: 277, w: 20, h: 48, hit: false }
         ]
       },
 
@@ -2229,16 +2227,16 @@
         platforms: [
           { x: 20, y: 430, w: 175, h: 26, core: true, style: 'altar', nodeId: 'A', tag: '시계탑 지하 입구' },
           { x: 215, y: 380, w: 105, h: 22, core: true, style: 'stair', tag: '1층 황동 계단' },
-          { x: 330, y: 338, w: 165, h: 24, core: true, style: 'core', nodeId: 'B', tag: '제1 기어 교차로' },
+          { x: 330, y: 338, w: 165, h: 24, core: true, style: 'lift', nodeId: 'B', moveY: true, baseY: 338, ampY: 36, spd: 0.035, phase: 0.0, tag: '⚙️제1 기어 교차로' },
           { x: 480, y: 255, w: 120, h: 20, core: false, style: 'detour', tag: '서쪽 종탑 계단' },
           { x: 625, y: 185, w: 255, h: 22, core: false, style: 'detour', nodeId: 'C', tag: '⚠️서쪽 종탑 우회로(느림)' },
           { x: 930, y: 175, w: 185, h: 20, core: false, style: 'detour', tag: '상부 녹슨 철교' },
           { x: 1170, y: 180, w: 180, h: 20, core: false, style: 'detour', tag: '종탑 연결교' },
           { x: 525, y: 375, w: 125, h: 22, core: true, style: 'stair', tag: '제 2기어교차로 입구 계단' },
-          { x: 675, y: 412, w: 220, h: 24, core: true, style: 'core', nodeId: 'D', tag: '제 2기어교차로' },
+          { x: 675, y: 412, w: 220, h: 24, core: true, style: 'lift', nodeId: 'D', moveY: true, baseY: 412, ampY: 40, spd: 0.038, phase: 2.1, tag: '⚙️제 2기어교차로' },
           { x: 1035, y: 442, w: 180, h: 20, core: false, style: 'deadend', nodeId: 'X', tag: '🚫막다른 태엽창고' },
           { x: 925, y: 365, w: 120, h: 22, core: true, style: 'stair', tag: '중앙 기어 발판' },
-          { x: 1080, y: 325, w: 175, h: 24, core: true, style: 'lift', nodeId: 'F', moveY: true, baseY: 315, ampY: 46, spd: 0.04, tag: '⚙️중앙 태엽 엘리베이터' },
+          { x: 1080, y: 325, w: 175, h: 24, core: true, style: 'lift', nodeId: 'F', moveY: true, baseY: 315, ampY: 46, spd: 0.04, phase: 4.2, tag: '⚙️중앙 태엽 엘리베이터' },
           { x: 1300, y: 270, w: 145, h: 22, core: true, style: 'stair', tag: '3층 황동 층계' },
           { x: 1485, y: 235, w: 245, h: 24, core: true, style: 'core', nodeId: 'G', tag: '시계 문자판 큰 다리' },
           { x: 1765, y: 195, w: 145, h: 22, core: true, style: 'stair', tag: '종각 오르는 계단' },
@@ -2363,10 +2361,10 @@
           { x: 265, y: 565, w: 135, h: 22, core: false, style: 'detour', tag: '중층 암흑 회랑' }
         ],
         wallHazards: [
-          { type: 'flame_skull_wheel', x: 180, y: 495, minX: 75, maxX: 250, spd: 1.5, vx: 1.5, r: 24, name: '심연 단애 인화차' },
-          { type: 'flame_skull_wheel', x: 940, y: 265, minX: 840, maxX: 1030, spd: 1.4, vx: 1.4, r: 24, name: '상층 회랑 인화차' },
-          { type: 'flame_skull_wheel', x: 1400, y: 440, minX: 1250, maxX: 1550, spd: 1.6, vx: 1.6, r: 24, name: '심연 마도 인화차' },
-          { type: 'flame_skull_wheel', x: 1420, y: 825, minX: 1320, maxX: 1500, spd: 1.5, vx: 1.5, r: 24, name: '심연 수로 인화차' }
+          { type: 'flame_skull_wheel', x: 180, y: 495, minX: 75, maxX: 250, spd: 1.5, vx: 1.5, r: 24, name: '화차', shortTag: '🔥화차' },
+          { type: 'flame_skull_wheel', x: 940, y: 265, minX: 840, maxX: 1030, spd: 1.4, vx: 1.4, r: 24, name: '화차', shortTag: '🔥화차' },
+          { type: 'flame_skull_wheel', x: 1400, y: 440, minX: 1250, maxX: 1550, spd: 1.6, vx: 1.6, r: 24, name: '화차', shortTag: '🔥화차' },
+          { type: 'flame_skull_wheel', x: 1420, y: 825, minX: 1320, maxX: 1500, spd: 1.5, vx: 1.5, r: 24, name: '화차', shortTag: '🔥화차' }
         ],
         teleporters: [
           // Deceptive Warp Pad: traps the player and warps them backward to Upper B!
@@ -3064,6 +3062,31 @@
       }
     }
 
+    function recalculateRouteMinutes() {
+      var st = STAGES[state.currentStageIdx];
+      var mins = 0;
+      var hasDetour = false;
+      for (var i = 0; i < state.visitedNodes.length - 1; i++) {
+        var n1 = state.visitedNodes[i];
+        var n2 = state.visitedNodes[i + 1];
+        var edge = st.edges.find(function(e) {
+          return (e.from === n1 && e.to === n2) || (e.to === n1 && e.from === n2);
+        });
+        if (!edge) {
+          mins += 5;
+          hasDetour = true;
+        } else {
+          mins += (edge.minutes || 1);
+          if (!edge.optimal) hasDetour = true;
+        }
+        if (st.optimalNodeSeq.indexOf(n2) === -1) {
+          hasDetour = true;
+        }
+      }
+      state.routeMinutes = mins;
+      state.tookDetour = hasDetour;
+    }
+
     function recordVisitedNode(nodeId) {
       var st = STAGES[state.currentStageIdx];
       var lastId = state.visitedNodes[state.visitedNodes.length - 1];
@@ -3072,24 +3095,45 @@
       var edge = st.edges.find(function(e) {
         return (e.from === lastId && e.to === nodeId) || (e.to === lastId && e.from === nodeId);
       });
-      var addMin = edge ? (edge.minutes || 1) : 5;
+
+      // 우회로/막다른 길 탐색 후 핵심 경로로 되돌아온 경우(되추적 / 가지치기 복귀)
+      var existingIdx = state.visitedNodes.indexOf(nodeId);
+      if (existingIdx !== -1) {
+        var prunedBranch = state.visitedNodes.slice(existingIdx + 1);
+        state.visitedNodes = state.visitedNodes.slice(0, existingIdx + 1);
+        recalculateRouteMinutes();
+        if (prunedBranch.length > 0) {
+          playSfx('sfx_dispel', 0.45);
+          state.floatingTexts.push({
+            x: state.player.x + 16,
+            y: state.player.y - 22,
+            text: '✂️ [가지치기 완료] 불필요한 장소 [' + prunedBranch.join(', ') + '] 걷어내고 핵심 경로 복귀!',
+            color: '#a7ffeb',
+            life: 65
+          });
+        }
+        updateRouteAnalyzerUI();
+        return;
+      }
+
+      // 새로운 장소로 전진
       state.visitedNodes.push(nodeId);
-      state.routeMinutes += addMin;
+      recalculateRouteMinutes();
 
       if (!edge || st.optimalNodeSeq.indexOf(nodeId) === -1 || !edge.optimal) {
-        state.tookDetour = true;
         state.floatingTexts.push({
           x: state.player.x + 16,
           y: state.player.y - 24,
-          text: !edge ? '⚠️ 연결 통로 없는 경로 건너뛰기! (최적 경로 이탈)' : '⚠️ 비최적 우회로/막다른길 진입! (+' + addMin + '분 시간 손실)',
+          text: !edge ? '⚠️ 연결 통로 없는 경로 건너뛰기! (최적 경로 이탈)' : '⚠️ 우회 장소 [' + nodeId + '] 탐색 중 (가지치기 후 핵심 경로로 복귀하세요)',
           color: '#ff8a80',
           life: 65
         });
       } else {
+        var stepMin = edge ? (edge.minutes || 1) : 1;
         state.floatingTexts.push({
           x: state.player.x + 16,
           y: state.player.y - 20,
-          text: '✅ 주요 장소 [' + nodeId + '] 통과 (+' + addMin + '분)',
+          text: '✅ 핵심 장소 [' + nodeId + '] 통과 (+' + stepMin + '분)',
           color: '#80deea',
           life: 45
         });
@@ -3319,7 +3363,7 @@
       st.platforms.forEach(function(plat) {
         if (plat.moveY) {
           var prevY = plat.y;
-          plat.y = plat.baseY + Math.sin(p.animTick * (plat.spd || 0.04)) * (plat.ampY || 36);
+          plat.y = plat.baseY + Math.sin(p.animTick * (plat.spd || 0.04) + (plat.phase || 0)) * (plat.ampY || 36);
           plat.dy = plat.y - prevY;
           if (plat.nodeId) {
             var nd = st.nodes.find(function(n){ return n.id === plat.nodeId; });
@@ -4468,7 +4512,7 @@
             ctx.lineWidth = 1;
             ctx.font = 'bold 9px "Noto Serif KR", serif';
             ctx.textAlign = 'center';
-            ctx.fillText(wh.shortTag || '🔥불꽃바퀴', 0, -28);
+            ctx.fillText(wh.shortTag || '🔥화차', 0, -28);
           } else if (wh.type === 'gear_large') {
             var gearImg = loadedImages['spr_gear_large'];
             if (gearImg && gearImg.complete) {
