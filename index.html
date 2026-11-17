@@ -223,36 +223,84 @@
       align-items: center;
       gap: 3px;
     }
+    /* Metallic Bloodborne Text Gradients */
+    .text-grad-gold {
+      background: linear-gradient(180deg, #fff3d1 0%, #e5c378 60%, #9e7a32 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      font-weight: 800;
+    }
+    .text-grad-silver {
+      background: linear-gradient(180deg, #ffffff 0%, #d5dde2 55%, #7b8e9b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      font-weight: 800;
+    }
+    .text-grad-crimson {
+      background: linear-gradient(180deg, #ffcdd2 0%, #ef5350 55%, #a82020 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      font-weight: 800;
+    }
+
+    .btn-cluster {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(15, 11, 18, 0.94);
+      border: 1px solid #3d2f20;
+      border-radius: 5px;
+      padding: 3px 5px;
+      gap: 5px;
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6), 0 2px 5px rgba(0, 0, 0, 0.5);
+    }
+    .btn-cluster-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #a89478;
+      padding: 0 6px 0 3px;
+      letter-spacing: 0.03em;
+      border-right: 1px solid #302418;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
     .btn-cluster-edu {
-      border-color: #8c6a28;
-      background: rgba(28, 20, 10, 0.92);
+      border-color: #4a3824;
+      background: rgba(18, 13, 20, 0.94);
     }
     .btn-cluster-user {
-      border-color: #5c3030;
-      background: rgba(26, 12, 16, 0.92);
+      border-color: #4a2828;
+      background: rgba(20, 11, 14, 0.94);
     }
     .btn-sm {
-      padding: 5px 10px !important;
+      padding: 5px 11px !important;
       font-size: 11.5px !important;
       border-radius: 3px !important;
       white-space: nowrap;
     }
     .student-badge {
-      background: rgba(168, 132, 56, 0.20);
-      border: 1px solid var(--gold);
-      color: var(--gold-bright);
-      padding: 4px 8px;
+      background: rgba(22, 16, 24, 0.95);
+      border: 1px solid #5a4224;
+      color: #d8b870;
+      padding: 3px 9px;
       border-radius: 4px;
       font-size: 11.5px;
       font-weight: 700;
       letter-spacing: 0.02em;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     /* Bloodborne Gothic Victorian Buttons */
     .btn {
-      background: linear-gradient(180deg, #221a25 0%, #110d14 100%);
-      color: var(--text-main);
-      border: 1px solid #543f25;
+      background: linear-gradient(180deg, #1e1722 0%, #0f0b13 100%);
+      color: #d4ccbf;
+      border: 1px solid #483521;
       padding: 7px 14px;
       border-radius: 4px;
       font-family: 'Cinzel', 'Noto Serif KR', 'Nanum Myeongjo', Batang, serif;
@@ -264,14 +312,14 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 2px 6px rgba(0,0,0,0.8);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 2px 5px rgba(0,0,0,0.7);
       user-select: none;
     }
     .btn:hover {
-      border-color: var(--gold-bright);
+      border-color: #c5a059;
       color: #fff8ee;
-      background: linear-gradient(180deg, #2e2133 0%, #17111c 100%);
-      box-shadow: 0 0 15px rgba(184, 142, 60, 0.4), inset 0 0 10px rgba(142, 28, 28, 0.35);
+      background: linear-gradient(180deg, #271f2b 0%, #140f18 100%);
+      box-shadow: 0 0 10px rgba(197, 160, 89, 0.25), inset 0 1px 0 rgba(255,255,255,0.1);
       transform: translateY(-1px);
     }
     .btn:active {
@@ -279,34 +327,37 @@
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
     }
     .btn-gold {
-      background: linear-gradient(180deg, #382c16 0%, #1f180a 100%);
-      border-color: var(--gold);
+      background: linear-gradient(180deg, #261b0f 0%, #130c06 100%);
+      border-color: #785a21;
       color: #f5e8cc;
     }
     .btn-gold:hover {
-      border-color: var(--gold-bright);
+      border-color: #e5c378;
+      background: linear-gradient(180deg, #322314 0%, #180f07 100%);
       color: #ffffff;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 0 12px rgba(226, 196, 129, 0.4);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 0 12px rgba(229, 195, 120, 0.35);
     }
-    .btn-cyan {
-      background: linear-gradient(180deg, #1e2630 0%, #10151c 100%);
-      border-color: #556677;
-      color: #d8e2eb;
+    .btn-silver, .btn-cyan {
+      background: linear-gradient(180deg, #1b2027 0%, #0d1014 100%);
+      border-color: #3e4a56;
+      color: #dbe4eb;
     }
-    .btn-cyan:hover {
-      border-color: var(--gold);
+    .btn-silver:hover, .btn-cyan:hover {
+      border-color: #7b8e9b;
+      background: linear-gradient(180deg, #232932 0%, #11151a 100%);
       color: #ffffff;
-      box-shadow: 0 0 10px rgba(168, 132, 56, 0.3);
+      box-shadow: 0 0 10px rgba(123, 142, 155, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
     }
-    .btn-crimson {
-      background: linear-gradient(180deg, #3d1616 0%, #200a0a 100%);
-      border-color: var(--crimson);
-      color: #eed6d6;
+    .btn-crimson, .btn-red {
+      background: linear-gradient(180deg, #280d11 0%, #130406 100%);
+      border-color: #63181e;
+      color: #f8d7da;
     }
-    .btn-crimson:hover {
-      border-color: var(--crimson-bright);
+    .btn-crimson:hover, .btn-red:hover {
+      border-color: #b71c1c;
+      background: linear-gradient(180deg, #341016 0%, #190508 100%);
       color: #ffffff;
-      box-shadow: 0 0 10px rgba(158, 40, 40, 0.4);
+      box-shadow: 0 0 12px rgba(183, 28, 28, 0.4), inset 0 1px 0 rgba(255, 205, 210, 0.15);
     }
 
     .container {
@@ -1035,16 +1086,16 @@
 
   <!-- 사전·사후 평가 모달 -->
   <div id="diagnosticModal" class="modal-backdrop hidden">
-    <div class="modal-card bloodborne-gold-card" style="max-width:780px; text-align:left; border:2px solid #00e5ff; box-shadow:0 0 25px rgba(0,229,255,0.25);">
-      <div style="font-size:19px; font-weight:900; color:#00e5ff; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #00838f; padding-bottom:8px;">
-        <span>📝 사전·사후 평가</span>
+    <div class="modal-card bloodborne-gold-card" style="max-width:780px; text-align:left; border:2px solid #556677; box-shadow:0 0 25px rgba(85,102,119,0.3);">
+      <div style="font-size:19px; font-weight:900; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #3e4a56; padding-bottom:8px;">
+        <span>📝 <span class="text-grad-silver">사전·사후 평가</span></span>
         <button class="btn" onclick="closeDiagnosticModal()" style="padding:4px 10px; font-size:12px;">✕</button>
       </div>
 
       <div style="display:flex; gap:8px; margin-bottom:14px; border-bottom:1px solid #37474f; padding-bottom:8px; flex-wrap:wrap;">
         <button id="diagTabBtn1" class="btn btn-gold btn-sm" onclick="switchDiagnosticTab(1)" style="font-weight:bold;">📋 1. 사전 평가 (게임 전)</button>
         <button id="diagTabBtn2" class="btn btn-sm" onclick="switchDiagnosticTab(2)" style="font-weight:bold;">🎯 2. 사후 평가 (게임 후)</button>
-        <button id="diagTabBtn3" class="btn btn-sm" onclick="switchDiagnosticTab(3)" style="font-weight:bold; color:#00e5ff; border-color:#00e5ff;">📈 3. 점수 비교</button>
+        <button id="diagTabBtn3" class="btn btn-sm" onclick="switchDiagnosticTab(3)" style="font-weight:bold;">📈 3. 점수 비교</button>
       </div>
 
       <div style="max-height:64vh; overflow-y:auto; padding-right:8px; font-size:13px; line-height:1.7; color:#e2dbd0;">
@@ -1184,7 +1235,7 @@
         </p>
       </div>
       <div style="margin-top:16px; text-align:center;">
-        <button class="btn btn-gold" onclick="closeCopyrightModal()" style="padding:8px 24px; font-size:13.5px; border-color:#e53935; color:#ffebee; background:#b71c1c;">닫기</button>
+        <button class="btn btn-gold" onclick="closeCopyrightModal()" style="padding:8px 24px; font-size:13.5px;"><span class="text-grad-gold">확인 및 닫기</span></button>
       </div>
     </div>
   </div>
@@ -1262,8 +1313,8 @@
       </div>
 
       <div style="margin-top:24px; display:flex; align-items:center; justify-content:center; border-top:1px solid rgba(229,57,53,0.3); padding-top:18px;">
-        <button class="btn btn-gold" onclick="confirmCopyrightAndEnterLogin()" style="font-size:16px; padding:13px 42px; font-weight:900; background:linear-gradient(180deg,#b71c1c 0%,#7f0000 100%); border:2px solid #ff5252; color:#ffffff; box-shadow:0 0 25px rgba(229,57,53,0.6); cursor:pointer; border-radius:6px; letter-spacing:0.04em; transition:all 0.2s ease;">
-          📜 비영리 연구 및 저작권 고지 확인 ▸ [고성 미궁 입장]
+        <button class="btn btn-gold" onclick="confirmCopyrightAndEnterLogin()" style="font-size:16px; padding:13px 42px; font-weight:900; letter-spacing:0.04em;">
+          📜 <span class="text-grad-gold">비영리 연구 및 저작권 고지 확인 ▸ [고성 미궁 입장]</span>
         </button>
       </div>
     </div>
@@ -1321,7 +1372,7 @@
         </div>
 
         <button class="btn btn-gold" style="font-size:16px; padding:12px 24px; justify-content:center; margin-top:8px; font-weight:900;" onpointerdown="playButtonClickSfx();" onclick="confirmStudentLogin()">
-          🏰 고성 미궁 탈출 시작하기 ▸
+          🏰 <span class="text-grad-gold">고성 미궁 탈출 시작하기 ▸</span>
         </button>
         <button type="button" class="btn" onclick="playButtonClickSfx(); resetSelectedStudentData()" style="font-size:12px; margin-top:8px; padding:6px 14px; justify-content:center; border:1px dashed #7986cb; color:#c5cae9; background:rgba(26,35,126,0.25);" title="선택한 학생의 진행 기록을 초기화하여 1단계부터 새로 시작합니다">
           ↻ 선택한 학생 진행 기록 초기화 (1단계부터 새로 시작)
@@ -1350,25 +1401,25 @@
         <!-- 1. 탐험 및 조작 클러스터 -->
         <div class="btn-cluster" title="게임 조작 및 화면 시점 설정">
           <span class="btn-cluster-label">🎮 탐험·조작</span>
-          <button class="btn btn-gold btn-sm" onclick="toggleControlMode()" id="controlModeBtn">🎮 WASD 모드</button>
-          <button class="btn btn-cyan btn-sm" onclick="toggleAbstractSight()" id="sightBtn">👁️ 맵 힌트 [Tab 키]</button>
+          <button class="btn btn-gold btn-sm" onclick="toggleControlMode()" id="controlModeBtn">🎮 <span class="text-grad-gold">WASD 모드</span></button>
+          <button class="btn btn-silver btn-sm" onclick="toggleAbstractSight()" id="sightBtn">👁️ <span class="text-grad-silver">맵 힌트 [Tab 키]</span></button>
           <button class="btn btn-sm" onclick="toggleCameraOverview()" id="camModeBtn">🔍 전체 맵 시점</button>
           <button class="btn btn-sm" onclick="toggleAudioBgm()" id="bgmToggleBtn">🎵 BGM</button>
         </div>
 
         <!-- 2. 교육과정 및 평가 대시보드 클러스터 -->
         <div class="btn-cluster btn-cluster-edu" title="2022 개정 교육과정 정보과 지도안 및 실시간 형성평가">
-          <button class="btn btn-gold btn-sm" onclick="playButtonClickSfx(); openPedagogyModal()" style="font-weight:800; border-color:#ffd54f; color:#fff3d1; background:linear-gradient(180deg,#3d2a0d 0%,#201505 100%);" title="2022 개정 교육과정 정보과 지도안 및 평가 루브릭 열기">🎓 교육·평가 지도안</button>
-          <button class="btn btn-cyan btn-sm" onclick="playButtonClickSfx(); openDiagnosticModal()" style="font-weight:800; border-color:#00e5ff; color:#e0f7fa; background:linear-gradient(180deg,#006064 0%,#00363a 100%);" title="학습 효과 실증을 위한 컴퓨팅 사고력 사전·사후 진단평가">📝 사전·사후 평가</button>
+          <button class="btn btn-gold btn-sm" onclick="playButtonClickSfx(); openPedagogyModal()" title="2022 개정 교육과정 정보과 지도안 및 평가 루브릭 열기">🎓 <span class="text-grad-gold">교육·평가 지도안</span></button>
+          <button class="btn btn-silver btn-sm" onclick="playButtonClickSfx(); openDiagnosticModal()" title="학습 효과 실증을 위한 컴퓨팅 사고력 사전·사후 진단평가">📝 <span class="text-grad-silver">사전·사후 평가</span></button>
           <button class="btn btn-sm" onclick="playButtonClickSfx(); openSheetModal()" title="구글 스프레드시트 기반 형성평가 환류 대시보드">📊 구글 시트 기록</button>
           <button class="btn btn-sm" onclick="playButtonClickSfx(); openCopyrightModal()" title="비영리 교육 연구 목적 및 저작권 고지">⚖️ 저작권 고지</button>
         </div>
 
         <!-- 3. 학생 세션 및 초기화 클러스터 -->
         <div class="btn-cluster btn-cluster-user" title="학생 로그인 세션 및 기록 관리">
-          <span class="btn-cluster-label" style="color:#ef9a9a;">👤 세션</span>
+          <span class="btn-cluster-label">👤 세션</span>
           <span id="studentBadge" class="student-badge">S01</span>
-          <button class="btn btn-red btn-sm" onclick="playButtonClickSfx(); restartEntireGameFromScratch()" style="background:rgba(211,47,47,0.28); border-color:#e53935; color:#ffcdd2; font-weight:bold;" title="현재 학생의 진행 기록을 초기화하고 1단계부터 새로 시작">🔄 재시작</button>
+          <button class="btn btn-crimson btn-sm" onclick="playButtonClickSfx(); restartEntireGameFromScratch()" title="현재 학생의 진행 기록을 초기화하고 1단계부터 새로 시작">🔄 <span class="text-grad-crimson">재시작</span></button>
           <button class="btn btn-sm" onclick="playButtonClickSfx(); goToLoginPage()" title="로그인 페이지로 돌아가기">🚪 나가기</button>
         </div>
       </div>
@@ -1432,7 +1483,7 @@
                 <button class="key-pill" onmousedown="setKey('ArrowLeft',true)" onmouseup="setKey('ArrowLeft',false)" ontouchstart="setKey('ArrowLeft',true)" ontouchend="setKey('ArrowLeft',false)">◀ 좌 [A]</button>
                 <button class="key-pill" onclick="triggerJump()">▲ 점프 [W]</button>
                 <button class="key-pill" onmousedown="setKey('ArrowRight',true)" onmouseup="setKey('ArrowRight',false)" ontouchstart="setKey('ArrowRight',true)" ontouchend="setKey('ArrowRight',false)">▶ 우 [D]</button>
-                <button class="key-pill key-pill-crimson" onclick="triggerAttack()">🗡️ 무기 공격 [Space / Z]</button>
+                <button class="key-pill key-pill-crimson" onclick="triggerAttack()">🗡️ <span class="text-grad-crimson">무기 공격</span> [Space / Z]</button>
               </div>
             </div>
 
@@ -1440,8 +1491,8 @@
             <div class="ctrl-group ctrl-group-hint">
               <span class="ctrl-group-label">👁️ 추상화 분석 & 탐색</span>
               <div class="ctrl-group-buttons">
-                <button class="key-pill key-pill-gold" onclick="toggleAbstractSight()" id="sightKeyPill">👁️ 맵 힌트 [Tab 키]</button>
-                <button class="key-pill key-pill-slate" id="pruneBtn" onclick="pruneAllDecoyNoises()">🧹 탈출 방해물 일괄 가지치기 [C 키]</button>
+                <button class="key-pill key-pill-gold" onclick="toggleAbstractSight()" id="sightKeyPill">👁️ <span class="text-grad-gold">맵 힌트</span> [Tab 키]</button>
+                <button class="key-pill key-pill-slate" id="pruneBtn" onclick="pruneAllDecoyNoises()">🧹 <span class="text-grad-silver">탈출 방해물 일괄 가지치기</span> [C 키]</button>
               </div>
             </div>
 
@@ -1449,7 +1500,7 @@
             <div class="ctrl-group ctrl-group-stage">
               <span class="ctrl-group-label">↻ 스테이지 제어</span>
               <div class="ctrl-group-buttons">
-                <button class="key-pill key-pill-reset" onclick="resetCurrentStage()">↺ 현재 맵 처음부터</button>
+                <button class="key-pill key-pill-reset" onclick="resetCurrentStage()">↺ <span class="text-grad-silver">현재 맵 처음부터</span></button>
                 <button class="key-pill key-pill-gold" id="nextStageQuickBtn" style="display:none;" onclick="goToNextUnlockedStage()">🚪 다음 해금 맵 ▸</button>
               </div>
             </div>
@@ -1496,8 +1547,8 @@
           <div class="grimoire-title">
             <span id="grimoireHeaderTitle">📜 추상화 학습 기록장 — 스테이지 탐구 답안</span>
             <div style="display:flex; gap:6px;">
-              <button class="btn btn-cyan" onclick="autoFillFromGameplay()">✨ 방금 플레이한 추상화 결과로 1·2·3단계 자동 채우기</button>
-              <button class="btn btn-gold" onclick="submitGrimoireAnswer()">💾 최종 답안 제출 (구글 시트 저장)</button>
+              <button class="btn btn-silver" onclick="autoFillFromGameplay()">✨ <span class="text-grad-silver">방금 플레이한 추상화 결과로 1·2·3단계 자동 채우기</span></button>
+              <button class="btn btn-gold" onclick="submitGrimoireAnswer()">💾 <span class="text-grad-gold">최종 답안 제출 (구글 시트 저장)</span></button>
             </div>
           </div>
 
@@ -1547,13 +1598,13 @@
 탈출 방해물은 [Space 검기]나 [맵 힌트]를 활용해 파악하고, 캐릭터는 추출된 '최적 핵심 발판'으로만 이동해 탈출하세요!</div>
           </div>
           <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
-            <button class="btn" style="font-size:12.5px; padding:5px 9px;" onclick="askPresetQuestion('1단계에서 왜 방해물을 직접 가지 않고 가지치기(제거)하나요?')">💡 1단계 탈출 방해물 가지치기 힌트</button>
-            <button class="btn" style="font-size:12.5px; padding:5px 9px;" onclick="askPresetQuestion('2단계에서 꼭 남겨야 할 핵심 정보는 무엇인가요?')">💡 2단계 핵심추출 힌트</button>
-            <button class="btn" style="font-size:12.5px; padding:5px 9px;" onclick="askPresetQuestion('3단계 최적 탈출 경로와 시간은 어떻게 구하나요?')">💡 3단계 최적경로 힌트</button>
+            <button class="btn btn-silver" style="font-size:12.5px; padding:5px 9px;" onclick="askPresetQuestion('1단계에서 왜 방해물을 직접 가지 않고 가지치기(제거)하나요?')">💡 <span class="text-grad-silver">1단계 탈출 방해물 가지치기 힌트</span></button>
+            <button class="btn btn-silver" style="font-size:12.5px; padding:5px 9px;" onclick="askPresetQuestion('2단계에서 꼭 남겨야 할 핵심 정보는 무엇인가요?')">💡 <span class="text-grad-silver">2단계 핵심추출 힌트</span></button>
+            <button class="btn btn-silver" style="font-size:12.5px; padding:5px 9px;" onclick="askPresetQuestion('3단계 최적 탈출 경로와 시간은 어떻게 구하나요?')">💡 <span class="text-grad-silver">3단계 최적경로 힌트</span></button>
           </div>
           <div style="display:flex; gap:6px;">
             <input id="tutorInput" type="text" placeholder="사서 AI에게 질문 입력..." style="flex:1; background:#0a0711; border:1px solid #433466; border-radius:6px; color:#fff; padding:8px 10px; font-size:13px;" onkeydown="if(event.key==='Enter') sendTutorQuestion()" />
-            <button class="btn btn-gold" onclick="sendTutorQuestion()">질문 ▸</button>
+            <button class="btn btn-gold" onclick="sendTutorQuestion()"><span class="text-grad-gold">질문 ▸</span></button>
           </div>
         </div>
       </section>
@@ -1567,7 +1618,7 @@
         <h2 style="color:var(--gold-bright); font-size:17px; margin:0;">📊 내 추상화 기록장 제출 내역 [구글 시트 클라우드 연동]</h2>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <a href="https://docs.google.com/spreadsheets/d/1Ti6XHwnI2QKeRwgT7w3Q2p41OX-JwgqWTCXgOyHKCfQ/edit#gid=1432851441" target="_blank" class="btn btn-gold" style="text-decoration:none; display:inline-flex; align-items:center; gap:5px; font-weight:bold; font-size:12px;" title="교사용 실시간 형성평가 대시보드로 이동">🌐 실시간 구글 시트 대시보드 ↗</a>
-          <button class="btn btn-cyan" onclick="downloadCsv()">📥 엑셀(.csv) 다운로드</button>
+          <button class="btn btn-silver" onclick="downloadCsv()">📥 <span class="text-grad-silver">엑셀(.csv) 다운로드</span></button>
           <button class="btn" onclick="closeSheetModal()">닫기 ✕</button>
         </div>
       </div>
@@ -1623,14 +1674,14 @@
 
       <!-- Action Buttons -->
       <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:20px;">
-        <button class="btn btn-gold" onclick="replayStageWithRespawn()" style="font-size:13.5px; padding:10px 18px;">
-          ↻ 스테이지 다시 도전 (몬스터 & 함정 리스폰)
+        <button class="btn btn-silver" onclick="replayStageWithRespawn()" style="font-size:13.5px; padding:10px 18px;">
+          ↻ <span class="text-grad-silver">스테이지 다시 도전</span> (몬스터 & 함정 리스폰)
         </button>
-        <button id="modalNextStageBtn" class="btn btn-cyan" onclick="goToNextUnlockedStage()" style="font-size:13.5px; padding:10px 18px;">
-          다음 해금 스테이지로 진입 ➔
+        <button id="modalNextStageBtn" class="btn btn-gold" onclick="goToNextUnlockedStage()" style="font-size:13.5px; padding:10px 18px;">
+          ✨ <span class="text-grad-gold">다음 해금 스테이지로 진입 ➔</span>
         </button>
-        <button class="btn btn-red" onclick="playButtonClickSfx(); restartEntireGameFromScratch()" style="font-size:13.5px; padding:10px 18px; background:rgba(211,47,47,0.3); border-color:#e53935; color:#ffcdd2;">
-          🔄 처음부터 전체 재도전
+        <button class="btn btn-crimson" onclick="playButtonClickSfx(); restartEntireGameFromScratch()" style="font-size:13.5px; padding:10px 18px;">
+          🔄 <span class="text-grad-crimson">처음부터 전체 재도전</span>
         </button>
         <button class="btn" onclick="closeStageClearModal()" style="font-size:13px; padding:10px 14px;">
           닫기 ✕
@@ -1843,7 +1894,9 @@
     function updateBgmButtonUI() {
       var btn = document.getElementById('bgmToggleBtn');
       if (!btn) return;
-      btn.textContent = bgmEnabled ? '🎵 BGM 켜짐' : '🔇 BGM 꺼짐';
+      btn.innerHTML = bgmEnabled 
+        ? '🎵 <span class="text-grad-gold">BGM 켜짐</span>' 
+        : '🔇 <span class="text-grad-silver">BGM 꺼짐</span>';
     }
 
     function playSfx(name, vol) {
@@ -2518,13 +2571,13 @@
       var btn = document.getElementById('controlModeBtn');
       var pruneBtn = document.getElementById('pruneBtn');
       if (state.controlMode === 'wasd') {
-        btn.textContent = '🎮 WASD 모드';
+        btn.innerHTML = '🎮 <span class="text-grad-gold">WASD 모드</span>';
         btn.className = 'btn btn-gold btn-sm';
         if (pruneBtn) pruneBtn.style.display = 'none';
         state.player.autoWaypoints = null;
       } else {
-        btn.textContent = '🖱️ 마우스 클릭';
-        btn.className = 'btn btn-cyan btn-sm';
+        btn.innerHTML = '🖱️ <span class="text-grad-silver">마우스 클릭</span>';
+        btn.className = 'btn btn-silver btn-sm';
         if (pruneBtn) pruneBtn.style.display = 'inline-flex';
       }
     }
@@ -2538,7 +2591,9 @@
     function toggleCameraOverview() {
       state.wideOverview = !state.wideOverview;
       var btn = document.getElementById('camModeBtn');
-      btn.textContent = state.wideOverview ? '🔍 밀착 추적 시점' : '🔍 전체 맵 시점';
+      btn.innerHTML = state.wideOverview 
+        ? '🔍 <span class="text-grad-gold">밀착 추적 시점</span>' 
+        : '🔍 <span class="text-grad-silver">전체 맵 시점</span>';
       playSfx('sfx_glyph', 0.45);
     }
 
@@ -2818,7 +2873,10 @@
       var btn = document.getElementById('sightBtn');
       var pill = document.getElementById('sightKeyPill');
       var txt = state.abstractSight ? '👁️ 맵 힌트 ON' : '👁️ 맵 힌트 OFF';
-      btn.textContent = txt;
+      btn.innerHTML = state.abstractSight 
+        ? '👁️ <span class="text-grad-gold">맵 힌트 ON</span>' 
+        : '👁️ <span class="text-grad-silver">맵 힌트 OFF</span>';
+      btn.className = state.abstractSight ? 'btn btn-gold btn-sm' : 'btn btn-silver btn-sm';
       if (pill) pill.textContent = txt;
       playSfx('sfx_glyph', 0.55);
       updateNoiseProgressUI();
@@ -5749,7 +5807,7 @@
       state.controlMode = chosenMode;
 
       state.student = { code: code, nickname: nick, level: '기본' };
-      document.getElementById('studentBadge').textContent = '학생코드: ' + code + ' (' + nick + ')';
+      document.getElementById('studentBadge').innerHTML = '학생코드: <span class="text-grad-gold">' + code + ' (' + nick + ')</span>';
 
       var cachedSubs = localStorage.getItem('map_abstraction_subs_' + code);
       state.submissions = cachedSubs ? JSON.parse(cachedSubs) : {};
