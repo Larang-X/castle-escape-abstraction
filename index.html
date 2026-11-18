@@ -2140,7 +2140,7 @@
         ],
         wallHazards: [
           { type: 'flame_skull_wheel', x: 280, y: 391, minX: 250, maxX: 365, spd: 1.4, vx: 1.4, r: 24, name: '화차', shortTag: '🔥화차' },
-          { type: 'flame_skull_wheel', x: 130, y: 346, minX: 65, maxX: 195, spd: 1.4, vx: 1.4, r: 24, name: '화차', shortTag: '🔥화차' }
+          { type: 'flame_skull_wheel', x: 130, y: 366, minX: 65, maxX: 195, spd: 1.4, vx: 1.4, r: 24, name: '화차', shortTag: '🔥화차' }
         ],
         pendulums: [
           { x: 615, y: 36, len: 92, amp: 0.38, spd: 0.045, phase: 0.0, dmg: 25 },
@@ -2878,6 +2878,7 @@
     }
 
     function toggleAbstractSight() {
+      invalidateBgCache();
       state.abstractSight = !state.abstractSight;
       var btn = document.getElementById('sightBtn');
       var pill = document.getElementById('sightKeyPill');
@@ -3117,6 +3118,12 @@
           }
         }
       } catch(e){}
+      if (st.edges) {
+        st.edges.forEach(function(ed) {
+          if (!ed._n1) ed._n1 = st.nodes.find(function(n){ return n.id === ed.from; });
+          if (!ed._n2) ed._n2 = st.nodes.find(function(n){ return n.id === ed.to; });
+        });
+      }
       state.player.vx = 0;
       state.player.vy = 0;
       state.player.hp = state.player.maxHp;
@@ -4223,6 +4230,12 @@
       spawnParticles(state.player.x + 16, state.player.y + 20, '#ffd740', 50);
       state.hazardProjectiles = []; // 클리어 즉시 잔존 투사체 일괄 소거
       state.player.invulnTimer = 99999;
+      if (st.edges) {
+        st.edges.forEach(function(ed) {
+          if (!ed._n1) ed._n1 = st.nodes.find(function(n){ return n.id === ed.from; });
+          if (!ed._n2) ed._n2 = st.nodes.find(function(n){ return n.id === ed.to; });
+        });
+      }
       state.player.vx = 0;
       state.player.vy = 0;
 
@@ -4408,6 +4421,42 @@
       bgCacheKey = '';
     }
 
+    var textWidthCache = {};
+    function getCachedTextWidth(ctx, text, font) {
+      if (!text) return 0;
+      var curFont = font || ctx.font;
+      var key = curFont + '|' + text;
+      var cached = textWidthCache[key];
+      if (cached !== undefined) return cached;
+      if (font && ctx.font !== font) ctx.font = font;
+      cached = ctx.measureText(text).width;
+      textWidthCache[key] = cached;
+      return cached;
+    }
+
+    var graphGridCanvas = null;
+    function getGraphGridCanvas() {
+      if (graphGridCanvas) return graphGridCanvas;
+      var c = document.createElement('canvas');
+      c.width = 900;
+      c.height = 250;
+      var gctx = c.getContext('2d');
+      gctx.fillStyle = '#070a12';
+      gctx.fillRect(0, 0, 900, 250);
+      gctx.strokeStyle = 'rgba(38, 198, 218, 0.11)';
+      gctx.lineWidth = 1;
+      gctx.beginPath();
+      for (var gx = 0; gx < 900; gx += 30) {
+        gctx.moveTo(gx, 0); gctx.lineTo(gx, 250);
+      }
+      for (var gy = 0; gy < 250; gy += 30) {
+        gctx.moveTo(0, gy); gctx.lineTo(900, gy);
+      }
+      gctx.stroke();
+      graphGridCanvas = c;
+      return graphGridCanvas;
+    }
+
     function getBgCacheCanvas(st, isAbstractMode) {
       var currentKey = st.id + '_' + (isAbstractMode ? 'abs' : 'norm') + '_' + st.worldW + 'x' + st.worldH;
       if (bgCacheCanvas && bgCacheKey === currentKey) {
@@ -4590,6 +4639,13 @@
       }
       bctx.restore();
 
+      // 4. 정적 플랫폼 오프스크린 일괄 합성 (프레임당 100회 이상의 개별 drawImage 및 스타일 연산 완전 제거)
+      st.platforms.forEach(function(plat) {
+        if (!plat.moveY && plat.style !== 'lift' && !plat.isShaftElevator) {
+          drawDistinctPlatform(bctx, plat, st, isAbstractMode);
+        }
+      });
+
       bgCacheCanvas = c;
       bgCacheKey = currentKey;
       return bgCacheCanvas;
@@ -4603,11 +4659,7 @@
       var isAbstractMode = state.abstractSight || (stats.removed >= stats.total);
 
       // 1. Base Sky / Cavern Backdrop (뷰포트 배경 클리어)
-      var grad = ctx.createLinearGradient(0, 0, 0, 480);
-      grad.addColorStop(0, st.themeBg[0]);
-      grad.addColorStop(0.68, st.themeBg[1]);
-      grad.addColorStop(1, '#07040b');
-      ctx.fillStyle = grad;
+      ctx.fillStyle = st.themeBg[0];
       ctx.fillRect(0, 0, 1320, 480);
 
       // World Transform: fit entire worldW/worldH in wideOverview, or smooth camera follow
@@ -4732,24 +4784,6 @@
           ctx.save();
           ctx.translate(wh.x, wh.y);
           if (wh.type === 'flame_skull_wheel') {
-            // Draw rail line
-            if (wh.minX !== undefined && wh.maxX !== undefined) {
-              ctx.save();
-              ctx.translate(-wh.x, -wh.y);
-              ctx.strokeStyle = '#3e2723';
-              ctx.lineWidth = 5;
-              ctx.beginPath();
-              ctx.moveTo(wh.minX, wh.y + 24);
-              ctx.lineTo(wh.maxX, wh.y + 24);
-              ctx.stroke();
-              ctx.strokeStyle = '#d84315';
-              ctx.lineWidth = 1.5;
-              ctx.beginPath();
-              ctx.moveTo(wh.minX, wh.y + 23);
-              ctx.lineTo(wh.maxX, wh.y + 23);
-              ctx.stroke();
-              ctx.restore();
-            }
             var wheelImg = loadedImages['spr_flame_skull_wheel'];
             if (wheelImg && wheelImg.complete) {
               var rot = (wh.x || 0) * 0.08 + (state.player.animTick * 0.04);
@@ -4785,8 +4819,8 @@
       var showOptimalGuide = state.abstractSight || (pruneRatioForGuide >= 0.70);
 
       st.edges.forEach(function(ed) {
-        var n1 = st.nodes.find(function(n){ return n.id === ed.from; });
-        var n2 = st.nodes.find(function(n){ return n.id === ed.to; });
+        var n1 = ed._n1 || st.nodes.find(function(n){ return n.id === ed.from; });
+        var n2 = ed._n2 || st.nodes.find(function(n){ return n.id === ed.to; });
         if (!n1 || !n2) return;
         var traversed = isEdgeTraversed(ed);
 
@@ -4813,7 +4847,7 @@
         var mx = (n1.x + n2.x) * 0.5;
         var my = (n1.y + n2.y) * 0.5 + (ed.labelDy || -14);
         ctx.font = 'bold 11px "Noto Serif KR", "Nanum Myeongjo", serif';
-        var tw = ctx.measureText(ed.cost).width + 12;
+        var tw = getCachedTextWidth(ctx, ed.cost, 'bold 11px "Noto Serif KR", "Nanum Myeongjo", serif') + 12;
         ctx.fillStyle = isAbstractMode ? 'rgba(9,7,14,0.92)' : 'rgba(9,7,14,0.85)';
         if (traversed) {
           ctx.strokeStyle = ed.optimal ? '#00e676' : '#ff8a80';
@@ -4837,9 +4871,11 @@
         ctx.restore();
       });
 
-      // 5. Draw Platforms
+      // 5. Draw Dynamic Moving Platforms (승강기/리프트 동적 발판만 렌더링; 정적 발판은 bgCanvas에 100% 캐싱 완료)
       st.platforms.forEach(function(plat) {
-        drawDistinctPlatform(ctx, plat, st, isAbstractMode);
+        if (plat.moveY || plat.style === 'lift' || plat.isShaftElevator) {
+          drawDistinctPlatform(ctx, plat, st, isAbstractMode);
+        }
       });
 
       // 6. Draw Nodes
@@ -4912,7 +4948,7 @@
 
         // [심사위원 시인성 개선] 노드 라벨 폰트 크기 확대 및 위치 자동 보정 (플랫폼/천장과 겹침 방지)
         ctx.font = 'bold 12.5px "Noto Serif KR", "Nanum Myeongjo", serif';
-        var ntw = ctx.measureText(nd.label).width + 16;
+        var ntw = getCachedTextWidth(ctx, nd.label, 'bold 12.5px "Noto Serif KR", "Nanum Myeongjo", serif') + 16;
         var labelY = (nd.labelDy != null) ? (nd.y + nd.labelDy) : (isGoal && state.currentStageIdx === 3 ? (nd.y - 120) : (nd.y - 20));
         ctx.fillStyle = 'rgba(8, 6, 14, 0.95)';
         ctx.strokeStyle = isGoal ? '#ff4081' : (isStart ? '#ffd740' : '#80deea');
@@ -5163,7 +5199,7 @@
 
         var tagStr = nz.shortTag || nz.name;
         ctx.font = 'bold 9.5px "Noto Serif KR", "Nanum Myeongjo", serif';
-        var bw = ctx.measureText(tagStr).width + 8;
+        var bw = getCachedTextWidth(ctx, tagStr, 'bold 9.5px "Noto Serif KR", "Nanum Myeongjo", serif') + 8;
         var bx = nz.x + nz.w * 0.5 - bw * 0.5;
         var by = nz.y - 16;
         ctx.fillStyle = nz.immortal ? 'rgba(183, 28, 28, 0.95)' : (nz.type === 'trap' ? 'rgba(183, 28, 28, 0.92)' : 'rgba(140, 14, 30, 0.9)');
@@ -5551,17 +5587,7 @@
       var ratio = state.abstractSight ? 1.0 : (stats.removed / stats.total);
       var showOptimalGuide = state.abstractSight || (ratio >= 0.70);
 
-      ctx.fillStyle = '#070a12';
-      ctx.fillRect(0, 0, 900, 250);
-
-      ctx.strokeStyle = 'rgba(38, 198, 218, 0.11)';
-      ctx.lineWidth = 1;
-      for (var gx = 0; gx < 900; gx += 30) {
-        ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, 250); ctx.stroke();
-      }
-      for (var gy = 0; gy < 250; gy += 30) {
-        ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(900, gy); ctx.stroke();
-      }
+      ctx.drawImage(getGraphGridCanvas(), 0, 0);
 
       var scaleX = 900 / st.worldW;
       var scaleY = 250 / st.worldH;
@@ -5617,7 +5643,7 @@
         var mx = (x1 + x2) * 0.5 + (ed.labelDx ? ed.labelDx * 0.5 : 0);
         var my = (y1 + y2) * 0.5 + (ed.labelDy ? ed.labelDy * 0.5 : -7);
         ctx.font = 'bold 10.5px "Noto Serif KR", "Nanum Myeongjo", serif';
-        var tw = ctx.measureText(ed.cost).width + 12;
+        var tw = getCachedTextWidth(ctx, ed.cost, 'bold 11px "Noto Serif KR", "Nanum Myeongjo", serif') + 12;
         ctx.fillStyle = 'rgba(7, 5, 14, 0.95)';
         ctx.fillRect(mx - tw/2, my - 8, tw, 15);
         if (traversed) {
