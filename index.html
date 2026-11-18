@@ -642,12 +642,39 @@
     }
     .stage-tab-desc, .stage-tab-hint {
       font-size: 12px;
-      color: var(--text-muted);
+      color: #dfd5c5;
       line-height: 1.75;
       letter-spacing: 0.04em;
       word-spacing: 0.08em;
-      margin-top: 5px;
+      margin-top: 6px;
+      padding: 7px 10px;
+      background: rgba(12, 10, 16, 0.85);
+      border: 1px solid rgba(197, 160, 89, 0.35);
+      border-left: 3px solid var(--gold-bright);
+      border-radius: 4px;
       word-break: keep-all;
+    }
+    .stage-hint-toggle-btn {
+      margin-top: 6px;
+      background: linear-gradient(180deg, #282015 0%, #14100a 100%);
+      border: 1px solid #8a6c32;
+      color: var(--gold-bright);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .stage-hint-toggle-btn:hover {
+      border-color: #ffd54f;
+      color: #ffffff;
+      background: linear-gradient(180deg, #382c1c 0%, #1e170e 100%);
+      box-shadow: 0 0 8px rgba(229, 195, 120, 0.35);
     }
 
     /* Horizontally Elongated Main Canvas (1320 x 480) */
@@ -3085,25 +3112,67 @@
       }
     }
 
+    function toggleStageTabHint(idx, ev) {
+      if (ev && ev.stopPropagation) ev.stopPropagation();
+      playButtonClickSfx();
+      if (!state.tabHintOpen) state.tabHintOpen = {};
+      state.tabHintOpen[idx] = !state.tabHintOpen[idx];
+      renderStageTabs();
+    }
+
+    function toggleMainHeaderHint(ev) {
+      if (ev && ev.stopPropagation) ev.stopPropagation();
+      playButtonClickSfx();
+      if (!state.bottomHintOpen) state.bottomHintOpen = {};
+      var idx = state.currentStageIdx;
+      state.bottomHintOpen[idx] = !state.bottomHintOpen[idx];
+      renderMainScreenHeader();
+    }
+
+    function renderMainScreenHeader() {
+      var st = STAGES[state.currentStageIdx];
+      var el = document.getElementById('mainScreenTitle');
+      if (!el || !st) return;
+      if (!state.bottomHintOpen) state.bottomHintOpen = {};
+      var isOpen = !!state.bottomHintOpen[state.currentStageIdx];
+      el.innerHTML =
+        '<span style="display:inline-flex; align-items:center; flex-wrap:wrap; gap:10px;">' +
+          '<span>⚔️ ' + st.mapNum + ' : ' + st.title + '</span>' +
+          '<button type="button" class="stage-hint-toggle-btn" style="margin-top:0;" onclick="toggleMainHeaderHint(event)">' +
+            (isOpen ? '💡 힌트 닫기 ▲' : '💡 힌트 보기 ▼') +
+          '</button>' +
+        '</span>' +
+        (isOpen
+          ? '<div class="stage-tab-hint" style="margin-top:8px; font-size:13px; color:#f5e8cc;">💡 힌트: ' + st.hint + '</div>'
+          : '');
+    }
+
     function renderStageTabs() {
       var container = document.getElementById('stageTabs');
+      if (!state.tabHintOpen) state.tabHintOpen = {};
       container.innerHTML = STAGES.map(function(st, idx) {
         var isAct = idx === state.currentStageIdx;
         var isClr = state.stageCleared[st.id];
         var sub = state.submissions[st.id];
         var unlocked = isStageUnlocked(idx);
+        var isHintOpen = !!state.tabHintOpen[idx];
         var statusBadge = !unlocked
           ? '🔒 이전 맵 클리어 필요'
           : (sub ? '✅ 시트제출완료' : (isClr ? '⭐ 탈출성공' : '진행중'));
         return (
-          '<button class="stage-tab ' + (isAct ? 'active ' : '') + (!unlocked ? 'locked' : '') + '" onclick="selectStage(' + idx + ')">' +
+          '<div class="stage-tab ' + (isAct ? 'active ' : '') + (!unlocked ? 'locked' : '') + '" onclick="selectStage(' + idx + ')">' +
             '<div class="stage-tab-num">' +
               '<span>' + st.mapNum + '</span>' +
               '<span>' + statusBadge + '</span>' +
             '</div>' +
             '<div class="stage-tab-title">' + (unlocked ? '' : '🔒 ') + st.title + '</div>' +
-            '<div class="stage-tab-hint">💡 힌트: ' + st.hint + '</div>' +
-          '</button>'
+            '<button type="button" class="stage-hint-toggle-btn" onclick="toggleStageTabHint(' + idx + ', event)">' +
+              (isHintOpen ? '💡 ' + st.mapNum + ' 힌트 닫기 ▲' : '💡 ' + st.mapNum + ' 힌트 보기 ▼') +
+            '</button>' +
+            (isHintOpen
+              ? '<div class="stage-tab-hint" onclick="event.stopPropagation();">💡 힌트: ' + st.hint + '</div>'
+              : '') +
+          '</div>'
         );
       }).join('');
 
@@ -3307,8 +3376,7 @@
       state.player.autoWaypoints = null;
       state.player.autoWpIdx = 0;
 
-      document.getElementById('mainScreenTitle').textContent =
-        '⚔️ ' + st.mapNum + ' : ' + st.title + ' | 💡 힌트: ' + st.hint;
+      renderMainScreenHeader();
       updateNoiseProgressUI();
       updateRouteAnalyzerUI();
       renderStageTabs();
@@ -3907,7 +3975,6 @@
                   var slashDir = dxP > 0 ? 1 : -1;
                   nz.vx = slashDir * 7.5;
                   nz.vy = Math.min(5.2, Math.max(2.2, dyP * 0.055));
-                  playSfx('sfx_sword', 0.95);
                   state.floatingTexts.push({
                     x: nz.x + nz.w * 0.5,
                     y: nz.y - 20,
@@ -3945,7 +4012,6 @@
                   var spinDir = dxP > 0 ? 1 : -1;
                   nz.vx = spinDir * 4.2;
                   nz.vy = (dyP > 0 ? 1 : -1) * 1.2;
-                  playSfx('slash', 0.95);
                   state.floatingTexts.push({
                     x: nz.x + nz.w * 0.5,
                     y: nz.y - 20,
@@ -4001,7 +4067,6 @@
                   life: 180
                 });
                 spawnParticles(handX, handY, '#ea80fc', 12);
-                playSfx('cast', 0.85);
 
                 if (nz.actionTimer === 54) {
                   state.floatingTexts.push({
@@ -4022,7 +4087,6 @@
               // 5. 환영 순간이동 (Phantom Teleport)
               if (nz.actionTimer === 20) {
                 spawnParticles(nz.x + nz.w * 0.5, nz.y + nz.h * 0.5, '#7b1fa2', 28);
-                playSfx('sfx_dispel', 0.65);
               }
               if (nz.actionTimer === 10) {
                 var offsetX = (p.facing > 0 ? -1 : 1) * (190 + Math.random() * 70);
@@ -5743,14 +5807,17 @@
         ctx.font = 'bold 14px "CastlevaniaKorean", "CastlevaniaPoR", "Galmuri11", "NeoDunggeunmo", serif';
         ctx.fillText('💡 팁: [맵 힌트]를 켜서 안전 루트를 확인하고 최적 경로로 이동하세요!', 660, 298);
 
-        ctx.fillStyle = 'rgba(183, 28, 28, 0.85)';
+        var retryTxt = '↻ 화면 클릭 또는 [Enter] 키로 재도전';
+        ctx.font = 'bold 15px "CastlevaniaKorean", "CastlevaniaPoR", "Galmuri11", "NeoDunggeunmo", serif';
+        var retryBoxW = Math.max(360, Math.ceil(ctx.measureText(retryTxt).width) + 52);
+        var retryBoxX = Math.round(660 - retryBoxW * 0.5);
+        ctx.fillStyle = 'rgba(183, 28, 28, 0.88)';
         ctx.strokeStyle = '#ff8a80';
         ctx.lineWidth = 2;
-        ctx.fillRect(520, 325, 280, 42);
-        ctx.strokeRect(520, 325, 280, 42);
+        ctx.fillRect(retryBoxX, 325, retryBoxW, 44);
+        ctx.strokeRect(retryBoxX, 325, retryBoxW, 44);
         ctx.fillStyle = '#fff';
-        ctx.font = 'bold 15px "CastlevaniaKorean", "CastlevaniaPoR", "Galmuri11", "NeoDunggeunmo", serif';
-        ctx.fillText('↻ 화면 클릭 또는 [Enter] 키로 재도전', 660, 351);
+        ctx.fillText(retryTxt, 660, 352);
         ctx.restore();
       }
     }
@@ -6843,8 +6910,16 @@
         askPresetQuestion('1단계에서 왜 방해물을 직접 가지 않고 가지치기(제거)하나요?');
       }, 100);
     }
+    if (urlParams.get('testHintOpen') === '1') {
+      state.tabHintOpen = { 0: true, 3: true };
+      state.bottomHintOpen = { 0: true, 1: true, 2: true, 3: true };
+    }
     renderStageTabs();
     resetCurrentStage();
+    if (urlParams.get('testGameOver') === '1') {
+      state.gameOver = true;
+      state.gameOverTick = 45;
+    }
     loadStageWorksheetUI();
     updateControlModeUI();
     playLoginBgm();
