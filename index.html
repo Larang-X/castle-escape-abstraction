@@ -4174,22 +4174,7 @@
         ctx.restore();
       }
 
-      // MAP 1, MAP 2 전용 제단 발판 하부 기둥 받침대
-      if ((st.id === 'T01' || st.id === 'T02') && plat.style === 'altar') {
-        var pilImg = loadedImages['spr_pillar'];
-        if (pilImg && pilImg.complete) {
-          var maxPillarY = plat.y + plat.h + 90;
-          if (plat.y + plat.h > st.worldH - 120) {
-            maxPillarY = st.worldH - 35;
-          }
-          var pillarH = Math.max(24, Math.min(130, maxPillarY - (plat.y + plat.h)));
-          ctx.save();
-          ctx.globalAlpha *= 0.60;
-          ctx.drawImage(pilImg, plat.x + 10, plat.y + plat.h, 32, pillarH);
-          ctx.drawImage(pilImg, plat.x + plat.w - 42, plat.y + plat.h, 32, pillarH);
-          ctx.restore();
-        }
-      }
+
 
       // Draw stepped geometry for 'stair'
       if (plat.style === 'stair') {
