@@ -1205,9 +1205,12 @@
       font-family: 'CastlevaniaKorean', 'CastlevaniaPoR', 'Galmuri11', 'NeoDunggeunmo', 'CastlevaniaPoR', 'Cinzel', 'Galmuri11', serif;
       font-size: 26px;
       font-weight: 900;
-      color: #ffe07d;
-      text-shadow: 0 0 20px rgba(0,0,0,0.9), 0 0 12px rgba(255,215,64,0.7);
-      letter-spacing: 0.18em;
+      background: linear-gradient(180deg, #ff8a80 0%, #ff1744 52%, #b71c1c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 14px rgba(255, 23, 68, 0.75));
+      letter-spacing: 0.14em;
     }
 
   </style>
@@ -1435,7 +1438,7 @@
       </div>
     </div>
     <div class="gate-center-emblem">
-      <div class="gate-title-text">로딩중...</div>
+      <div class="gate-title-text">미궁에 온 걸 환영한다...</div>
     </div>
   </div>
 
@@ -1970,49 +1973,8 @@
       } catch (e) {}
     }
 
-    // 거대 고성 성문 개방 묵직한 중저음 & 끼이이익 쇳소리 효과음
+    // 거대 고성 성문 개방 효과음 (사용자 지정 오디오 에셋 단독 재생)
     function playGateOpeningSfx() {
-      try {
-        var ctx = getAudioCtx();
-        if (ctx) {
-          var now = ctx.currentTime;
-
-          // 거대 석조 성문 마찰 중저음 (60Hz -> 30Hz)
-          var rumbleOsc = ctx.createOscillator();
-          var rumbleGain = ctx.createGain();
-          rumbleOsc.type = 'triangle';
-          rumbleOsc.frequency.setValueAtTime(60, now);
-          rumbleOsc.frequency.exponentialRampToValueAtTime(30, now + 2.4);
-
-          var filter = ctx.createBiquadFilter();
-          filter.type = 'lowpass';
-          filter.frequency.setValueAtTime(140, now);
-          filter.frequency.linearRampToValueAtTime(55, now + 2.4);
-
-          rumbleGain.gain.setValueAtTime(0.22, now);
-          rumbleGain.gain.exponentialRampToValueAtTime(0.001, now + 2.4);
-
-          rumbleOsc.connect(filter);
-          filter.connect(rumbleGain);
-          rumbleGain.connect(ctx.destination);
-          rumbleOsc.start(now);
-          rumbleOsc.stop(now + 2.4);
-
-          // 무거운 청동 래치 분리음
-          var latchOsc = ctx.createOscillator();
-          var latchGain = ctx.createGain();
-          latchOsc.type = 'sine';
-          latchOsc.frequency.setValueAtTime(380, now);
-          latchGain.gain.setValueAtTime(0.12, now);
-          latchGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
-          latchOsc.connect(latchGain);
-          latchGain.connect(ctx.destination);
-          latchOsc.start(now);
-          latchOsc.stop(now + 0.22);
-        }
-      } catch (e) {}
-
-      // 오디오 에셋 (3.2초 길이의 authentic 끼이이익... 쇠문 열리는 효과음)
       var doorAudio = loadedAudios['aud_door'] || loadedAudios['aud_sfx_door'];
       if (!doorAudio) {
         doorAudio = new Audio('assets/audio/sfx_door.wav');
@@ -2021,7 +1983,7 @@
       if (doorAudio) {
         try {
           doorAudio.currentTime = 0;
-          doorAudio.volume = 0.70;
+          doorAudio.volume = 0.85;
           doorAudio.play().catch(function(){});
         } catch (e) {}
       }
@@ -3133,18 +3095,7 @@
       var st = STAGES[state.currentStageIdx];
       var el = document.getElementById('mainScreenTitle');
       if (!el || !st) return;
-      if (!state.bottomHintOpen) state.bottomHintOpen = {};
-      var isOpen = !!state.bottomHintOpen[state.currentStageIdx];
-      el.innerHTML =
-        '<span style="display:inline-flex; align-items:center; flex-wrap:wrap; gap:10px;">' +
-          '<span>⚔️ ' + st.mapNum + ' : ' + st.title + '</span>' +
-          '<button type="button" class="stage-hint-toggle-btn" style="margin-top:0;" onclick="toggleMainHeaderHint(event)">' +
-            (isOpen ? '💡 힌트 닫기 ▲' : '💡 힌트 보기 ▼') +
-          '</button>' +
-        '</span>' +
-        (isOpen
-          ? '<div class="stage-tab-hint" style="margin-top:8px; font-size:13px; color:#f5e8cc;">💡 힌트: ' + st.hint + '</div>'
-          : '');
+      el.textContent = '⚔️ ' + st.mapNum + ' : ' + st.title;
     }
 
     function renderStageTabs() {
