@@ -3627,7 +3627,7 @@
           if (nz.y <= nz.minY) { nz.y = nz.minY; nz.vy = Math.abs(nz.vy); }
           if (nz.y + nz.h >= nz.maxY) { nz.y = nz.maxY - nz.h; nz.vy = -Math.abs(nz.vy); }
         } else if (nz.moveMode === 'freeRoam' || nz.moveMode === 'stalker') {
-          if (nz.id === 'n01') {
+          if (st.id === 'T04' && nz.shortTag && nz.shortTag.indexOf('사신') !== -1) {
             // [정통 캐슬바니아 사신 데스 보스 전용 다중 액션 AI]
             if (!nz.actionState) {
               nz.actionState = 'stalk';
@@ -3659,25 +3659,22 @@
               if (nz.actionTimer <= 0) {
                 var rand = Math.random();
                 if (distP > 340) {
-                  // 원거리: 회전 소형 낫 소환 마법(그림 5) 또는 대낫 기 모으기(그림 4)
+                  // 원거리: 환영 순간이동으로 플레이어 근접 추적 또는 대낫 치켜들기 (원거리 투사체 소환 전면 배제)
                   if (rand < 0.55) {
-                    nz.actionState = 'cast';
-                    nz.actionTimer = 75;
+                    nz.actionState = 'teleport';
+                    nz.actionTimer = 30;
                   } else {
                     nz.actionState = 'raise';
                     nz.actionTimer = 42;
                   }
                 } else {
-                  // 중근거리: 대낫 수직 치켜들기 급강하(그림 4) 또는 환영 순간이동
-                  if (rand < 0.45) {
+                  // 중근거리: 대낫 수직 치켜들기 급강하 참격 또는 환영 순간이동
+                  if (rand < 0.6) {
                     nz.actionState = 'raise';
                     nz.actionTimer = 38;
-                  } else if (rand < 0.72) {
+                  } else {
                     nz.actionState = 'teleport';
                     nz.actionTimer = 30;
-                  } else {
-                    nz.actionState = 'cast';
-                    nz.actionTimer = 65;
                   }
                 }
               }
@@ -3725,42 +3722,9 @@
                 nz.vy = -2.2;
               }
             } else if (nz.actionState === 'cast') {
-              // 4. 그림 5: 손을 전방으로 뻗어 회전 소형 낫 소환 (Cast Spinning Sickles)
-              nz.vx *= 0.85;
-              nz.vy *= 0.85;
-              nz.x += nz.vx;
-              nz.y += nz.vy;
-
-              if (nz.phaseTick % 4 === 0) {
-                spawnParticles(nz.x + (dxP > 0 ? nz.w + 8 : -8), nz.y + 36, '#b388ff', 3);
-              }
-
-              // 3연속 회전 소형 낫 소환
-              if (nz.actionTimer === 54 || nz.actionTimer === 38 || nz.actionTimer === 22) {
-                if (!state.hazardProjectiles) state.hazardProjectiles = [];
-                var handX = dxP > 0 ? nz.x + nz.w + 14 : nz.x - 14;
-                var handY = nz.y + 36;
-                var angleP = Math.atan2((p.y + 20) - handY, (p.x + 16) - handX) + (Math.random() - 0.5) * 0.4;
-                var sickleSpd = 3.6 + Math.random() * 0.7;
-                state.hazardProjectiles.push({
-                  type: 'death_sickle',
-                  x: handX,
-                  y: handY,
-                  vx: Math.cos(angleP) * sickleSpd,
-                  vy: Math.sin(angleP) * sickleSpd,
-                  r: 15,
-                  dmg: 15,
-                  life: 200,
-                  name: '사신의 회전 소형 낫',
-                  animTick: Math.floor(Math.random() * 8)
-                });
-                playSfx('sfx_dispel', 0.5);
-              }
-
-              if (nz.actionTimer <= 0) {
-                nz.actionState = 'stalk';
-                nz.actionTimer = 135 + Math.floor(Math.random() * 45);
-              }
+              // 원거리 투사체 소환 전면 제거 (원거리 공격은 MAP 3 데몬 로드 전용)
+              nz.actionState = 'stalk';
+              nz.actionTimer = 100;
             } else if (nz.actionState === 'teleport') {
               // 5. 환영 순간이동 (Phantom Teleport)
               if (nz.actionTimer === 20) {
@@ -3804,65 +3768,13 @@
           if (nz.y + nz.h >= st.worldH - 55) { nz.y = st.worldH - 55 - nz.h; nz.vy = -Math.abs(nz.vy); }
         }
 
-        // [정통 창월의 십자가 보스 4 까마귀 마수 말파스: 날개짓 비행 & 검은 깃털(흑우탄) 난사 AI]
-        if (nz.id === 'n02' && !nz.hit && !state.gameOver) {
-          if (!nz.actionState) {
-            nz.actionState = 'hover';
-            nz.attackTimer = 90;
-          }
-          var dxToP = (p.x + 16) - (nz.x + nz.w * 0.5);
-          var dyToP = (p.y + 20) - (nz.y + nz.h * 0.5);
-          var distToP = Math.hypot(dxToP, dyToP);
-
-          nz.attackTimer = (nz.attackTimer || 90) - 1;
-
-          if (nz.actionState === 'hover') {
-            // 플레이어가 420px 이내 접근 시 날개 활짝 펼치며 깃털 난사 준비
-            if (distToP < 420 && nz.attackTimer <= 0) {
-              nz.actionState = 'prepare';
-              nz.actionTimer = 22; // 날개 활짝 펼치며 마력 집중
-              nz.vx = nz.vx * 0.2;
-              nz.vy = nz.vy * 0.2;
-            }
-          } else if (nz.actionState === 'prepare') {
-            nz.actionTimer--;
-            if (nz.actionTimer <= 0) {
-              nz.actionState = 'fire';
-              nz.actionTimer = 20; // 깃털 난사 포즈 유지
-              if (!state.hazardProjectiles) state.hazardProjectiles = [];
-              var baseAngle = Math.atan2(dyToP, dxToP);
-              [-0.22, 0.22].forEach(function(offsetAngle) {
-                var angle = baseAngle + offsetAngle;
-                var spd = 3.8;
-                state.hazardProjectiles.push({
-                  type: 'malphas_feather',
-                  name: '까마귀 마수 흑우탄',
-                  dmg: 28,
-                  r: 8,
-                  x: nz.x + nz.w * 0.5,
-                  y: nz.y + nz.h * 0.5 + 8,
-                  vx: Math.cos(angle) * spd,
-                  vy: Math.sin(angle) * spd,
-                  life: 140,
-                  rot: angle
-                });
-              });
-              spawnParticles(nz.x + nz.w * 0.5, nz.y + nz.h * 0.5 + 8, '#7e57c2', 15);
-              playSfx('sfx_magic', 0.55);
-            }
-          } else if (nz.actionState === 'fire') {
-            nz.actionTimer--;
-            if (nz.actionTimer <= 0) {
-              nz.actionState = 'hover';
-              nz.attackTimer = 100 + Math.floor(Math.random() * 45);
-              nz.vx = (Math.random() > 0.5 ? 1 : -1) * (1.1 + Math.random() * 0.4);
-              nz.vy = (Math.random() > 0.5 ? 1 : -1) * (0.6 + Math.random() * 0.4);
-            }
-          }
+        // [정통 창월의 십자가 보스 4 까마귀 마수 말파스: 비행 순찰 AI (원거리 투사체 완전 배제, MAP 3 데몬 로드만 원거리 공격)]
+        if (st.id === 'T04' && nz.shortTag && nz.shortTag.indexOf('말파스') !== -1 && !nz.hit && !state.gameOver) {
+          nz.actionState = 'hover';
         }
 
-        // [정통 오더 오브 에클레시아 심연 악마 데몬 로드: 날개짓 비행 & 암흑 지옥탄 영창 사격 AI]
-        if (nz.id === 'n3' && !nz.hit && !state.gameOver) {
+        // [정통 오더 오브 에클레시아 심연 악마 데몬 로드: 게임 내 유일한 원거리 지옥탄 영창 사격 AI (MAP 3 전용)]
+        if (st.id === 'T03' && nz.shortTag === '😈데몬로드' && !nz.hit && !state.gameOver) {
           if (!nz.actionState) {
             nz.actionState = 'patrol';
             nz.attackTimer = 90;
@@ -3925,7 +3837,7 @@
         }
 
         // [심연 수문장 전용 보스 AI] 파이널 가드 정통 참격 고속 공격 연계 (치켜들기 ➔ 내리치기 ➔ 지면강타 ➔ 자세회복, 2배속)
-        if (nz.id === 'n10' && !nz.hit && !state.gameOver) {
+        if (st.id === 'T04' && nz.shortTag && nz.shortTag.indexOf('파이널가드') !== -1 && !nz.hit && !state.gameOver) {
           if (!nz.actionState) {
             nz.actionState = 'patrol';
             nz.attackCooldown = 20;
@@ -4004,7 +3916,10 @@
         }
 
         var canHitPlayer = nz.immortal || (!state.abstractSight && p.attackTimer === 0);
-        if (st.id === 'T01' && (nz.id === 'n3' || nz.shortTag === '⚠️미믹' || (nz.name && nz.name.indexOf('미믹') !== -1) || nz.noAttack)) {
+        if (st.id === 'T01' && (nz.id === 'n3' || nz.shortTag === '⚠️미믹' || (nz.name && nz.name.indexOf('미믹') !== -1) || nz.noAttack || nz.dmg === 0)) {
+          canHitPlayer = false;
+        }
+        if (nz.noAttack || nz.dmg === 0) {
           canHitPlayer = false;
         }
         if (canHitPlayer && p.invulnTimer === 0) {
@@ -4881,7 +4796,7 @@
           ctx.restore();
         }
 
-        if (nz.id === 'n01') {
+        if (st.id === 'T04' && nz.shortTag && nz.shortTag.indexOf('사신') !== -1) {
           // [사신 데스 전용 모션 렌더링 - 그림 4 치켜들기, 그림 5 마법 소환, 급강하 참격]
           ctx.save();
           ctx.translate(nz.x + nz.w * 0.5, nz.y + nz.h * 0.5);
@@ -4921,7 +4836,7 @@
             }
           }
           ctx.restore();
-        } else if (nz.id === 'n3') {
+        } else if (st.id === 'T03' && nz.shortTag === '😈데몬로드') {
           // [정통 오더 오브 에클레시아 심연 악마 데몬 로드 비행 및 암흑 마법 영창 렌더링]
           ctx.save();
           ctx.translate(nz.x + nz.w * 0.5, nz.y + nz.h * 0.5);
@@ -4970,7 +4885,7 @@
             ctx.fillRect(-nz.w * 0.5, -nz.h * 0.5, nz.w, nz.h);
           }
           ctx.restore();
-        } else if (nz.id === 'n02') {
+        } else if (st.id === 'T04' && nz.shortTag && nz.shortTag.indexOf('말파스') !== -1) {
           // [정통 창월의 십자가 보스 4 까마귀 마수 말파스 날개짓 비행 & 검은 깃털 사격 모션]
           var sprKey = nz.sprite;
           if (nz.actionState === 'prepare' || nz.actionState === 'fire') {
@@ -4993,7 +4908,7 @@
             ctx.fillStyle = '#4a148c';
             ctx.fillRect(nz.x, nz.y, nz.w, nz.h);
           }
-        } else if (nz.id === 'n10') {
+        } else if (st.id === 'T04' && nz.shortTag && nz.shortTag.indexOf('파이널가드') !== -1) {
           // [정통 캐슬바니아 심연 수문장 파이널 가드 보스 전용 다단계 참격 모션]
           var sprKey = nz.sprite;
           if (nz.actionState === 'windup') {
