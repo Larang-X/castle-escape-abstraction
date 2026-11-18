@@ -965,13 +965,16 @@
       pointer-events: none;
     }
     .gate-bat-ornament {
-      width: 210px;
-      height: 210px;
+      width: 215px;
+      height: 215px;
       display: flex;
       align-items: center;
       justify-content: center;
       filter: drop-shadow(0 8px 30px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 25px rgba(212, 175, 55, 0.45));
       z-index: 2;
+    }
+    .gate-bat-ornament.bat-flip {
+      transform: scaleX(-1);
     }
     .gate-bat-svg {
       width: 100%;
@@ -1122,13 +1125,23 @@
   </div>
 
   <!-- Diagnostic Modal -->
-  <div id="diagnosticModal" class="modal-backdrop hidden">
-    <div class="modal-card bloodborne-gold-card" style="max-width:780px; text-align:left; border:2px solid #556677; box-shadow:0 0 25px rgba(85,102,119,0.3);">
+    <div id="diagnosticModal" class="modal-backdrop hidden">
+    <div class="modal-card bloodborne-gold-card" style="max-width:820px; text-align:left; border:2px solid #556677; box-shadow:0 0 25px rgba(85,102,119,0.3);">
       <div style="font-size:19px; font-weight:900; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #3e4a56; padding-bottom:8px;">
-        <span>📝 <span class="text-grad-silver">사전·사후 평가</span></span>
+        <span>📝 <span class="text-grad-silver">사전·사후 평가 (MAP 1 ~ MAP 4 맞춤형)</span></span>
         <button class="btn" onclick="closeDiagnosticModal()" style="padding:4px 10px; font-size:12px;">✕</button>
       </div>
 
+      <!-- MAP Selector Tabs -->
+      <div style="display:flex; gap:6px; margin-bottom:12px; background:rgba(15, 12, 18, 0.7); padding:6px; border-radius:6px; border:1px solid #3e4a56; flex-wrap:wrap; align-items:center;">
+        <span style="font-size:12px; font-weight:bold; color:#ffd54f; margin-right:4px;">🗺️ 평가 대상 맵:</span>
+        <button id="diagStageBtn0" class="btn btn-sm btn-gold" onclick="switchDiagnosticStage(0)" style="font-size:12px; font-weight:bold;">🌋 MAP 1 (용암성당)</button>
+        <button id="diagStageBtn1" class="btn btn-sm" onclick="switchDiagnosticStage(1)" style="font-size:12px; font-weight:bold;">❄️ MAP 2 (설원동굴)</button>
+        <button id="diagStageBtn2" class="btn btn-sm" onclick="switchDiagnosticStage(2)" style="font-size:12px; font-weight:bold;">⚙️ MAP 3 (시계탑)</button>
+        <button id="diagStageBtn3" class="btn btn-sm" onclick="switchDiagnosticStage(3)" style="font-size:12px; font-weight:bold;">👑 MAP 4 (심연탈출)</button>
+      </div>
+
+      <!-- Category Tabs -->
       <div style="display:flex; gap:8px; margin-bottom:14px; border-bottom:1px solid #37474f; padding-bottom:8px; flex-wrap:wrap;">
         <button id="diagTabBtn1" class="btn btn-gold btn-sm" onclick="switchDiagnosticTab(1)" style="font-weight:bold;">📋 1. 사전 평가 (게임 전)</button>
         <button id="diagTabBtn2" class="btn btn-sm" onclick="switchDiagnosticTab(2)" style="font-weight:bold;">🎯 2. 사후 평가 (게임 후)</button>
@@ -1137,25 +1150,14 @@
 
       <div style="max-height:64vh; overflow-y:auto; padding-right:8px; font-size:13px; line-height:1.7; color:#e2dbd0;">
 
+        <!-- Tab 1: Pre-test -->
         <div id="diagTabContent1">
-          <div style="background:rgba(25, 20, 15, 0.9); border:1px solid #795548; border-left:4px solid #ffb74d; padding:10px 14px; border-radius:6px; margin-bottom:14px;">
-            <div style="font-weight:bold; color:#ffb74d;">📋 사전 평가: 게임을 하기 전에 풀어 보세요</div>
-            <div style="font-size:12px; color:#d7ccc8; margin-top:2px;">지금 내가 추상화를 얼마나 알고 있는지 확인합니다. 틀려도 괜찮아요!</div>
+          <div id="diagPreBanner" style="background:rgba(25, 20, 15, 0.9); border:1px solid #795548; border-left:4px solid #ffb74d; padding:10px 14px; border-radius:6px; margin-bottom:14px;">
+            <div id="diagPreTitle" style="font-weight:bold; color:#ffb74d;">📋 MAP 1 사전 평가: 게임을 하기 전에 풀어 보세요</div>
+            <div id="diagPreDesc" style="font-size:12px; color:#d7ccc8; margin-top:2px;">지금 내가 추상화를 얼마나 알고 있는지 확인합니다. 틀려도 괜찮아요!</div>
           </div>
 
-          <div style="background:rgba(18, 14, 22, 0.9); border:1px solid #4a361e; padding:12px; border-radius:6px; margin-bottom:12px;">
-            <div style="font-weight:bold; color:#ffd54f; margin-bottom:6px;">Q1. 정보 교과에서 말하는 '추상화'는 무엇일까요?</div>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="preQ1" value="A" style="margin-right:6px;"> ① 내용을 어렵고 흐릿하게 만들어서 알아보기 힘들게 하는 것</label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="preQ1" value="B" style="margin-right:6px;"> ② 필요 없는 부분은 빼고, 꼭 필요한 것만 남겨서 단순하게 만드는 것</label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="preQ1" value="C" style="margin-right:6px;"> ③ 모든 모양과 색깔을 하나도 빠뜨리지 않고 자세히 그리는 것</label>
-          </div>
-
-          <div style="background:rgba(18, 14, 22, 0.9); border:1px solid #4a361e; padding:12px; border-radius:6px; margin-bottom:12px;">
-            <div style="font-weight:bold; color:#ffd54f; margin-bottom:6px;">Q2. 아주 복잡한 미로에서 탈출하려면 가장 먼저 무엇을 하는 것이 좋을까요?</div>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="preQ2" value="A" style="margin-right:6px;"> ① 아무 길이나 골라서 끝까지 달려가 본다.</label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="preQ2" value="B" style="margin-right:6px;"> ② 출발 장소와 도착 장소를 확인하고, 막다른 길이나 함정을 먼저 지운다.</label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="preQ2" value="C" style="margin-right:6px;"> ③ 시간이 오래 걸려도 미로의 모든 곳을 한 번씩 가 본다.</label>
-          </div>
+          <div id="diagPreContainer"></div>
 
           <div style="text-align:center; margin-top:10px;">
             <button class="btn btn-gold btn-sm" onclick="gradePreTest()" style="padding:6px 20px; font-weight:bold;">사전 평가 채점하기</button>
@@ -1163,25 +1165,14 @@
           <div id="preTestFeedback" style="margin-top:12px; display:none; padding:10px; border-radius:6px; font-size:12.5px; line-height:1.7;"></div>
         </div>
 
+        <!-- Tab 2: Post-test -->
         <div id="diagTabContent2" style="display:none;">
-          <div style="background:rgba(15, 25, 20, 0.9); border:1px solid #2e7d32; border-left:4px solid #69f0ae; padding:10px 14px; border-radius:6px; margin-bottom:14px;">
-            <div style="font-weight:bold; color:#69f0ae;">🎯 사후 평가: 게임을 마친 뒤에 풀어 보세요</div>
-            <div style="font-size:12px; color:#c8e6c9; margin-top:2px;">게임에서 배운 가지치기와 가장 빠른 길 설명하기를 확인합니다.</div>
+          <div id="diagPostBanner" style="background:rgba(15, 25, 20, 0.9); border:1px solid #2e7d32; border-left:4px solid #69f0ae; padding:10px 14px; border-radius:6px; margin-bottom:14px;">
+            <div id="diagPostTitle" style="font-weight:bold; color:#69f0ae;">🎯 MAP 1 사후 평가: 게임을 마친 뒤에 풀어 보세요</div>
+            <div id="diagPostDesc" style="font-size:12px; color:#c8e6c9; margin-top:2px;">게임에서 배운 가지치기와 가장 빠른 길 설명하기를 확인합니다.</div>
           </div>
 
-          <div style="background:rgba(18, 14, 22, 0.9); border:1px solid #4a361e; padding:12px; border-radius:6px; margin-bottom:12px;">
-            <div style="font-weight:bold; color:#ffd54f; margin-bottom:6px;">Q1. MAP 1에서 막다른 보물방(C)과 느린 용암 우회로(E)를 처음부터 지우고 생각하면 어떤 점이 좋을까요?</div>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="postQ1" value="A" style="margin-right:6px;"> ① 따져 볼 길이 줄어들어서, 가장 빠른 길을 더 쉽고 빠르게 찾을 수 있다.</label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="postQ1" value="B" style="margin-right:6px;"> ② 게임 시간이 길어져서 더 오래 즐길 수 있다.</label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="postQ1" value="C" style="margin-right:6px;"> ③ 캐릭터가 두 배 빨리 달릴 수 있다.</label>
-          </div>
-
-          <div style="background:rgba(18, 14, 22, 0.9); border:1px solid #4a361e; padding:12px; border-radius:6px; margin-bottom:12px;">
-            <div style="font-weight:bold; color:#ffd54f; margin-bottom:6px;">Q2. 청록색 길(A→B→D→F→G)이 가장 빠르다는 것을 바르게 설명한 것은 무엇일까요?</div>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="postQ2" value="A" style="margin-right:6px;"> ① 청록색이 화면에서 가장 눈에 잘 띄기 때문이다.</label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="postQ2" value="B" style="margin-right:6px;"> ② 용암 우회로로 가면 1+2+4+3=10분이 걸리지만, 이 길은 1+2+2+1=6분이라서 더 짧기 때문이다.</label>
-            <label style="display:block; margin-bottom:6px; cursor:pointer;"><input type="radio" name="postQ2" value="C" style="margin-right:6px;"> ③ 몬스터가 가장 많아서 더 재미있기 때문이다.</label>
-          </div>
+          <div id="diagPostContainer"></div>
 
           <div style="text-align:center; margin-top:10px;">
             <button class="btn btn-gold btn-sm" onclick="gradePostTest()" style="padding:6px 20px; font-weight:bold;">사후 평가 채점하기</button>
@@ -1189,44 +1180,20 @@
           <div id="postTestFeedback" style="margin-top:12px; display:none; padding:10px; border-radius:6px; font-size:12.5px; line-height:1.7;"></div>
         </div>
 
+        <!-- Tab 3: Score Comparison -->
         <div id="diagTabContent3" style="display:none;">
           <div style="background:rgba(20, 15, 24, 0.9); border:1px solid #4a361e; border-left:4px solid #9e7a32; padding:10px 14px; border-radius:6px; margin-bottom:14px;">
-            <div style="font-weight:bold;"><span class="text-grad-gold">📈 사전·사후 점수 비교</span></div>
-            <div style="font-size:12px; color:#e2dbd0; margin-top:2px;">이 기기에서 채점한 나의 점수가 자동으로 표시됩니다.</div>
+            <div style="font-weight:bold;"><span class="text-grad-gold">📈 MAP 1 ~ MAP 4 사전·사후 점수 및 성취도 비교</span></div>
+            <div style="font-size:12px; color:#e2dbd0; margin-top:2px;">이 기기에서 각 맵별로 채점한 나의 사전·사후 점수가 자동으로 집계됩니다.</div>
           </div>
 
-          <table style="width:100%; border-collapse:collapse; font-size:13px; background:rgba(12, 10, 16, 0.9); border:1px solid #4a361e; margin-bottom:14px; text-align:center;">
-            <thead>
-              <tr style="background:#1e1722; color:#e5c378; border-bottom:1px solid #5a4224;">
-                <th style="padding:8px; border:1px solid #4a361e;">구분</th>
-                <th style="padding:8px; border:1px solid #4a361e;">사전 평가 (게임 전)</th>
-                <th style="padding:8px; border:1px solid #4a361e;">사후 평가 (게임 후)</th>
-                <th style="padding:8px; border:1px solid #4a361e;">변화</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="padding:10px; border:1px solid #4a361e; font-weight:bold; color:#e2dbd0;">내 점수 (2점 만점)</td>
-                <td id="diagPreScore" style="padding:10px; border:1px solid #4a361e; color:#e2dbd0;">아직 안 풀었어요</td>
-                <td id="diagPostScore" style="padding:10px; border:1px solid #4a361e; color:#e2dbd0;">아직 안 풀었어요</td>
-                <td id="diagGain" style="padding:10px; border:1px solid #4a361e; font-weight:bold;">-</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div style="background:rgba(18, 28, 22, 0.9); border:1px solid #2e7d32; padding:10px 14px; border-radius:6px; font-size:12.5px; line-height:1.75; color:#e8f5e9;">
-            <div style="font-weight:bold; color:#69f0ae; margin-bottom:3px;">💡 이 평가를 쓰는 방법 (선생님용)</div>
-            1) 게임을 시작하기 전에 학생이 <strong>사전 평가</strong>를 풉니다.<br/>
-            2) 게임(1~3단계)을 마친 뒤에 같은 학생이 <strong>사후 평가</strong>를 풉니다.<br/>
-            3) 사전과 사후 점수를 비교하면 게임을 한 뒤에 추상화 이해가 얼마나 달라졌는지 알 수 있습니다.<br/>
-            4) 학생이 구글 시트에 남긴 2단계 답안(왜 그 길을 뺐는지)과 함께 보면, 스스로 판단했는지 청록색 길을 따라 했는지도 확인할 수 있습니다.
-          </div>
+          <div id="diagComparisonTableContainer"></div>
         </div>
 
       </div>
 
-      <div style="margin-top:14px; text-align:right;">
-        <button class="btn btn-gold" onclick="closeDiagnosticModal()" style="padding:8px 20px;">확인 및 닫기</button>
+      <div style="margin-top:14px; text-align:right; border-top:1px solid #3e4a56; padding-top:8px;">
+        <button class="btn btn-gold" onclick="closeDiagnosticModal()" style="padding:6px 20px;">확인 및 닫기</button>
       </div>
     </div>
   </div>
@@ -1279,112 +1246,168 @@
 
   <div id="gateTransitionOverlay" class="gate-overlay hidden">
     <div class="gate-door gate-door-left">
-      <div class="gate-bat-ornament" title="고성 미궁 성문 좌측 박쥐 문장">
-        <svg viewBox="0 0 200 200" class="gate-bat-svg" aria-hidden="true">
+      <div class="gate-bat-ornament" title="고성 미궁 성문 좌측 박쥐 문장 (안쪽 지향)">
+        <svg viewBox="0 0 240 240" class="gate-bat-svg" aria-hidden="true">
           <defs>
-            <linearGradient id="gateGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#fff2a8"/>
-              <stop offset="30%" stop-color="#d4af37"/>
-              <stop offset="70%" stop-color="#8a5a1e"/>
-              <stop offset="100%" stop-color="#4a300d"/>
+            <linearGradient id="crestGold" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fff5b8"/>
+              <stop offset="25%" stop-color="#d4af37"/>
+              <stop offset="60%" stop-color="#8c5d23"/>
+              <stop offset="100%" stop-color="#3d240d"/>
             </linearGradient>
-            <linearGradient id="gateMetalRim" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#4a3622"/>
-              <stop offset="50%" stop-color="#c5a059"/>
-              <stop offset="100%" stop-color="#241910"/>
+            <linearGradient id="batWingSkin" x1="10%" y1="0%" x2="90%" y2="100%">
+              <stop offset="0%" stop-color="#801026"/>
+              <stop offset="45%" stop-color="#4a0815"/>
+              <stop offset="85%" stop-color="#24040a"/>
+              <stop offset="100%" stop-color="#0f0205"/>
             </linearGradient>
-            <radialGradient id="gateRubyGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#ff5252"/>
-              <stop offset="100%" stop-color="#8a0000"/>
+            <linearGradient id="batBone" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#a1887f"/>
+              <stop offset="40%" stop-color="#5d4037"/>
+              <stop offset="100%" stop-color="#271813"/>
+            </linearGradient>
+            <linearGradient id="batFlesh" x1="20%" y1="0%" x2="80%" y2="100%">
+              <stop offset="0%" stop-color="#bcaaa4"/>
+              <stop offset="35%" stop-color="#6d4c41"/>
+              <stop offset="80%" stop-color="#3e2723"/>
+              <stop offset="100%" stop-color="#1b0000"/>
+            </linearGradient>
+            <radialGradient id="batRubyEye" cx="40%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="#ff3d00"/>
+              <stop offset="50%" stop-color="#d50000"/>
+              <stop offset="100%" stop-color="#4a0000"/>
             </radialGradient>
-            <filter id="gateDropGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.9"/>
-              <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#d4af37" flood-opacity="0.35"/>
+            <filter id="batReliefGlow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#000000" flood-opacity="0.95"/>
+              <feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="#d4af37" flood-opacity="0.35"/>
             </filter>
           </defs>
-          <g filter="url(#gateDropGlow)">
-            <circle cx="100" cy="100" r="92" fill="#140a16" stroke="url(#gateMetalRim)" stroke-width="5"/>
-            <circle cx="100" cy="100" r="84" fill="none" stroke="url(#gateGoldGrad)" stroke-width="1.5" stroke-dasharray="6,4"/>
-            <circle cx="100" cy="100" r="76" fill="#1c1020" stroke="#3d281a" stroke-width="2"/>
-            <circle cx="100" cy="12" r="3.5" fill="url(#gateGoldGrad)"/>
-            <circle cx="100" cy="188" r="3.5" fill="url(#gateGoldGrad)"/>
-            <circle cx="12" cy="100" r="3.5" fill="url(#gateGoldGrad)"/>
-            <circle cx="188" cy="100" r="3.5" fill="url(#gateGoldGrad)"/>
-            <circle cx="38" cy="38" r="3" fill="url(#gateGoldGrad)"/>
-            <circle cx="162" cy="38" r="3" fill="url(#gateGoldGrad)"/>
-            <circle cx="38" cy="162" r="3" fill="url(#gateGoldGrad)"/>
-            <circle cx="162" cy="162" r="3" fill="url(#gateGoldGrad)"/>
-            <path d="M 75 145 C 75 168, 125 168, 125 145 C 125 138, 118 138, 118 145 C 118 160, 82 160, 82 145 Z" fill="url(#gateGoldGrad)" stroke="#241910" stroke-width="1"/>
-            <circle cx="100" cy="144" r="5" fill="#3a2210" stroke="url(#gateGoldGrad)" stroke-width="1.5"/>
-            <path d="M 100 82 C 88 56, 58 42, 28 50 C 42 66, 44 80, 36 94 C 48 94, 58 106, 56 120 C 70 114, 82 118, 88 128 C 94 116, 98 98, 100 82 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.5"/>
-            <path d="M 88 78 Q 55 60 28 50" stroke="#4a300d" stroke-width="1.5" fill="none"/>
-            <path d="M 88 88 Q 58 84 36 94" stroke="#4a300d" stroke-width="1.5" fill="none"/>
-            <path d="M 90 98 Q 68 104 56 120" stroke="#4a300d" stroke-width="1.5" fill="none"/>
-            <path d="M 100 82 C 112 56, 142 42, 172 50 C 158 66, 156 80, 164 94 C 152 94, 142 106, 144 120 C 130 114, 118 118, 112 128 C 106 116, 102 98, 100 82 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.5"/>
-            <path d="M 112 78 Q 145 60 172 50" stroke="#4a300d" stroke-width="1.5" fill="none"/>
-            <path d="M 112 88 Q 142 84 164 94" stroke="#4a300d" stroke-width="1.5" fill="none"/>
-            <path d="M 110 98 Q 132 104 144 120" stroke="#4a300d" stroke-width="1.5" fill="none"/>
-            <polygon points="28,50 25,44 32,48" fill="#fff2a8"/>
-            <polygon points="172,50 175,44 168,48" fill="#fff2a8"/>
-            <path d="M 94 76 Q 88 96 92 118 L 100 134 L 108 118 Q 112 96 106 76 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.5"/>
-            <line x1="93" y1="88" x2="107" y2="88" stroke="#4a300d" stroke-width="1.2"/>
-            <line x1="93" y1="98" x2="107" y2="98" stroke="#4a300d" stroke-width="1.2"/>
-            <line x1="95" y1="108" x2="105" y2="108" stroke="#4a300d" stroke-width="1.2"/>
-            <path d="M 94 76 C 92 68, 86 52, 84 48 C 90 56, 96 66, 98 70 C 100 68, 100 68, 102 70 C 104 66, 110 56, 116 48 C 114 52, 108 68, 106 76 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.2"/>
-            <circle cx="100" cy="74" r="6" fill="url(#gateGoldGrad)"/>
-            <circle cx="97" cy="73" r="1.6" fill="url(#gateRubyGlow)"/>
-            <circle cx="103" cy="73" r="1.6" fill="url(#gateRubyGlow)"/>
-            <circle cx="97" cy="73" r="0.6" fill="#ffffff"/>
-            <circle cx="103" cy="73" r="0.6" fill="#ffffff"/>
-            <polygon points="98,77 97,80 99,78" fill="#fff"/>
-            <polygon points="102,77 103,80 101,78" fill="#fff"/>
-            <path d="M 92 130 Q 94 138 97 142" stroke="#fff2a8" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <path d="M 108 130 Q 106 138 103 142" stroke="#fff2a8" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <g filter="url(#batReliefGlow)">
+            <circle cx="120" cy="120" r="112" fill="#120409" stroke="url(#crestGold)" stroke-width="6"/>
+            <circle cx="120" cy="120" r="102" fill="none" stroke="#d4af37" stroke-width="1.2" stroke-dasharray="5,4"/>
+            <circle cx="120" cy="120" r="94" fill="#1a070e" stroke="#4a1520" stroke-width="1.8"/>
+            <circle cx="120" cy="14" r="3.5" fill="url(#crestGold)"/>
+            <circle cx="120" cy="226" r="3.5" fill="url(#crestGold)"/>
+            <circle cx="14" cy="120" r="3.5" fill="url(#crestGold)"/>
+            <circle cx="226" cy="120" r="3.5" fill="url(#crestGold)"/>
+            <circle cx="45" cy="45" r="3" fill="url(#crestGold)"/>
+            <circle cx="195" cy="45" r="3" fill="url(#crestGold)"/>
+            <circle cx="45" cy="195" r="3" fill="url(#crestGold)"/>
+            <circle cx="195" cy="195" r="3" fill="url(#crestGold)"/>
+            <path d="M 90 190 C 90 220, 150 220, 150 190 C 150 182, 142 182, 142 190 C 142 210, 98 210, 98 190 Z" fill="url(#crestGold)" stroke="#1a0f07" stroke-width="1.5"/>
+            <circle cx="120" cy="188" r="6" fill="#2d1506" stroke="url(#crestGold)" stroke-width="1.5"/>
+
+            <!-- Left Door Bat (Facing Inward-Right) -->
+            <path d="M 82 108 C 65 72, 38 48, 16 54 C 28 72, 28 88, 20 106 C 36 112, 46 126, 48 142 C 62 136, 72 138, 80 148 C 84 134, 82 120, 82 108 Z" fill="url(#batWingSkin)" stroke="#100004" stroke-width="1.5"/>
+            <path d="M 82 108 Q 48 70 16 54" stroke="url(#batBone)" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M 58 116 Q 36 94 20 106" stroke="#3e2723" stroke-width="1.8" fill="none"/>
+            <path d="M 64 128 Q 52 132 48 142" stroke="#3e2723" stroke-width="1.6" fill="none"/>
+            <polygon points="16,54 11,46 19,50" fill="#ffd740" stroke="#3e2723" stroke-width="0.8"/>
+            <polygon points="20,106 17,112 23,109" fill="#d4af37"/>
+
+            <path d="M 112 110 C 128 55, 172 26, 222 36 C 200 68, 194 92, 212 122 C 188 118, 168 136, 174 162 C 150 148, 134 156, 122 172 C 114 152, 110 128, 112 110 Z" fill="url(#batWingSkin)" stroke="#150005" stroke-width="2"/>
+            <path d="M 106 114 C 124 64, 166 32, 222 36" stroke="url(#batBone)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M 112 108 C 128 62, 166 34, 218 37" stroke="#d7ccc8" stroke-width="1.2" fill="none" opacity="0.6"/>
+            <path d="M 132 118 C 160 98, 184 104, 212 122" stroke="url(#batBone)" stroke-width="2.6" fill="none"/>
+            <path d="M 126 132 C 148 134, 160 142, 174 162" stroke="url(#batBone)" stroke-width="2.2" fill="none"/>
+            <path d="M 120 148 C 124 158, 122 164, 122 172" stroke="url(#batBone)" stroke-width="1.8" fill="none"/>
+            <polygon points="222,36 228,26 216,31" fill="#ffd740" stroke="#3e2723" stroke-width="1"/>
+            <polygon points="212,122 218,126 211,130" fill="#ffd740"/>
+            <polygon points="174,162 179,166 172,170" fill="#ffd740"/>
+
+            <path d="M 86 106 C 78 126, 82 152, 96 172 L 110 172 C 120 152, 122 126, 110 106 Z" fill="url(#batFlesh)" stroke="#150005" stroke-width="1.8"/>
+            <path d="M 88 118 Q 98 123 108 118" stroke="#211510" stroke-width="2.2" fill="none"/>
+            <path d="M 90 128 Q 98 133 107 128" stroke="#211510" stroke-width="2.2" fill="none"/>
+            <path d="M 92 138 Q 98 143 105 138" stroke="#211510" stroke-width="2.0" fill="none"/>
+            <path d="M 94 148 Q 98 152 103 148" stroke="#211510" stroke-width="1.8" fill="none"/>
+            <line x1="98" y1="116" x2="98" y2="152" stroke="#211510" stroke-width="1.5"/>
+
+            <path d="M 92 170 Q 88 182 82 186" stroke="#ffd740" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M 97 172 Q 95 184 92 188" stroke="#ffd740" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M 103 172 Q 104 184 103 189" stroke="#ffd740" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M 108 170 Q 112 182 116 186" stroke="#ffd740" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+            <polygon points="80,102 65,72 85,86" fill="url(#batFlesh)" stroke="#150005" stroke-width="1.4"/>
+            <polygon points="78,98 69,78 82,88" fill="#4a1520"/>
+            <polygon points="98,96 108,68 106,86" fill="url(#batFlesh)" stroke="#150005" stroke-width="1.4"/>
+            <polygon points="99,93 105,74 104,87" fill="#4a1520"/>
+            <path d="M 78 100 C 76 84, 106 80, 108 98 C 108 114, 80 114, 78 100 Z" fill="url(#batFlesh)" stroke="#150005" stroke-width="1.8"/>
+
+            <ellipse cx="86" cy="95" rx="3.2" ry="2.2" transform="rotate(-10 86 95)" fill="url(#batRubyEye)"/>
+            <ellipse cx="98" cy="94" rx="3.0" ry="2.2" transform="rotate(-5 98 94)" fill="url(#batRubyEye)"/>
+            <circle cx="85" cy="94" r="0.9" fill="#ffffff"/>
+            <circle cx="97" cy="93" r="0.9" fill="#ffffff"/>
+
+            <path d="M 83 104 Q 93 110 102 103" stroke="#120204" stroke-width="2" fill="none"/>
+            <polygon points="87,104 86,112 90,107" fill="#ffffff" stroke="#3e2723" stroke-width="0.5"/>
+            <polygon points="97,103 96,111 99,106" fill="#ffffff" stroke="#3e2723" stroke-width="0.5"/>
+            <polygon points="92,106 91,110 93,108" fill="#ffffff"/>
           </g>
         </svg>
       </div>
     </div>
     <div class="gate-door gate-door-right">
-      <div class="gate-bat-ornament" title="고성 미궁 성문 우측 박쥐 문장">
-        <svg viewBox="0 0 200 200" class="gate-bat-svg" aria-hidden="true">
-          <g filter="url(#gateDropGlow)">
-            <circle cx="100" cy="100" r="92" fill="#140a16" stroke="url(#gateMetalRim)" stroke-width="5"/>
-            <circle cx="100" cy="100" r="84" fill="none" stroke="url(#gateGoldGrad)" stroke-width="1.5" stroke-dasharray="6,4"/>
-            <circle cx="100" cy="100" r="76" fill="#1c1020" stroke="#3d281a" stroke-width="2"/>
-            <circle cx="100" cy="12" r="3.5" fill="url(#gateGoldGrad)"/>
-            <circle cx="100" cy="188" r="3.5" fill="url(#gateGoldGrad)"/>
-            <circle cx="12" cy="100" r="3.5" fill="url(#gateGoldGrad)"/>
-            <circle cx="188" cy="100" r="3.5" fill="url(#gateGoldGrad)"/>
-            <circle cx="38" cy="38" r="3" fill="url(#gateGoldGrad)"/>
-            <circle cx="162" cy="38" r="3" fill="url(#gateGoldGrad)"/>
-            <circle cx="38" cy="162" r="3" fill="url(#gateGoldGrad)"/>
-            <circle cx="162" cy="162" r="3" fill="url(#gateGoldGrad)"/>
-            <path d="M 75 145 C 75 168, 125 168, 125 145 C 125 138, 118 138, 118 145 C 118 160, 82 160, 82 145 Z" fill="url(#gateGoldGrad)" stroke="#241910" stroke-width="1"/>
-            <circle cx="100" cy="144" r="5" fill="#3a2210" stroke="url(#gateGoldGrad)" stroke-width="1.5"/>
-            <path d="M 100 82 C 88 56, 58 42, 28 50 C 42 66, 44 80, 36 94 C 48 94, 58 106, 56 120 C 70 114, 82 118, 88 128 C 94 116, 98 98, 100 82 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.5"/>
-            <path d="M 88 78 Q 55 60 28 50" stroke="#4a300d" stroke-width="1.5" fill="none"/>
-            <path d="M 88 88 Q 58 84 36 94" stroke="#4a300d" stroke-width="1.5" fill="none"/>
-            <path d="M 90 98 Q 68 104 56 120" stroke="#4a300d" stroke-width="1.5" fill="none"/>
-            <path d="M 100 82 C 112 56, 142 42, 172 50 C 158 66, 156 80, 164 94 C 152 94, 142 106, 144 120 C 130 114, 118 118, 112 128 C 106 116, 102 98, 100 82 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.5"/>
-            <path d="M 112 78 Q 145 60 172 50" stroke="#4a300d" stroke-width="1.5" fill="none"/>
-            <path d="M 112 88 Q 142 84 164 94" stroke="#4a300d" stroke-width="1.5" fill="none"/>
-            <path d="M 110 98 Q 132 104 144 120" stroke="#4a300d" stroke-width="1.5" fill="none"/>
-            <polygon points="28,50 25,44 32,48" fill="#fff2a8"/>
-            <polygon points="172,50 175,44 168,48" fill="#fff2a8"/>
-            <path d="M 94 76 Q 88 96 92 118 L 100 134 L 108 118 Q 112 96 106 76 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.5"/>
-            <line x1="93" y1="88" x2="107" y2="88" stroke="#4a300d" stroke-width="1.2"/>
-            <line x1="93" y1="98" x2="107" y2="98" stroke="#4a300d" stroke-width="1.2"/>
-            <line x1="95" y1="108" x2="105" y2="108" stroke="#4a300d" stroke-width="1.2"/>
-            <path d="M 94 76 C 92 68, 86 52, 84 48 C 90 56, 96 66, 98 70 C 100 68, 100 68, 102 70 C 104 66, 110 56, 116 48 C 114 52, 108 68, 106 76 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.2"/>
-            <circle cx="100" cy="74" r="6" fill="url(#gateGoldGrad)"/>
-            <circle cx="97" cy="73" r="1.6" fill="url(#gateRubyGlow)"/>
-            <circle cx="103" cy="73" r="1.6" fill="url(#gateRubyGlow)"/>
-            <circle cx="97" cy="73" r="0.6" fill="#ffffff"/>
-            <circle cx="103" cy="73" r="0.6" fill="#ffffff"/>
-            <polygon points="98,77 97,80 99,78" fill="#fff"/>
-            <polygon points="102,77 103,80 101,78" fill="#fff"/>
-            <path d="M 92 130 Q 94 138 97 142" stroke="#fff2a8" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <path d="M 108 130 Q 106 138 103 142" stroke="#fff2a8" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <div class="gate-bat-ornament bat-flip" title="고성 미궁 성문 우측 박쥐 문장 (대칭 반전, 안쪽 지향)">
+        <svg viewBox="0 0 240 240" class="gate-bat-svg" aria-hidden="true">
+          <g filter="url(#batReliefGlow)">
+            <circle cx="120" cy="120" r="112" fill="#120409" stroke="url(#crestGold)" stroke-width="6"/>
+            <circle cx="120" cy="120" r="102" fill="none" stroke="#d4af37" stroke-width="1.2" stroke-dasharray="5,4"/>
+            <circle cx="120" cy="120" r="94" fill="#1a070e" stroke="#4a1520" stroke-width="1.8"/>
+            <circle cx="120" cy="14" r="3.5" fill="url(#crestGold)"/>
+            <circle cx="120" cy="226" r="3.5" fill="url(#crestGold)"/>
+            <circle cx="14" cy="120" r="3.5" fill="url(#crestGold)"/>
+            <circle cx="226" cy="120" r="3.5" fill="url(#crestGold)"/>
+            <circle cx="45" cy="45" r="3" fill="url(#crestGold)"/>
+            <circle cx="195" cy="45" r="3" fill="url(#crestGold)"/>
+            <circle cx="45" cy="195" r="3" fill="url(#crestGold)"/>
+            <circle cx="195" cy="195" r="3" fill="url(#crestGold)"/>
+            <path d="M 90 190 C 90 220, 150 220, 150 190 C 150 182, 142 182, 142 190 C 142 210, 98 210, 98 190 Z" fill="url(#crestGold)" stroke="#1a0f07" stroke-width="1.5"/>
+            <circle cx="120" cy="188" r="6" fill="#2d1506" stroke="url(#crestGold)" stroke-width="1.5"/>
+
+            <path d="M 82 108 C 65 72, 38 48, 16 54 C 28 72, 28 88, 20 106 C 36 112, 46 126, 48 142 C 62 136, 72 138, 80 148 C 84 134, 82 120, 82 108 Z" fill="url(#batWingSkin)" stroke="#100004" stroke-width="1.5"/>
+            <path d="M 82 108 Q 48 70 16 54" stroke="url(#batBone)" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M 58 116 Q 36 94 20 106" stroke="#3e2723" stroke-width="1.8" fill="none"/>
+            <path d="M 64 128 Q 52 132 48 142" stroke="#3e2723" stroke-width="1.6" fill="none"/>
+            <polygon points="16,54 11,46 19,50" fill="#ffd740" stroke="#3e2723" stroke-width="0.8"/>
+            <polygon points="20,106 17,112 23,109" fill="#d4af37"/>
+
+            <path d="M 112 110 C 128 55, 172 26, 222 36 C 200 68, 194 92, 212 122 C 188 118, 168 136, 174 162 C 150 148, 134 156, 122 172 C 114 152, 110 128, 112 110 Z" fill="url(#batWingSkin)" stroke="#150005" stroke-width="2"/>
+            <path d="M 106 114 C 124 64, 166 32, 222 36" stroke="url(#batBone)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <path d="M 112 108 C 128 62, 166 34, 218 37" stroke="#d7ccc8" stroke-width="1.2" fill="none" opacity="0.6"/>
+            <path d="M 132 118 C 160 98, 184 104, 212 122" stroke="url(#batBone)" stroke-width="2.6" fill="none"/>
+            <path d="M 126 132 C 148 134, 160 142, 174 162" stroke="url(#batBone)" stroke-width="2.2" fill="none"/>
+            <path d="M 120 148 C 124 158, 122 164, 122 172" stroke="url(#batBone)" stroke-width="1.8" fill="none"/>
+            <polygon points="222,36 228,26 216,31" fill="#ffd740" stroke="#3e2723" stroke-width="1"/>
+            <polygon points="212,122 218,126 211,130" fill="#ffd740"/>
+            <polygon points="174,162 179,166 172,170" fill="#ffd740"/>
+
+            <path d="M 86 106 C 78 126, 82 152, 96 172 L 110 172 C 120 152, 122 126, 110 106 Z" fill="url(#batFlesh)" stroke="#150005" stroke-width="1.8"/>
+            <path d="M 88 118 Q 98 123 108 118" stroke="#211510" stroke-width="2.2" fill="none"/>
+            <path d="M 90 128 Q 98 133 107 128" stroke="#211510" stroke-width="2.2" fill="none"/>
+            <path d="M 92 138 Q 98 143 105 138" stroke="#211510" stroke-width="2.0" fill="none"/>
+            <path d="M 94 148 Q 98 152 103 148" stroke="#211510" stroke-width="1.8" fill="none"/>
+            <line x1="98" y1="116" x2="98" y2="152" stroke="#211510" stroke-width="1.5"/>
+
+            <path d="M 92 170 Q 88 182 82 186" stroke="#ffd740" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M 97 172 Q 95 184 92 188" stroke="#ffd740" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M 103 172 Q 104 184 103 189" stroke="#ffd740" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M 108 170 Q 112 182 116 186" stroke="#ffd740" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+            <polygon points="80,102 65,72 85,86" fill="url(#batFlesh)" stroke="#150005" stroke-width="1.4"/>
+            <polygon points="78,98 69,78 82,88" fill="#4a1520"/>
+            <polygon points="98,96 108,68 106,86" fill="url(#batFlesh)" stroke="#150005" stroke-width="1.4"/>
+            <polygon points="99,93 105,74 104,87" fill="#4a1520"/>
+            <path d="M 78 100 C 76 84, 106 80, 108 98 C 108 114, 80 114, 78 100 Z" fill="url(#batFlesh)" stroke="#150005" stroke-width="1.8"/>
+
+            <ellipse cx="86" cy="95" rx="3.2" ry="2.2" transform="rotate(-10 86 95)" fill="url(#batRubyEye)"/>
+            <ellipse cx="98" cy="94" rx="3.0" ry="2.2" transform="rotate(-5 98 94)" fill="url(#batRubyEye)"/>
+            <circle cx="85" cy="94" r="0.9" fill="#ffffff"/>
+            <circle cx="97" cy="93" r="0.9" fill="#ffffff"/>
+
+            <path d="M 83 104 Q 93 110 102 103" stroke="#120204" stroke-width="2" fill="none"/>
+            <polygon points="87,104 86,112 90,107" fill="#ffffff" stroke="#3e2723" stroke-width="0.5"/>
+            <polygon points="97,103 96,111 99,106" fill="#ffffff" stroke="#3e2723" stroke-width="0.5"/>
+            <polygon points="92,106 91,110 93,108" fill="#ffffff"/>
           </g>
         </svg>
       </div>
@@ -1665,7 +1688,7 @@
                   🎯 <span class="text-grad-gold">왜 '탈출 방해물 가지치기(추상화)'가 '최적 탈출 경로 탐색'으로 이어질까요?</span>
                 </div>
                 <p style="color:#e2dbd0; line-height:1.5; font-size:12px;">
-                  우회로나 막다른 방에 있는 미끼 상자·장식 함정을 먹으려고 <strong>직접 캐릭터가 걸어가면 시간이 낭비되어 최적 경로가 깨집니다!</strong><br/>
+                  우회로나 막다른 방에 있는 미믹·장식 함정을 먹으려고 <strong>직접 캐릭터가 걸어가면 시간이 낭비되어 최적 경로가 깨집니다!</strong><br/>
                   불필요한 갈림길과 함정을 <strong>원격 가지치기</strong>하거나 <strong>[맵 힌트]</strong>로 확인한 뒤, 추출된 <strong>핵심 최단 루트</strong>로만 이동해 탈출하세요!
                 </p>
               </div>
@@ -1699,7 +1722,7 @@
             <div style="font-size:12.5px; color:#e2dbd0; background:rgba(18, 14, 26, 0.85); border:1px solid #5c471f; border-left:3px solid var(--gold); padding:8px 12px; border-radius:4px; margin-bottom:8px; line-height:1.6;">
               <strong class="text-grad-gold">💡 1단계 작성 팁 (탈출 방해물 분류 형식):</strong><br>
               • <strong>가지치기할 불필요한 장소(방):</strong> 탈출과 무관한 막다른 방, 비최적 우회로<br>
-              • <strong>원격 제거할 함정 및 장애물:</strong> 스페이스/클릭으로 소거 가능한 불필요한 미끼 상자·차단벽<br>
+              • <strong>원격 제거할 함정 및 장애물:</strong> 스페이스/클릭으로 소거 가능한 불필요한 미믹·차단벽<br>
               • <strong>반드시 회피해야 할 즉사 지형/함정:</strong> 원격 제거 불가! 밟거나 접촉 시 탈출 실패/시간 낭비<br>
               • <strong>방해 몬스터:</strong> 최단 경로 길목을 막거나 플레이어를 추적하는 적
             </div>
@@ -2300,7 +2323,7 @@
         noises: [
           { id: 'n1', name: '⚠️ 폭발 화염 촛대 함정', shortTag: '⚠️화염함정', type: 'trap', dmg: 20, sprite: 'spr_candle_f1', sprite2: 'spr_candle_f2', x: 175, y: 123, w: 28, h: 32, hit: false },
           { id: 'n2', name: '블러드 스켈레톤', shortTag: '💀적색해골', type: 'monster', dmg: 25, sprite: 'spr_rskl_f1', sprite2: 'spr_rskl_f2', x: 410, y: 197, w: 24, h: 48, moveMode: 'patrol', minX: 365, maxX: 485, vx: 1.25, hit: false },
-          { id: 'n3', name: '⚠️ 가짜 미믹 상자 함정', shortTag: '⚠️미믹', type: 'trap', dmg: 25, sprite: 'spr_mimi_f1', sprite2: 'spr_mimi_f2', x: 755, y: 120, w: 32, h: 30, hit: false },
+          { id: 'n3', name: '⚠️ 미믹', shortTag: '⚠️미믹', type: 'trap', dmg: 0, noAttack: true, sprite: 'spr_mimi_f1', sprite2: 'spr_mimi_f2', x: 755, y: 120, w: 32, h: 30, hit: false },
           { id: 'n4', name: '화염 임프', shortTag: '👹화염임프', type: 'monster', dmg: 25, sprite: 'spr_imp_f1', sprite2: 'spr_imp_f2', x: 960, y: 255, w: 28, h: 28, moveMode: 'sine', minX: 880, maxX: 1120, baseY: 255, ampY: 22, vx: 1.6, hit: false },
           { id: 'n5', name: '우회로 지하 좀비', shortTag: '🧟우회로좀비', type: 'monster', dmg: 20, sprite: 'spr_zbs_f1', sprite2: 'spr_zbs_f2', x: 1120, y: 384, w: 26, h: 48, moveMode: 'patrol', minX: 1055, maxX: 1215, vx: 1.0, hit: false },
           { id: 'n6', name: '⚠️ 독침 분출 고딕석관 함정', shortTag: '⚠️독침석관', type: 'trap', dmg: 20, sprite: 'spr_dest_vase', sprite2: 'spr_dest_vase', x: 1295, y: 277, w: 20, h: 48, hit: false }
@@ -2379,7 +2402,7 @@
           { id: 'n1', name: '⚠️ 낙하 얼음가시 샹들리에 함정', shortTag: '⚠️가시샹들리에', type: 'trap', dmg: 25, sprite: 'spr_dest_chandelier', sprite2: 'spr_dest_chandelier', x: 355, y: 241, w: 24, h: 44, hit: false },
           { id: 'n2', name: '상층 설인 예티', shortTag: '🦍설인예티', type: 'monster', dmg: 30, sprite: 'spr_yeti_f1', sprite2: 'spr_yeti_f2', x: 780, y: 109, w: 42, h: 56, moveMode: 'patrol', minX: 680, maxX: 910, vx: 1.25, hit: false },
           { id: 'n3', name: '수로 불가사리 데카라비아', shortTag: '⭐데카라비아', type: 'monster', dmg: 20, sprite: 'spr_sfish_f1', sprite2: 'spr_sfish_f2', x: 720, y: 376, w: 32, h: 32, moveMode: 'patrol', minX: 655, maxX: 830, vx: 1.45, hit: false },
-          { id: 'n4', name: '⚠️ 막다른 얼음 미끼상자 함정', shortTag: '⚠️얼음미끼', type: 'trap', dmg: 20, sprite: 'spr_coffer_closed', sprite2: 'spr_coffer_open', x: 1080, y: 412, w: 32, h: 28, hit: false },
+          { id: 'n4', name: '⚠️ 미믹', shortTag: '⚠️미믹', type: 'trap', dmg: 20, sprite: 'spr_coffer_closed', sprite2: 'spr_coffer_open', x: 1080, y: 412, w: 32, h: 28, hit: false },
           { id: 'n5', name: '빙하 원령 벤시', shortTag: '👻빙하원령', type: 'monster', dmg: 25, sprite: 'spr_gho_f1', sprite2: 'spr_gho_f2', x: 1320, y: 215, w: 25, h: 48, moveMode: 'sine', minX: 1220, maxX: 1520, baseY: 215, ampY: 26, vx: 1.45, hit: false },
           { id: 'n6', name: '⚠️ 고드름 수호기사 석상 함정', shortTag: '⚠️수호석상', type: 'trap', dmg: 25, sprite: 'spr_statue_knight', sprite2: 'spr_statue_knight', x: 1755, y: 131, w: 30, h: 64, hit: false },
           { id: 'n7', name: '설원 화이트 울프', shortTag: '🐺화이트울프', type: 'monster', dmg: 25, sprite: 'spr_wwolf_f1', sprite2: 'spr_wwolf_f2', x: 80, y: 366, w: 48, h: 44, moveMode: 'patrol', minX: 60, maxX: 200, vx: 1.4, hit: false }
@@ -2465,7 +2488,7 @@
           { id: 'n1', name: '파동 메두사 헤드', shortTag: '🐍메두사헤드', type: 'monster', dmg: 25, sprite: 'spr_medusa_f1', sprite2: 'spr_medusa_f2', x: 380, y: 250, w: 26, h: 26, moveMode: 'sine', minX: 240, maxX: 580, baseY: 250, ampY: 32, vx: 1.8, hit: false },
           { id: 'n2', name: '종탑 엑스아머', shortTag: '🪓엑스아머', type: 'monster', dmg: 30, sprite: 'spr_axarm_f1', sprite2: 'spr_axarm_f2', x: 735, y: 127, w: 36, h: 58, moveMode: 'patrol', minX: 640, maxX: 840, vx: 1.2, hit: false },
           { id: 'n3', name: '심연 악마 데몬 로드', shortTag: '😈데몬로드', type: 'monster', dmg: 30, sprite: 'spr_arcdemon_f1', sprite2: 'spr_arcdemon_f2', x: 800, y: 300, w: 88, h: 70, moveMode: 'sine', minX: 720, maxX: 930, baseY: 300, ampY: 18, vx: 1.3, hit: false, actionState: 'patrol', attackTimer: 90 },
-          { id: 'n4', name: '⚠️ 막다른 태엽 미끼상자 함정', shortTag: '⚠️태엽미끼', type: 'trap', dmg: 25, sprite: 'spr_mimi_f1', sprite2: 'spr_mimi_f2', x: 1110, y: 412, w: 32, h: 30, hit: false },
+          { id: 'n4', name: '⚠️ 미믹', shortTag: '⚠️미믹', type: 'trap', dmg: 25, sprite: 'spr_mimi_f1', sprite2: 'spr_mimi_f2', x: 1110, y: 412, w: 32, h: 30, hit: false },
           { id: 'n5', name: '감시자의 눈 피핑아이', shortTag: '👁️피핑아이', type: 'monster', dmg: 25, sprite: 'spr_eye_f1', sprite2: 'spr_eye_f2', x: 1420, y: 190, w: 26, h: 26, moveMode: 'sine', minX: 1280, maxX: 1680, baseY: 190, ampY: 28, vx: 1.65, hit: false },
           { id: 'n6', name: '⚠️ 분쇄 기어 분쇄기 함정', shortTag: '⚠️분쇄기어', type: 'trap', dmg: 30, sprite: 'spr_gear_large', sprite2: 'spr_gear_large', x: 1810, y: 139, w: 54, h: 54, hit: false },
           { id: 'n7', name: '시계탑 비행 악마 데빌', shortTag: '😈비행데빌', type: 'monster', dmg: 32, sprite: 'spr_devil_f1', sprite2: 'spr_devil_f2', x: 120, y: 71, origX: 120, origY: 71, w: 48, h: 94, moveMode: 'patrol', minX: 65, maxX: 230, vx: 1.25, hit: false }
@@ -2479,7 +2502,7 @@
         worldW: 2400,
         worldH: 960, // 2x Vertical Depth!
         title: '심연 최종 탈출 [ 🩸 최고난도: 몬스터 무한 소환 & 불사신 데스 ]',
-        hint: '막다른 길인 [X1.고문실], 통행 불가인 [X2.폐쇄철문], 역송 함정인 [W.함정마법진]을 배제하고, [C.승강장] 승강기로 하강 후 [G.심연대교]를 거쳐 8분 만에 탈출하세요.',
+        hint: '막다른 길인 [X1.고문실], 통행 불가인 [X2.폐쇄철문], 역송 함정인 [M.만티코어다리 ➔ W.함정마법진]을 배제하고, [C.승강장] 승강기로 하강 후 [G.심연대교]를 거쳐 8분 만에 탈출하세요.',
         bgm: 'bgm_castle',
         weaponSprite: 'spr_great_glyph',
         weaponName: '빛의 대검 글리프',
@@ -2490,12 +2513,12 @@
         hazardName: '💀 심연 가시 즉사 구역 (HP 100% 즉사!)',
         targetMinutes: 8,
         optimalNodeSeq: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'Z'],
-        optimalSummary: '• 전체 최적 탈출 경로: A.첨탑옥좌 ➔ B.서쪽복도 ➔ C.승강장 ➔ D.고문실갈림길 ➔ E.중앙수로 ➔ F.대교입구 ➔ G.심연대교 ➔ Z.심연대성문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 1분 + 1분 + 1분 + 1분 + 1분 = 총 8분\n• 최종 탈출 전략: 상층 폐쇄철문(X2)과 함정마법진(W)을 완벽히 가지치기하고 승강기로 하강하여 심연대교로 탈출하는 유일한 8분 최단 경로임',
+        optimalSummary: '• 전체 최적 탈출 경로: A.첨탑옥좌 ➔ B.서쪽복도 ➔ C.승강장 ➔ D.고문실갈림길 ➔ E.중앙수로 ➔ F.대교입구 ➔ G.심연대교 ➔ Z.심연대성문\n• 총 최단 탈출 시간 계산: 1분 + 2분 + 1분 + 1분 + 1분 + 1분 + 1분 = 총 8분\n• 최종 탈출 전략: 상층 폐쇄철문(X2)과 만티코어다리 유인 역송함정(M➔W)을 완벽히 가지치기하고 승강기로 하강하여 심연대교로 탈출하는 유일한 8분 최단 경로임',
         step1Question: '[1단계: 문제 정의 및 목표 분석] 탈출 출발 장소, 최종 탈출구, 그리고 최적 목표 시간(분)을 명시해 보세요.',
         step2Question: '[2단계: 핵심 요소 추출 및 경로 배제 분석] 탈출에 꼭 필요한 핵심 장소 간 \'구간별 소요 시간\'과, 가지치기하여 탈출로에서 \'배제(소거)한 우회로 및 위험 요소의 구체적 배제 이유\'를 서술해 보세요.',
         step3Question: '[3단계: 최적 탈출 경로 및 총 소요 시간 도출] 2단계의 핵심 구간을 종합하여 출발지부터 탈출구까지의 \'전체 최적 탈출 경로 순서\'와 \'총 소요 시간(합산 식)\'을 명확히 계산하여 적어 보세요.',
         autoStep1: '• 출발지: A.첨탑옥좌\n• 목표지: Z.심연대성문\n• 최적 목표 시간: 8분',
-        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.첨탑옥좌 ➔ B.서쪽복도]: 1분\n  - [B.서쪽복도 ➔ C.승강장]: 2분 (수직 승강기)\n  - [C.승강장 ➔ D.고문실갈림길]: 1분\n  - [D.고문실갈림길 ➔ E.중앙수로]: 1분\n  - [E.중앙수로 ➔ F.대교입구]: 1분\n  - [F.대교입구 ➔ G.심연대교]: 1분\n  - [G.심연대교 ➔ Z.심연대성문]: 1분 (성문 개방)\n• 우회로 및 위험 요소 배제 이유:\n  - [X1.고문실, Y.지하감옥]: 탈출로가 없는 막다른 길이므로 배제함\n  - [X2.폐쇄철문]: 통행이 완전히 차단된 불통 구역이므로 배제함\n  - [W.함정마법진]: 상층 복도로 강제 역송시켜 시간을 낭비하게 만드는 함정이므로 배제함',
+        autoStep2: '• 주요 핵심 구간별 소요 시간:\n  - [A.첨탑옥좌 ➔ B.서쪽복도]: 1분\n  - [B.서쪽복도 ➔ C.승강장]: 2분 (수직 승강기)\n  - [C.승강장 ➔ D.고문실갈림길]: 1분\n  - [D.고문실갈림길 ➔ E.중앙수로]: 1분\n  - [E.중앙수로 ➔ F.대교입구]: 1분\n  - [F.대교입구 ➔ G.심연대교]: 1분\n  - [G.심연대교 ➔ Z.심연대성문]: 1분 (성문 개방)\n• 우회로 및 위험 요소 배제 이유:\n  - [X1.고문실, Y.지하감옥]: 탈출로가 없는 막다른 길이므로 배제함\n  - [X2.폐쇄철문]: 통행이 완전히 차단된 불통 구역이므로 배제함\n  - [M.만티코어다리 ➔ W.함정마법진]: 외견상 7분으로 보이나 상층 서쪽복도로 강제 역송시키는 치명적 함정이므로 배제함',
         nodes: [
           { id: 'A', label: 'A.첨탑옥좌[출발]', x: 105, y: 140 },
           { id: 'B', label: 'B.서쪽복도', x: 420, y: 240 },
@@ -2506,6 +2529,7 @@
           { id: 'C', label: 'C.승강장', x: 460, y: 750 },
           { id: 'Y', label: 'Y.지하감옥', x: 690, y: 875 },
           { id: 'D', label: 'D.고문실갈림길', x: 880, y: 760 },
+          { id: 'M', label: 'M.만티코어다리', x: 960, y: 445 },
           { id: 'W', label: 'W.함정마법진', x: 1160, y: 440 },
           { id: 'E', label: 'E.중앙수로', x: 1400, y: 820 },
           { id: 'F', label: 'F.대교입구', x: 1720, y: 820 },
@@ -2521,7 +2545,10 @@
           { from: 'B', to: 'C', cost: '2분(수직승강기)', minutes: 2, optimal: true, labelDy: 16 },
           { from: 'C', to: 'Y', cost: '4분(막다른길)', minutes: 4, optimal: false, deadEnd: true, labelDy: 26, labelDx: -18 },
           { from: 'C', to: 'D', cost: '1분', minutes: 1, optimal: true, labelDy: -14 },
-          { from: 'D', to: 'W', cost: '3분(상층역송함정)', minutes: 3, optimal: false, deadEnd: true, broken: true, labelDy: -16 },
+          { from: 'B', to: 'M', cost: '2분(상층연결교)', minutes: 2, optimal: false, labelDy: -14 },
+          { from: 'D', to: 'M', cost: '1분(만티코어다리)', minutes: 1, optimal: false, labelDy: -16 },
+          { from: 'M', to: 'W', cost: '1분(함정진입로)', minutes: 1, optimal: false, labelDy: -14 },
+          { from: 'W', to: 'G', cost: '2분(역송함정)', minutes: 2, optimal: false, deadEnd: true, broken: true, labelDy: -16 },
           { from: 'D', to: 'E', cost: '1분', minutes: 1, optimal: true, labelDy: 14 },
           { from: 'E', to: 'F', cost: '1분', minutes: 1, optimal: true, labelDy: -14 },
           { from: 'F', to: 'G', cost: '1분', minutes: 1, optimal: true, labelDy: -14 },
@@ -2551,6 +2578,7 @@
           { x: 820, y: 795, w: 180, h: 24, core: true, style: 'core', nodeId: 'D', tag: '심연 고문실 갈림길' },
           { x: 1030, y: 815, w: 110, h: 22, core: true, style: 'stair', tag: '심연 수로 입구 계단' },
           { x: 1170, y: 835, w: 100, h: 22, core: true, style: 'core', tag: '심연 수로 징검발판' },
+          { x: 900, y: 480, w: 160, h: 24, core: false, style: 'detour', nodeId: 'M', tag: '만티코어 다리' },
           { x: 1060, y: 610, w: 120, h: 22, core: false, style: 'detour', tag: '중층 유인 계단' },
           { x: 1100, y: 475, w: 200, h: 24, core: false, style: 'detour', nodeId: 'W', tag: '🌀함정 마법진 제단' },
           { x: 1300, y: 855, w: 210, h: 24, core: true, style: 'core', nodeId: 'E', tag: '중앙 수로' },
@@ -2624,7 +2652,7 @@
           { id: 'n07', name: '심연 몽마 리리스', shortTag: '🦇몽마리리스', type: 'monster', dmg: 35, sprite: 'spr_lilith_f1', sprite2: 'spr_lilith_f2', x: 1430, y: 740, w: 46, h: 47, origX: 1430, origY: 740, vx: 1.6, vy: -1.0, origVx: 1.6, origVy: -1.0, moveMode: 'territoryRoam', minX: 1330, maxX: 1600, minY: 680, maxY: 840, hit: false },
 
           // 막다른 길 함정
-          { id: 't01', name: '⚠️ 고문실 미믹 함정', shortTag: '⚠️미믹', type: 'trap', dmg: 25, sprite: 'spr_coffer_closed', sprite2: 'spr_coffer_open', x: 750, y: 126, w: 32, h: 28, hit: false },
+          { id: 't01', name: '⚠️ 미믹', shortTag: '⚠️미믹', type: 'trap', dmg: 25, sprite: 'spr_coffer_closed', sprite2: 'spr_coffer_open', x: 750, y: 126, w: 32, h: 28, hit: false },
           { id: 't02', name: '⚠️ 심연 감옥 철창 차단벽 함정', shortTag: '⚠️철창함정', type: 'trap', dmg: 25, sprite: 'spr_shutter', sprite2: 'spr_shutter', x: 605, y: 829, w: 32, h: 56, hit: false },
           { id: 't03', name: '⚠️ 상층 폐쇄 철문 차단 함정', shortTag: '⚠️폐쇄철문', type: 'trap', dmg: 25, sprite: 'spr_shutter', sprite2: 'spr_shutter', x: 1845, y: 230, w: 32, h: 56, hit: false },
           { id: 'n09', name: '심연 세이렌 로렐라이', shortTag: '🧜심연로렐라이', type: 'monster', dmg: 32, sprite: 'spr_lorelei_f1', sprite2: 'spr_lorelei_f2', x: 140, y: 455, w: 58, h: 58, origX: 140, origY: 455, vx: 1.4, vy: -0.8, origVx: 1.4, origVy: -0.8, moveMode: 'territoryRoam', minX: 80, maxX: 225, minY: 430, maxY: 510, hit: false },
@@ -4125,6 +4153,9 @@
         }
 
         var canHitPlayer = nz.immortal || (!state.abstractSight && p.attackTimer === 0);
+        if (st.id === 'T01' && (nz.id === 'n3' || nz.shortTag === '⚠️미믹' || (nz.name && nz.name.indexOf('미믹') !== -1) || nz.noAttack)) {
+          canHitPlayer = false;
+        }
         if (canHitPlayer && p.invulnTimer === 0) {
           var px1 = p.x + 6, py1 = p.y + 6, px2 = p.x + 26, py2 = p.y + 38;
           var nx1 = nz.x + 4, ny1 = nz.y + 4, nx2 = nz.x + nz.w - 4, ny2 = nz.y + nz.h - 4;
@@ -6049,6 +6080,232 @@
       if (m) m.classList.add('hidden');
     }
 
+        var currentDiagStageIdx = 0;
+    var currentDiagTab = 1;
+
+    var DIAG_QUESTIONS = [
+      {
+        mapId: "T01",
+        mapNum: "MAP 1",
+        title: "용암 지하성당",
+        pre: {
+          desc: "게임을 시작하기 전 나의 기초 추상화 및 문제 상태 이해도를 확인합니다. 틀려도 괜찮아요!",
+          q1: {
+            text: "Q1. 정보 교과에서 문제 해결을 위해 불필요한 세부 요소(장식, 함정)를 제거하고 꼭 필요한 핵심만 남기는 사고 과정을 무엇이라 할까요?",
+            options: [
+              { val: "A", text: "① 추상화" },
+              { val: "B", text: "② 암호화" },
+              { val: "C", text: "③ 프로그램 실행" }
+            ],
+            ans: "A",
+            correctExplanation: "정보 교과의 추상화는 복잡한 현실에서 불필요한 요소를 버리고 핵심만 간추려 단순화하는 사고력입니다. [9정03-02]",
+            wrongExplanation: "정답은 ①번: 추상화는 내용을 어렵게 만드는 것이 아니라, 불필요한 요소를 빼고 핵심만 남기는 개념입니다."
+          },
+          q2: {
+            text: "Q2. 갈래길이 많은 미로에서 탈출할 때 가장 먼저 취해야 할 효과적인 알고리즘적 접근법은 무엇일까요?",
+            options: [
+              { val: "A", text: "① 아무 길이나 골라 무작정 끝까지 달려가 본다." },
+              { val: "B", text: "② 출발지와 목적지를 확인하고, 막다른 방이나 함정을 먼저 지우는 가지치기를 한다." },
+              { val: "C", text: "③ 미로에 있는 모든 방을 하나도 빠짐없이 다 방문한다." }
+            ],
+            ans: "B",
+            correctExplanation: "출발지와 목적지를 명확히 구조화하고, 막다른 길을 먼저 가지치기해야 최단 경로를 빠르고 정확하게 찾을 수 있습니다. [9정03-01]",
+            wrongExplanation: "정답은 ②번: 무작정 달리기보다 막다른 길과 함정을 먼저 지우는 가지치기를 해야 탐색 효율이 극대화됩니다."
+          }
+        },
+        post: {
+          desc: "용암 지하성당에서 배운 가지치기와 최단 시간 합산 알고리즘을 확인합니다.",
+          q1: {
+            text: "Q1. MAP 1에서 막다른 보물방(C, 미믹)과 느린 용암 우회로(E)를 처음부터 지우고 생각하면 어떤 점이 가장 유익할까요?",
+            options: [
+              { val: "A", text: "① 따져 보아야 할 후보 경로의 수가 크게 줄어들어 가장 빠른 길을 쉽고 빠르게 찾을 수 있다." },
+              { val: "B", text: "② 게임 플레이 시간이 늘어나서 더 재미있어진다." },
+              { val: "C", text: "③ 캐릭터가 두 배 빠르게 달릴 수 있다." }
+            ],
+            ans: "A",
+            correctExplanation: "불필요한 우회로와 막다른 방을 가지치기하면 문제의 복잡도가 줄어들어 최적 알고리즘을 명확히 도출할 수 있습니다. [9정03-02]",
+            wrongExplanation: "정답은 ①번: 가지치기는 검토해야 할 후보 경로를 줄여 문제 해결 시간을 단축시키는 핵심 추상화 기법입니다."
+          },
+          q2: {
+            text: "Q2. 청록색 최적 경로 [A➔B➔D➔F➔G]가 가장 빠르다는 것을 바르게 증명한 설명은 무엇일까요?",
+            options: [
+              { val: "A", text: "① 1분 + 2분 + 2분 + 1분 = 총 6분이 걸려, 용암 우회로(총 10분)보다 4분이 단축되기 때문이다." },
+              { val: "B", text: "② 청록색 안내선이 화면에서 가장 눈에 잘 띄기 때문이다." },
+              { val: "C", text: "③ 중간에 몬스터가 가장 적게 나오기 때문이다." }
+            ],
+            ans: "A",
+            correctExplanation: "경로의 구간별 소요 시간을 수치로 합산하여 비교 검증하는 것이 올바른 최적 알고리즘 증명입니다. [9정03-01]",
+            wrongExplanation: "정답은 ①번: 가장 빠르다는 근거는 색상이 아니라, 구간별 소요 시간의 합산 식(총 6분)을 통해 제시해야 합니다."
+          }
+        }
+      },
+      {
+        mapId: "T02",
+        mapNum: "MAP 2",
+        title: "설원 얼음동굴",
+        pre: {
+          desc: "설원 동굴 탐색에 앞서 지연 우회로와 가중치 합산에 대한 사전 이해도를 점검합니다. 틀려도 괜찮아요!",
+          q1: {
+            text: "Q1. 컴퓨터 알고리즘에서 여러 갈래 경로 중 탈출구가 없는 막다른 길이나 지연로를 사전에 배제하는 기법을 무엇이라 할까요?",
+            options: [
+              { val: "A", text: "① 가지치기" },
+              { val: "B", text: "② 무한 반복문" },
+              { val: "C", text: "③ 변수 선언" }
+            ],
+            ans: "A",
+            correctExplanation: "가지치기는 불필요한 분기를 사전에 잘라내어 탐색 효율을 극대화하는 알고리즘 최적화 기법입니다. [9정03-02]",
+            wrongExplanation: "정답은 ①번: 막다른 길이나 불필요한 지연로를 사전에 배제하는 기법은 가지치기입니다."
+          },
+          q2: {
+            text: "Q2. MAP 2처럼 빙판길과 갈림길이 섞여 있을 때 최적 경로를 판단하는 가장 올바른 기준은 무엇일까요?",
+            options: [
+              { val: "A", text: "① 지도에서 가장 넓어 보이는 길을 고른다." },
+              { val: "B", text: "② 각 구간의 소요 시간(가중치)을 더해 합산 시간이 가장 적게 걸리는 길을 선택한다." },
+              { val: "C", text: "③ 얼음 보물상자가 있는 쪽으로 먼저 이동한다." }
+            ],
+            ans: "B",
+            correctExplanation: "각 구간의 가중치(분)를 정확히 합산하여 총 소요 시간이 최소가 되는 경로를 찾는 것이 최적 알고리즘 설계입니다. [9정03-01]",
+            wrongExplanation: "정답은 ②번: 겉보기에 현혹되지 않고 구간별 소요 시간의 합을 비교해야 합니다."
+          }
+        },
+        post: {
+          desc: "설원 얼음동굴에서 학습한 다중 지연로 소거와 최적 경로 검증을 확인합니다.",
+          q1: {
+            text: "Q1. MAP 2에서 막다른 얼음빙벽(C, 미믹)과 얼음빙판 우회로(E)를 탈출로에서 배제해야 하는 핵심 이유는 무엇일까요?",
+            options: [
+              { val: "A", text: "① C는 탈출구가 없는 막다른 길이고, E는 4분이 걸려 직행로(D 2분)보다 2분이 지연되기 때문이다." },
+              { val: "B", text: "② 얼음 몬스터가 100마리 이상 출현하기 때문이다." },
+              { val: "C", text: "③ 얼음 바닥이라서 신발이 젖기 때문이다." }
+            ],
+            ans: "A",
+            correctExplanation: "C는 막다른 길, E는 4분이 걸리는 지연 우회로이므로 2분 직행로(D)를 위해 반드시 배제해야 합니다. [9정03-02]",
+            wrongExplanation: "정답은 ①번: 배제 이유는 막다른 방과 시간 지연(4분 vs 2분)이라는 논리적 근거에 기반해야 합니다."
+          },
+          q2: {
+            text: "Q2. MAP 2의 최적 탈출 경로 [A➔B➔D➔F➔G]의 총 소요 시간과 그 계산식이 올바르게 짝지어진 것은?",
+            options: [
+              { val: "A", text: "① 1분 + 2분 + 2분 + 1분 + 1분 = 총 7분" },
+              { val: "B", text: "② 1분 + 2분 + 4분 + 1분 = 총 8분" },
+              { val: "C", text: "③ 2분 + 2분 + 2분 + 2분 = 총 8분" }
+            ],
+            ans: "A",
+            correctExplanation: "구간별 소요 시간을 합산하면 A(1)+B(2)+D(2)+F(1)+G(1) = 총 7분이 정확히 도출됩니다. [9정03-01]",
+            wrongExplanation: "정답은 ①번: 각 핵심 구간의 시간을 더하면 1+2+2+1+1 = 총 7분입니다."
+          }
+        }
+      },
+      {
+        mapId: "T03",
+        mapNum: "MAP 3",
+        title: "시계탑 기관",
+        pre: {
+          desc: "수직 이동과 복잡한 톱니 기믹 속에서 문제 상태를 구조화하는 능력을 점검합니다. 틀려도 괜찮아요!",
+          q1: {
+            text: "Q1. 시계탑처럼 수많은 기어와 태엽이 얽힌 복잡한 환경에서 최단 탈출 알고리즘을 설계하기 위해 가장 먼저 필요한 과정은?",
+            options: [
+              { val: "A", text: "① 문제 상태를 출발점, 핵심 거점, 소요 시간, 탈출구로 단순화하여 구조화한다." },
+              { val: "B", text: "② 모든 톱니바퀴의 회전 속도를 똑같이 맞춘다." },
+              { val: "C", text: "③ 몬스터를 전부 쓰러뜨릴 때까지 제자리에 서 있는다." }
+            ],
+            ans: "A",
+            correctExplanation: "문제 해결의 첫 단계는 상태를 출발지, 목표지, 핵심 연결로 구조화하는 것입니다. [9정03-01]",
+            wrongExplanation: "정답은 ①번: 복잡한 기믹에 현혹되지 않고 핵심 요소와 시간으로 단순화해야 합니다."
+          },
+          q2: {
+            text: "Q2. 경로 탐색 시 특정 장소가 탈출구와 연결되지 않고 막혀 있는 막다른 곳임을 알았을 때 취해야 할 행동은?",
+            options: [
+              { val: "A", text: "① 그래도 혹시 모르니 끝까지 걸어가 본다." },
+              { val: "B", text: "② 탐색 후보 목록에서 즉시 지우고, 다른 연결 경로를 검토한다." },
+              { val: "C", text: "③ 게임을 처음부터 다시 시작한다." }
+            ],
+            ans: "B",
+            correctExplanation: "막다른 길을 즉시 소거하면 불필요한 연산과 탐색 낭비를 완벽히 차단할 수 있습니다. [9정03-02]",
+            wrongExplanation: "정답은 ②번: 막다른 곳임을 확인했다면 미련 없이 후보군에서 지우는 것이 올바른 알고리즘입니다."
+          }
+        },
+        post: {
+          desc: "시계탑 옥상 탈출에서 적용한 분쇄 함정 소거와 합산 식 도출을 확인합니다.",
+          q1: {
+            text: "Q1. MAP 3 시계탑에서 태엽창고(C, 미믹)와 거대 톱니 우회로(E)를 가지치기해야 하는 이유로 알맞은 것은?",
+            options: [
+              { val: "A", text: "① C는 막다른 방이고, E는 4분이 걸려 핵심 교각(D 2분)보다 비효율적이므로" },
+              { val: "B", text: "② 톱니바퀴 소리가 너무 시끄러워서" },
+              { val: "C", text: "③ 시계탑 꼭대기에 문이 닫혀 있어서" }
+            ],
+            ans: "A",
+            correctExplanation: "태엽창고(C)는 출구가 없는 막다른 방이며, 톱니 우회로(E)는 직행(2분) 대비 2분이 낭비되는 비효율적 경로입니다. [9정03-02]",
+            wrongExplanation: "정답은 ①번: 가지치기의 정당성은 막다른 구조와 시간 낭비(4분 vs 2분)에서 비롯됩니다."
+          },
+          q2: {
+            text: "Q2. 시계탑 최적 탈출 경로 [A➔B➔D➔F➔G (총 7분)]이 최선의 알고리즘임을 어떻게 검증할 수 있을까요?",
+            options: [
+              { val: "A", text: "① 합산 식(1+2+2+1+1=7분)을 통해 우회로를 이용하는 경로(총 9분)보다 2분 빠름을 수학적으로 비교한다." },
+              { val: "B", text: "② 시계 바늘이 정각 12시를 가리키는지 확인한다." },
+              { val: "C", text: "③ 엑스아머 몬스터를 모두 쓰러뜨렸는지 확인한다." }
+            ],
+            ans: "A",
+            correctExplanation: "수학적 합산 식을 통해 대안 경로(9분)와 비교하여 최소 시간(7분)임을 증명하는 것이 최적해 검증입니다. [9정03-02]",
+            wrongExplanation: "정답은 ①번: 최적 알고리즘 검증은 소요 시간 합산 식의 수치적 비교로 이루어집니다."
+          }
+        }
+      },
+      {
+        mapId: "T04",
+        mapNum: "MAP 4",
+        title: "심연 최종 탈출",
+        pre: {
+          desc: "역송 함정 유인과 다층 수직 미궁의 제약 조건을 판별하는 심화 추상화 능력을 점검합니다. 틀려도 괜찮아요!",
+          q1: {
+            text: "Q1. 경로 중 외견상 소요 시간이 짧아 보이지만, 플레이어를 시작 지점으로 강제 역송시키는 함정 구간이 있을 때 어떻게 해야 할까요?",
+            options: [
+              { val: "A", text: "① 제약 조건을 분석하여 해당 함정 경로를 최단 경로 후보에서 과감히 가지치기한다." },
+              { val: "B", text: "② 표시된 시간이 짧으니 무조건 그 길로 뛰어든다." },
+              { val: "C", text: "③ 지도에 표시된 모든 화살표를 반대로 바꾼다." }
+            ],
+            ans: "A",
+            correctExplanation: "조건부 제약(강제 역송, 불통)이 걸린 경로는 겉보기 시간이 짧더라도 올바른 해가 아니므로 배제해야 합니다. [9정03-02]",
+            wrongExplanation: "정답은 ①번: 시간이 짧아 보여도 역송 함정이라면 목표 도달이 불가능하므로 가지치기해야 합니다."
+          },
+          q2: {
+            text: "Q2. 상층과 지하 심연으로 나뉜 다층 복합 미궁에서 문제를 해결하는 올바른 추상화 과정은?",
+            options: [
+              { val: "A", text: "① 층간을 잇는 핵심 이동 수단(승강기)과 통행 불가 구역을 파악하여 구조화한다." },
+              { val: "B", text: "② 모든 몬스터의 체력과 공격력을 전부 암기한다." },
+              { val: "C", text: "③ 승강기를 타지 않고 즉사 구역으로 뛰어내린다." }
+            ],
+            ans: "A",
+            correctExplanation: "복잡한 다층 구조에서는 핵심 연결 수단(승강기)과 장애 요소를 식별하여 모델링하는 것이 첫걸음입니다. [9정03-01]",
+            wrongExplanation: "정답은 ①번: 세부 몬스터 수치에 얽매이지 않고 공간 간의 핵심 연결 상태를 파악해야 합니다."
+          }
+        },
+        post: {
+          desc: "만티코어다리 유인 함정 소거와 최종 8분 최적 탈출 경로 도출을 확인합니다.",
+          q1: {
+            text: "Q1. MAP 4에서 [만티코어다리 ➔ 함정마법진] 경로는 언뜻 7분으로 보여 유혹적이지만, 왜 반드시 가지치기해야 할까요?",
+            options: [
+              { val: "A", text: "① 함정마법진(W)을 밟는 순간 상층 서쪽복도로 강제 역송되어 탈출이 실패하기 때문이다." },
+              { val: "B", text: "② 만티코어가 나타나 길을 가로막기 때문이다." },
+              { val: "C", text: "③ 다리 발판의 색깔이 마음에 들지 않기 때문이다." }
+            ],
+            ans: "A",
+            correctExplanation: "외견상 7분으로 보이지만 실제로는 상층으로 강제 역송되는 치명적 함정이므로 탐색 트리에서 소거해야 합니다. [9정03-02]",
+            wrongExplanation: "정답은 ①번: 만티코어다리에서 이어지는 함정마법진은 시간을 낭비시키는 역송 함정이므로 반드시 배제해야 합니다."
+          },
+          q2: {
+            text: "Q2. MAP 4의 심연 최종 탈출 최적 경로 [A➔B➔C➔D➔E➔F➔G➔Z (총 8분)]에 대한 올바른 설명은?",
+            options: [
+              { val: "A", text: "① 상층 폐쇄철문(X2)과 만티코어 함정(M➔W)을 배제하고, 승강기(C)로 하강하여 심연대교로 탈출하는 유일한 최단 경로이다." },
+              { val: "B", text: "② 상층 폐쇄철문(X2)을 글리프 검으로 부수고 나가는 경로이다." },
+              { val: "C", text: "③ 심연 가시 즉사 구역으로 떨어져서 부활하는 편법 경로이다." }
+            ],
+            ans: "A",
+            correctExplanation: "폐쇄철문과 역송 함정을 모두 가지치기하고 승강기와 심연대교를 거치는 8분 합산 경로가 유일한 최적해입니다. [9정03-01, 9정03-02]",
+            wrongExplanation: "정답은 ①번: 불가능한 길과 함정을 배제한 후 승강기를 타는 8분 경로가 유일한 정답입니다."
+          }
+        }
+      }
+    ];
+
     function diagLoad() {
       try { return JSON.parse(localStorage.getItem('castleDiagScores') || '{}'); } catch (e) { return {}; }
     }
@@ -6059,78 +6316,236 @@
         localStorage.setItem('castleDiagScores', JSON.stringify(d));
       } catch (e) {}
     }
-    function diagRefresh() {
-      var d = diagLoad();
-      var pre = document.getElementById('diagPreScore');
-      var post = document.getElementById('diagPostScore');
-      var gain = document.getElementById('diagGain');
-      if (pre) pre.innerHTML = (d.pre === undefined) ? '아직 안 풀었어요' : ('<span class="text-grad-silver">' + d.pre + '점</span>');
-      if (post) post.innerHTML = (d.post === undefined) ? '아직 안 풀었어요' : ('<span class="text-grad-gold">' + d.post + '점</span>');
-      if (gain) {
-        if (d.pre === undefined || d.post === undefined) gain.textContent = '-';
-        else {
-          var diff = d.post - d.pre;
-          gain.innerHTML = diff > 0 
-            ? ('<span class="text-grad-gold">+' + diff + '점 성장!</span>') 
-            : (diff === 0 ? '<span style="color:#e2dbd0;">변화 없음</span>' : ('<span class="text-grad-crimson">' + diff + '점</span>'));
+
+    function switchDiagnosticStage(stageIdx) {
+      if (stageIdx < 0 || stageIdx >= DIAG_QUESTIONS.length) stageIdx = 0;
+      currentDiagStageIdx = stageIdx;
+      for (var s = 0; s < 4; s++) {
+        var btn = document.getElementById('diagStageBtn' + s);
+        if (btn) {
+          btn.className = (s === stageIdx) ? 'btn btn-sm btn-gold' : 'btn btn-sm';
         }
       }
+      renderDiagnosticQuestions();
+      hideDiagnosticFeedback();
     }
+
+    function hideDiagnosticFeedback() {
+      var fbPre = document.getElementById('preTestFeedback');
+      if (fbPre) { fbPre.style.display = 'none'; fbPre.innerHTML = ''; }
+      var fbPost = document.getElementById('postTestFeedback');
+      if (fbPost) { fbPost.style.display = 'none'; fbPost.innerHTML = ''; }
+    }
+
+    function renderDiagnosticQuestions() {
+      var dq = DIAG_QUESTIONS[currentDiagStageIdx];
+      if (!dq) return;
+
+      var preTitle = document.getElementById('diagPreTitle');
+      var preDesc = document.getElementById('diagPreDesc');
+      if (preTitle) preTitle.textContent = '📋 ' + dq.mapNum + ' (' + dq.title + ') 사전 평가: 게임을 하기 전에 풀어 보세요';
+      if (preDesc) preDesc.textContent = dq.pre.desc;
+
+      var postTitle = document.getElementById('diagPostTitle');
+      var postDesc = document.getElementById('diagPostDesc');
+      if (postTitle) postTitle.textContent = '🎯 ' + dq.mapNum + ' (' + dq.title + ') 사후 평가: 게임을 마친 뒤에 풀어 보세요';
+      if (postDesc) postDesc.textContent = dq.post.desc;
+
+      var preBox = document.getElementById('diagPreContainer');
+      if (preBox) {
+        preBox.innerHTML = renderQuestionBlock('pre', dq.pre.q1, 1) + renderQuestionBlock('pre', dq.pre.q2, 2);
+      }
+
+      var postBox = document.getElementById('diagPostContainer');
+      if (postBox) {
+        postBox.innerHTML = renderQuestionBlock('post', dq.post.q1, 1) + renderQuestionBlock('post', dq.post.q2, 2);
+      }
+    }
+
+    function renderQuestionBlock(type, q, num) {
+      var name = type + 'Q' + num;
+      var html = '<div style="background:rgba(18, 14, 22, 0.9); border:1px solid #4a361e; padding:12px; border-radius:6px; margin-bottom:12px;">' +
+        '<div style="font-weight:bold; color:#ffd54f; margin-bottom:8px; line-height:1.5;">' + escapeHtml(q.text) + '</div>';
+      q.options.forEach(function(opt) {
+        html += '<label style="display:block; margin-bottom:6px; cursor:pointer; color:#e2dbd0; font-size:12.5px;">' +
+          '<input type="radio" name="' + name + '" value="' + opt.val + '" style="margin-right:8px; vertical-align:middle;">' +
+          escapeHtml(opt.text) + '</label>';
+      });
+      html += '</div>';
+      return html;
+    }
+
+    function gradePreTest() {
+      playButtonClickSfx();
+      var dq = DIAG_QUESTIONS[currentDiagStageIdx];
+      var q1 = document.querySelector('input[name="preQ1"]:checked');
+      var q2 = document.querySelector('input[name="preQ2"]:checked');
+      if (!q1 || !q2) { alert(dq.mapNum + ' Q1과 Q2를 모두 골라 주세요.'); return; }
+
+      var c1 = (q1.value === dq.pre.q1.ans);
+      var c2 = (q2.value === dq.pre.q2.ans);
+      var score = (c1 ? 1 : 0) + (c2 ? 1 : 0);
+
+      var key = 'pre_' + dq.mapId;
+      diagSave(key, score);
+      if (dq.mapId === 'T01') diagSave('pre', score);
+
+      var fb = document.getElementById('preTestFeedback');
+      if (!fb) return;
+      fb.style.display = 'block';
+
+      if (score === 2) {
+        fb.style.background = 'rgba(27, 94, 32, 0.4)';
+        fb.style.border = '1px solid #2e7d32';
+        fb.style.color = '#a5d6a7';
+        fb.innerHTML = '<strong>🎉 ' + dq.mapNum + ' 2문제 모두 맞혔어요! (2/2점 만점)</strong><br/>' +
+          '• Q1: ' + dq.pre.q1.correctExplanation + '<br/>' +
+          '• Q2: ' + dq.pre.q2.correctExplanation + '<br/>' +
+          '훌륭합니다! 이제 ' + dq.mapNum + ' 고성 미궁에서 직접 최적 탈출을 실천해 보세요!';
+      } else {
+        fb.style.background = 'rgba(62, 39, 35, 0.5)';
+        fb.style.border = '1px solid #795548';
+        fb.style.color = '#ffe082';
+        fb.innerHTML = '<strong>💡 ' + dq.mapNum + ' ' + score + '/2 정답</strong><br/>' +
+          '• Q1 ' + (c1 ? '정답!' : dq.pre.q1.wrongExplanation) + '<br/>' +
+          '• Q2 ' + (c2 ? '정답!' : dq.pre.q2.wrongExplanation) + '<br/>' +
+          '게임을 플레이하면서 막다른 길을 직접 가지치기해 보세요!';
+      }
+      diagRefresh();
+    }
+
+    function gradePostTest() {
+      playButtonClickSfx();
+      var dq = DIAG_QUESTIONS[currentDiagStageIdx];
+      var q1 = document.querySelector('input[name="postQ1"]:checked');
+      var q2 = document.querySelector('input[name="postQ2"]:checked');
+      if (!q1 || !q2) { alert(dq.mapNum + ' Q1과 Q2를 모두 골라 주세요.'); return; }
+
+      var c1 = (q1.value === dq.post.q1.ans);
+      var c2 = (q2.value === dq.post.q2.ans);
+      var score = (c1 ? 1 : 0) + (c2 ? 1 : 0);
+
+      var key = 'post_' + dq.mapId;
+      diagSave(key, score);
+      if (dq.mapId === 'T01') diagSave('post', score);
+
+      var fb = document.getElementById('postTestFeedback');
+      if (!fb) return;
+      fb.style.display = 'block';
+
+      if (score === 2) {
+        fb.style.background = 'rgba(27, 94, 32, 0.4)';
+        fb.style.border = '1px solid #2e7d32';
+        fb.style.color = '#a5d6a7';
+        fb.innerHTML = '<strong>🌟 ' + dq.mapNum + ' 2문제 모두 맞혔어요! (2/2점 만점)</strong><br/>' +
+          '• Q1: ' + dq.post.q1.correctExplanation + '<br/>' +
+          '• Q2: ' + dq.post.q2.correctExplanation + '<br/>' +
+          '2022 개정 정보과 성취기준 [9정03-01]과 [9정03-02]를 완벽히 도달했습니다!';
+      } else {
+        fb.style.background = 'rgba(62, 39, 35, 0.5)';
+        fb.style.border = '1px solid #795548';
+        fb.style.color = '#ffe082';
+        fb.innerHTML = '<strong>💡 ' + dq.mapNum + ' ' + score + '/2 정답</strong><br/>' +
+          '• Q1 ' + (c1 ? '정답!' : dq.post.q1.wrongExplanation) + '<br/>' +
+          '• Q2 ' + (c2 ? '정답!' : dq.post.q2.wrongExplanation) + '<br/>' +
+          '[🎓 교육·평가 지도안]의 루브릭과 가지치기 요령을 다시 확인해 보세요!';
+      }
+      diagRefresh();
+    }
+
+    function diagRefresh() {
+      var d = diagLoad();
+      var container = document.getElementById('diagComparisonTableContainer');
+      if (!container) return;
+
+      var totalPre = 0, totalPost = 0;
+      var countPre = 0, countPost = 0;
+
+      var html = '<table style="width:100%; border-collapse:collapse; font-size:12.5px; background:rgba(12, 10, 16, 0.9); border:1px solid #4a361e; text-align:center;">' +
+        '<thead>' +
+          '<tr style="background:#1e1722; color:#e5c378; border-bottom:1px solid #5a4224;">' +
+            '<th style="padding:8px; border:1px solid #4a361e;">맵 구분</th>' +
+            '<th style="padding:8px; border:1px solid #4a361e;">사전 평가 (게임 전)</th>' +
+            '<th style="padding:8px; border:1px solid #4a361e;">사후 평가 (게임 후)</th>' +
+            '<th style="padding:8px; border:1px solid #4a361e;">성취도 성장</th>' +
+            '<th style="padding:8px; border:1px solid #4a361e;">이동</th>' +
+          '</tr>' +
+        '</thead>' +
+        '<tbody>';
+
+      DIAG_QUESTIONS.forEach(function(dq, idx) {
+        var preScore = d['pre_' + dq.mapId];
+        if (preScore === undefined && dq.mapId === 'T01' && d.pre !== undefined) preScore = d.pre;
+
+        var postScore = d['post_' + dq.mapId];
+        if (postScore === undefined && dq.mapId === 'T01' && d.post !== undefined) postScore = d.post;
+
+        var preStr = (preScore === undefined) ? '<span style="color:#888;">미응시</span>' : ('<span class="text-grad-silver" style="font-weight:bold;">' + preScore + ' / 2점</span>');
+        var postStr = (postScore === undefined) ? '<span style="color:#888;">미응시</span>' : ('<span class="text-grad-gold" style="font-weight:bold;">' + postScore + ' / 2점</span>');
+
+        var growthStr = '-';
+        if (preScore !== undefined && postScore !== undefined) {
+          var diff = postScore - preScore;
+          if (diff > 0) growthStr = '<span class="text-grad-gold" style="font-weight:bold;">+' + diff + '점 성장!</span>';
+          else if (diff === 0) growthStr = (postScore === 2) ? '<span style="color:#69f0ae; font-weight:bold;">만점 유지!</span>' : '<span style="color:#b0bec5;">변화 없음</span>';
+          else growthStr = '<span class="text-grad-crimson">' + diff + '점</span>';
+        }
+
+        if (preScore !== undefined) { totalPre += preScore; countPre++; }
+        if (postScore !== undefined) { totalPost += postScore; countPost++; }
+
+        html += '<tr style="border-bottom:1px solid #2f2347;">' +
+          '<td style="padding:8px; font-weight:bold; color:#ffd54f; text-align:left;">' + dq.mapNum + ' ' + dq.title + '</td>' +
+          '<td style="padding:8px;">' + preStr + '</td>' +
+          '<td style="padding:8px;">' + postStr + '</td>' +
+          '<td style="padding:8px;">' + growthStr + '</td>' +
+          '<td style="padding:8px;"><button class="btn btn-sm" onclick="switchDiagnosticStage(' + idx + '); switchDiagnosticTab(1);" style="padding:2px 8px; font-size:11px;">문제 보기</button></td>' +
+        '</tr>';
+      });
+
+      var totalGrowth = '-';
+      if (countPre > 0 && countPost > 0) {
+        var tDiff = totalPost - totalPre;
+        if (tDiff > 0) totalGrowth = '<span class="text-grad-gold" style="font-weight:bold; font-size:13px;">+' + tDiff + '점 성장!</span>';
+        else if (tDiff === 0) totalGrowth = '<span style="color:#69f0ae; font-weight:bold;">만점 유지!</span>';
+        else totalGrowth = '<span class="text-grad-crimson">' + tDiff + '점</span>';
+      }
+
+      html += '<tr style="background:#140e1b; font-weight:bold; border-top:2px solid #5a4224;">' +
+        '<td style="padding:10px; color:#fff59d;">🌟 전체 종합 (총 8점 만점)</td>' +
+        '<td style="padding:10px; color:#e0e0e0;">' + totalPre + ' / 8점 (' + countPre + '/4 완료)</td>' +
+        '<td style="padding:10px; color:#ffd54f;">' + totalPost + ' / 8점 (' + countPost + '/4 완료)</td>' +
+        '<td style="padding:10px;">' + totalGrowth + '</td>' +
+        '<td style="padding:10px;">-</td>' +
+      '</tr>' +
+      '</tbody></table>';
+
+      container.innerHTML = html;
+    }
+
+    function switchDiagnosticTab(tabIdx) {
+      playButtonClickSfx();
+      currentDiagTab = tabIdx;
+      for (var i = 1; i <= 3; i++) {
+        var btn = document.getElementById('diagTabBtn' + i);
+        var content = document.getElementById('diagTabContent' + i);
+        if (btn) btn.className = (i === tabIdx) ? 'btn btn-gold btn-sm' : 'btn btn-sm';
+        if (content) content.style.display = (i === tabIdx) ? 'block' : 'none';
+      }
+      if (tabIdx === 3) diagRefresh();
+    }
+
     function openDiagnosticModal() {
+      playButtonClickSfx();
       var m = document.getElementById('diagnosticModal');
       if (m) m.classList.remove('hidden');
-      diagRefresh();
+      switchDiagnosticStage(state.currentStageIdx || 0);
+      switchDiagnosticTab(1);
     }
     function closeDiagnosticModal() {
       playButtonClickSfx();
       var m = document.getElementById('diagnosticModal');
       if (m) m.classList.add('hidden');
-    }
-    function switchDiagnosticTab(tabIdx) {
-      playButtonClickSfx();
-      for (var i = 1; i <= 3; i++) {
-        var content = document.getElementById('diagTabContent' + i);
-        var btn = document.getElementById('diagTabBtn' + i);
-        if (content) content.style.display = (i === tabIdx) ? 'block' : 'none';
-        if (btn) btn.className = (i === tabIdx) ? 'btn btn-gold btn-sm' : 'btn btn-sm';
-      }
-      if (tabIdx === 3) diagRefresh();
-    }
-    function diagShow(fb, score, goodMsg, badMsg) {
-      fb.style.display = 'block';
-      if (score === 2) {
-        fb.style.background = 'rgba(38, 27, 15, 0.95)';
-        fb.style.border = '1px solid #785a21';
-        fb.style.color = '#e2dbd0';
-        fb.innerHTML = '<span class="text-grad-gold" style="font-weight:bold;">' + goodMsg + '</span>';
-      } else {
-        fb.style.background = 'rgba(40, 13, 17, 0.95)';
-        fb.style.border = '1px solid #63181e';
-        fb.style.color = '#e2dbd0';
-        fb.innerHTML = '<span class="text-grad-crimson" style="font-weight:bold;">' + badMsg + '</span>';
-      }
-    }
-    function gradePreTest() {
-      playButtonClickSfx();
-      var q1 = document.querySelector('input[name="preQ1"]:checked');
-      var q2 = document.querySelector('input[name="preQ2"]:checked');
-      if (!q1 || !q2) { alert('Q1과 Q2를 모두 골라 주세요.'); return; }
-      var score = (q1.value === 'B' ? 1 : 0) + (q2.value === 'B' ? 1 : 0);
-      diagSave('pre', score);
-      diagShow(document.getElementById('preTestFeedback'), score,
-        '<strong>🎉 2문제 모두 맞혔어요!</strong><br/>추상화가 무엇인지 잘 알고 있네요. 이제 고성 미궁에서 직접 확인해 보세요!',
-        '<strong>💡 ' + score + '/2 정답</strong><br/>• Q1 정답은 ②번: 정보 교과의 추상화는 흐릿하게 만드는 것이 아니라, 필요 없는 것을 빼고 핵심만 남기는 것입니다.<br/>• Q2 정답은 ②번: 무작정 달리기보다, 막다른 길과 함정을 먼저 지우면 훨씬 쉬워집니다.<br/>게임을 하면서 직접 익혀 봐요!');
-    }
-    function gradePostTest() {
-      playButtonClickSfx();
-      var q1 = document.querySelector('input[name="postQ1"]:checked');
-      var q2 = document.querySelector('input[name="postQ2"]:checked');
-      if (!q1 || !q2) { alert('Q1과 Q2를 모두 골라 주세요.'); return; }
-      var score = (q1.value === 'A' ? 1 : 0) + (q2.value === 'B' ? 1 : 0);
-      diagSave('post', score);
-      diagShow(document.getElementById('postTestFeedback'), score,
-        '<strong>🌟 2문제 모두 맞혔어요!</strong><br/>• Q1: 필요 없는 길을 먼저 지우면 따져 볼 길이 줄어듭니다.<br/>• Q2: 다른 길(10분)보다 이 길(6분)이 짧다는 것을 시간 계산으로 설명했어요.<br/>[9정03-01]과 [9정03-02]를 잘 이해했습니다!',
-        '<strong>💡 ' + score + '/2 정답</strong><br/>• Q1 정답은 ①번: 따져 볼 길이 줄어서 가장 빠른 길을 쉽게 찾을 수 있습니다.<br/>• Q2 정답은 ②번: 다른 길과 시간을 직접 더해서 비교해야 가장 빠른 길이라고 설명할 수 있습니다.<br/>[🎓 교육·평가 지도안]의 쉬운 설명을 다시 읽어 보세요!');
     }
 
     function openCopyrightModal() {
