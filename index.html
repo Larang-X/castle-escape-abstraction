@@ -2904,6 +2904,9 @@
           life: 25 + Math.floor(Math.random() * 20)
         });
       }
+      if (state.particles.length > 250) {
+        state.particles.splice(0, state.particles.length - 250);
+      }
     }
 
     function renderStageTabs() {
@@ -3026,6 +3029,7 @@
     }
 
     function resetCurrentStage() {
+      invalidateBgCache();
       var st = STAGES[state.currentStageIdx];
       state.currentStageGoalReached = false;
       state.gameOver = false;
@@ -3070,6 +3074,47 @@
         if (_up.get('pY')) {
           state.player.y = parseFloat(_up.get('pY'));
           state.cameraY = (st.worldH > _cH) ? Math.max(0, Math.min(st.worldH - _cH, state.player.y - _cH * 0.5)) : 0;
+        }
+        if ((_up.get('testDeathCast') === '1' || _up.get('testDeathSickle') === '1') && state.currentStageIdx === 3) {
+          var d = st.noises.find(function(n){ return n.id === 'n01'; });
+          if (d) {
+            d.x = 420;
+            d.y = 280;
+            d.actionState = 'cast_sickles';
+            d.actionTimer = 45;
+            state.hazardProjectiles = [{
+              type: 'death_sickle',
+              x: 360,
+              y: 285,
+              vx: -3.2,
+              vy: 0.2,
+              r: 12,
+              dmg: 18,
+              name: '사신의 회전 소형 낫',
+              animTick: 0,
+              wavePhase: 1.2,
+              life: 150
+            }, {
+              type: 'death_sickle',
+              x: 310,
+              y: 270,
+              vx: -3.4,
+              vy: -0.4,
+              r: 12,
+              dmg: 18,
+              name: '사신의 회전 소형 낫',
+              animTick: 2,
+              wavePhase: 2.5,
+              life: 140
+            }];
+            state.floatingTexts.push({
+              x: d.x + d.w * 0.5,
+              y: d.y - 22,
+              text: '🪄 사신의 주술: 회전 소형 낫 소환!',
+              color: '#e040fb',
+              life: 45
+            });
+          }
         }
       } catch(e){}
       state.player.vx = 0;
@@ -3635,8 +3680,11 @@
               if (nz.actionTimer <= 0) {
                 var rand = Math.random();
                 if (distP > 340) {
-                  // 원거리: 환영 순간이동 또는 대낫 치켜들기 급강하 일격
-                  if (rand < 0.55) {
+                  // 원거리: 소형 낫 소환 (40%) 또는 순간이동 (35%) 또는 대낫 치켜들기 급강하 일격 (25%)
+                  if (rand < 0.40) {
+                    nz.actionState = 'cast_sickles';
+                    nz.actionTimer = 70;
+                  } else if (rand < 0.75) {
                     nz.actionState = 'teleport';
                     nz.actionTimer = 30;
                   } else {
@@ -3644,11 +3692,14 @@
                     nz.actionTimer = 52;
                   }
                 } else {
-                  // 중근거리: 대낫 급강하 일격 참격 (50%) 또는 360도 전방위 회전 참격 (35%) 또는 순간이동 (15%)
-                  if (rand < 0.50) {
+                  // 중근거리: 소형 낫 소환 (30%) 또는 대낫 급강하 일격 (35%) 또는 360도 전방위 회전 참격 (25%) 또는 순간이동 (10%)
+                  if (rand < 0.30) {
+                    nz.actionState = 'cast_sickles';
+                    nz.actionTimer = 70;
+                  } else if (rand < 0.65) {
                     nz.actionState = 'overhead_cleave';
                     nz.actionTimer = 52;
-                  } else if (rand < 0.85) {
+                  } else if (rand < 0.90) {
                     nz.actionState = 'spin_slash';
                     nz.actionTimer = 44;
                   } else {
@@ -3734,6 +3785,56 @@
                   nz.actionState = 'stalk';
                   nz.actionTimer = 115 + Math.floor(Math.random() * 35);
                 }
+              }
+            } else if (nz.actionState === 'cast_sickles') {
+              // 4. 손 벌려 회전 소형 낫 소환 마법 영창 [104번 정품 스프라이트]
+              nz.vx *= 0.85;
+              nz.vy = Math.sin(nz.phaseTick * 0.12) * 0.4;
+              nz.x += nz.vx;
+              nz.y += nz.vy;
+
+              var handDir = (p.x < nz.x + nz.w * 0.5) ? -1 : 1;
+              var handX = nz.x + nz.w * 0.5 + handDir * 42;
+              var handY = nz.y + nz.h * 0.5 - 6;
+
+              if (nz.phaseTick % 2 === 0) {
+                spawnParticles(handX + (Math.random() - 0.5) * 12, handY + (Math.random() - 0.5) * 12, '#ba68c8', 2);
+              }
+
+              if (nz.actionTimer === 54 || nz.actionTimer === 38 || nz.actionTimer === 22) {
+                if (!state.hazardProjectiles) state.hazardProjectiles = [];
+                var angleToP = Math.atan2((p.y + 20) - handY, (p.x + 16) - handX) + (Math.random() - 0.5) * 0.32;
+                var sickSpd = 3.2 + Math.random() * 0.6;
+                state.hazardProjectiles.push({
+                  type: 'death_sickle',
+                  x: handX,
+                  y: handY,
+                  vx: Math.cos(angleToP) * sickSpd,
+                  vy: Math.sin(angleToP) * sickSpd,
+                  r: 12,
+                  dmg: 18,
+                  name: '사신의 회전 소형 낫',
+                  animTick: Math.floor(Math.random() * 4),
+                  wavePhase: Math.random() * Math.PI * 2,
+                  life: 180
+                });
+                spawnParticles(handX, handY, '#ea80fc', 12);
+                playSfx('cast', 0.85);
+
+                if (nz.actionTimer === 54) {
+                  state.floatingTexts.push({
+                    x: nz.x + nz.w * 0.5,
+                    y: nz.y - 22,
+                    text: '🪄 사신의 주술: 회전 소형 낫 소환!',
+                    color: '#e040fb',
+                    life: 45
+                  });
+                }
+              }
+
+              if (nz.actionTimer <= 0) {
+                nz.actionState = 'stalk';
+                nz.actionTimer = 95 + Math.floor(Math.random() * 35);
               }
             } else if (nz.actionState === 'teleport') {
               // 5. 환영 순간이동 (Phantom Teleport)
@@ -3941,16 +4042,35 @@
         }
       });
 
-      // Update hazard projectiles (수문장 참격파 등)
+      // Update hazard projectiles (수문장 참격파 및 사신의 회전 소형 낫 등)
       if (state.hazardProjectiles && state.hazardProjectiles.length > 0) {
         for (var hpIdx = state.hazardProjectiles.length - 1; hpIdx >= 0; hpIdx--) {
           var hp = state.hazardProjectiles[hpIdx];
+          if (hp.type === 'death_sickle') {
+            hp.wavePhase = (hp.wavePhase || 0) + 0.14;
+            hp.y += Math.sin(hp.wavePhase) * 1.1;
+            var dxToPlayer = (p.x + 16) - hp.x;
+            var dyToPlayer = (p.y + 20) - hp.y;
+            var dDist = Math.hypot(dxToPlayer, dyToPlayer);
+            if (dDist > 12 && hp.life > 30) {
+              hp.vx += (dxToPlayer / dDist) * 0.08;
+              hp.vy += (dyToPlayer / dDist) * 0.08;
+              var curSpd = Math.hypot(hp.vx, hp.vy);
+              if (curSpd > 3.6) {
+                hp.vx = (hp.vx / curSpd) * 3.6;
+                hp.vy = (hp.vy / curSpd) * 3.6;
+              }
+            }
+            if (state.player.animTick % 4 === 0) {
+              spawnParticles(hp.x, hp.y, '#ce93d8', 1);
+            }
+          }
           hp.x += hp.vx;
           hp.y += (hp.vy || 0);
           hp.life--;
           if (p.invulnTimer === 0 && !state.gameOver) {
             var pDist = Math.hypot((p.x + 16) - hp.x, (p.y + 20) - hp.y);
-            if (pDist < hp.r + 15) {
+            if (pDist < (hp.r || 14) + 15) {
               damagePlayer(hp.dmg, hp.name, hp.x);
               spawnParticles(hp.x, hp.y, '#ba68c8', 18);
               hp.life = 0;
@@ -4280,6 +4400,201 @@
       ctx.restore();
     }
 
+    var bgCacheCanvas = null;
+    var bgCacheKey = '';
+
+    function invalidateBgCache() {
+      bgCacheCanvas = null;
+      bgCacheKey = '';
+    }
+
+    function getBgCacheCanvas(st, isAbstractMode) {
+      var currentKey = st.id + '_' + (isAbstractMode ? 'abs' : 'norm') + '_' + st.worldW + 'x' + st.worldH;
+      if (bgCacheCanvas && bgCacheKey === currentKey) {
+        return bgCacheCanvas;
+      }
+
+      var c = document.createElement('canvas');
+      c.width = st.worldW;
+      c.height = st.worldH;
+      var bctx = c.getContext('2d');
+      bctx.imageSmoothingEnabled = false;
+
+      // 1. Base Sky / Cavern Backdrop
+      var grad = bctx.createLinearGradient(0, 0, 0, st.worldH);
+      grad.addColorStop(0, st.themeBg[0]);
+      grad.addColorStop(0.68, st.themeBg[1]);
+      grad.addColorStop(1, '#07040b');
+      bctx.fillStyle = grad;
+      bctx.fillRect(0, 0, st.worldW, st.worldH);
+
+      // 2. Background Architecture
+      bctx.save();
+      bctx.globalAlpha = isAbstractMode ? 0.15 : 0.78;
+      var bgTile0 = loadedImages[st.tileSheet0];
+      var bgTile1 = loadedImages[st.tileSheet1];
+
+      if (st.id === 'T03') {
+        var clockWall = loadedImages['tile_clock_wall'];
+        if (clockWall && clockWall.complete) {
+          for (var cwx = 0; cwx < st.worldW; cwx += 128) {
+            for (var cwy = 36; cwy < st.worldH - 50; cwy += 128) {
+              bctx.drawImage(clockWall, cwx, cwy, 128, 128);
+            }
+          }
+        }
+        if (bgTile0 && bgTile0.complete && bgTile1 && bgTile1.complete) {
+          for (var cmx = 20; cmx < st.worldW; cmx += 256) {
+            bctx.drawImage(bgTile0, cmx, 60, 128, 128);
+            bctx.drawImage(bgTile1, cmx + 128, 60, 128, 128);
+            bctx.drawImage(bgTile0, cmx, 240, 128, 128);
+            bctx.drawImage(bgTile1, cmx + 128, 240, 128, 128);
+          }
+        }
+      } else {
+        for (var wx = 38; wx < st.worldW; wx += 128) {
+          bctx.fillStyle = st.themeBg[1];
+          bctx.fillRect(wx, 42, 82, st.worldH - 100);
+        }
+        if (bgTile0 && bgTile0.complete) {
+          for (var bx = 0; bx < st.worldW; bx += 128) {
+            for (var by = 38; by < st.worldH - 60; by += 260) {
+              bctx.drawImage(bgTile0, 0, 0, 128, 110, bx, by, 128, 130);
+              if (bgTile1 && bgTile1.complete) {
+                bctx.drawImage(bgTile1, 0, 0, 128, 110, bx, by + 130, 128, 130);
+              }
+            }
+          }
+        }
+      }
+
+      // MAP 1, MAP 2 전용 고딕 장식 대기둥 렌더링
+      if (st.id === 'T01' || st.id === 'T02') {
+        var pillarImg = loadedImages['spr_pillar'];
+        if (pillarImg && pillarImg.complete) {
+          for (var px = 20; px < st.worldW; px += 260) {
+            bctx.drawImage(pillarImg, px, 130, 50, st.worldH - 180);
+          }
+        }
+      }
+      bctx.restore();
+
+      // 3. Static Bottom Hazard Textures
+      bctx.save();
+      var bHazY = st.worldH - 46;
+      if (st.id === 'T01') {
+        var hazLava = loadedImages['tile_haz_lava'];
+        if (hazLava && hazLava.complete) {
+          for (var lx = 0; lx < st.worldW; lx += 128) {
+            bctx.drawImage(hazLava, 0, 48, 128, 64, lx, bHazY, 128, 46);
+          }
+        }
+      } else if (st.id === 'T02') {
+        var hazIce = loadedImages['tile_haz_glacier'];
+        if (hazIce && hazIce.complete) {
+          for (var ix = 0; ix < st.worldW; ix += 128) {
+            bctx.drawImage(hazIce, 0, 64, 128, 64, ix, bHazY, 128, 44);
+          }
+        }
+        var spkIce = loadedImages['tile_spikes_ice'];
+        if (spkIce && spkIce.complete) {
+          for (var sx = 0; sx < st.worldW; sx += 64) {
+            bctx.drawImage(spkIce, sx, bHazY - 2, 64, 20);
+          }
+        }
+      } else if (st.id === 'T03') {
+        var spkSteel = loadedImages['tile_spikes_steel'];
+        if (spkSteel && spkSteel.complete) {
+          for (var stx = 0; stx < st.worldW; stx += 64) {
+            bctx.drawImage(spkSteel, stx, bHazY - 2, 64, 22);
+          }
+        }
+      } else {
+        // MAP 4 HARD MODE: 심연 바닥 흑요석 및 가시, 해골
+        var pitGrad = bctx.createLinearGradient(0, bHazY - 40, 0, st.worldH);
+        pitGrad.addColorStop(0, 'rgba(10, 2, 6, 0.1)');
+        pitGrad.addColorStop(0.4, 'rgba(74, 8, 18, 0.85)');
+        pitGrad.addColorStop(1, 'rgba(183, 28, 28, 0.95)');
+        bctx.fillStyle = pitGrad;
+        bctx.fillRect(0, bHazY - 30, st.worldW, 76);
+
+        var platCastle = loadedImages['tile_plat_castle'];
+        if (platCastle && platCastle.complete) {
+          for (var cx = 0; cx < st.worldW; cx += 96) {
+            bctx.drawImage(platCastle, cx, bHazY - 6, 96, 32);
+          }
+        }
+
+        var spkDos = loadedImages['tile_spikes_dos'];
+        if (spkDos && spkDos.complete) {
+          bctx.save();
+          bctx.globalAlpha = 0.65;
+          for (var ssx = 8; ssx < st.worldW; ssx += 64) {
+            bctx.drawImage(spkDos, ssx, bHazY - 38, 64, 32);
+          }
+          bctx.restore();
+          for (var bsx = 0; bsx < st.worldW; bsx += 64) {
+            bctx.drawImage(spkDos, bsx, bHazY - 32, 64, 32);
+          }
+        } else {
+          var spkSteel = loadedImages['tile_spikes_steel'];
+          var spkBlood = loadedImages['tile_spikes_blood'];
+          if (spkSteel && spkSteel.complete) {
+            bctx.save();
+            bctx.globalAlpha = 0.55;
+            for (var ssx = 32; ssx < st.worldW; ssx += 64) {
+              bctx.drawImage(spkSteel, ssx, bHazY - 32, 64, 26);
+            }
+            bctx.restore();
+          }
+          if (spkBlood && spkBlood.complete) {
+            for (var bsx = 0; bsx < st.worldW; bsx += 64) {
+              bctx.drawImage(spkBlood, bsx, bHazY - 24, 64, 24);
+            }
+          }
+        }
+
+        var skullImg = loadedImages['spr_dest_skull'];
+        if (skullImg && skullImg.complete) {
+          for (var skx = 70; skx < st.worldW; skx += 160) {
+            bctx.drawImage(skullImg, skx, bHazY - 20, 24, 24);
+          }
+        }
+
+        if (st.instantHazards) {
+          st.instantHazards.forEach(function(ih) {
+            bctx.save();
+            if (ih.r) {
+              var radGlow = bctx.createRadialGradient(ih.x, ih.y, 4, ih.x, ih.y, ih.r);
+              radGlow.addColorStop(0, 'rgba(255, 23, 68, 0.45)');
+              radGlow.addColorStop(1, 'rgba(183, 28, 28, 0.15)');
+              bctx.fillStyle = radGlow;
+              bctx.strokeStyle = '#ff1744';
+              bctx.lineWidth = 2.5;
+              bctx.beginPath();
+              bctx.arc(ih.x, ih.y, ih.r, 0, Math.PI * 2);
+              bctx.fill();
+              bctx.stroke();
+            } else {
+              bctx.strokeStyle = '#ff1744';
+              bctx.lineWidth = 2;
+              bctx.strokeRect(ih.x, ih.y, ih.w, ih.h);
+            }
+            bctx.font = 'bold 12px "Noto Serif KR", "Nanum Myeongjo", serif';
+            bctx.fillStyle = '#ff8a80';
+            bctx.textAlign = 'center';
+            bctx.fillText(ih.name, ih.x + (ih.w ? ih.w * 0.5 : 0), (ih.y ? ih.y - 12 : 40));
+            bctx.restore();
+          });
+        }
+      }
+      bctx.restore();
+
+      bgCacheCanvas = c;
+      bgCacheKey = currentKey;
+      return bgCacheCanvas;
+    }
+
     function drawMainGame() {
       var ctx = gameCanvas.getContext('2d');
       ctx.imageSmoothingEnabled = false;
@@ -4287,7 +4602,7 @@
       var stats = getRemovableNoiseStats();
       var isAbstractMode = state.abstractSight || (stats.removed >= stats.total);
 
-      // 1. Base Sky / Cavern Backdrop
+      // 1. Base Sky / Cavern Backdrop (뷰포트 배경 클리어)
       var grad = ctx.createLinearGradient(0, 0, 0, 480);
       grad.addColorStop(0, st.themeBg[0]);
       grad.addColorStop(0.68, st.themeBg[1]);
@@ -4303,21 +4618,22 @@
         ctx.translate(-Math.round(state.cameraX), -Math.round(state.cameraY || 0));
       }
 
-      // 2. Background Architecture
-      ctx.save();
-      ctx.globalAlpha = isAbstractMode ? 0.15 : 0.78;
-      var bgTile0 = loadedImages[st.tileSheet0];
-      var bgTile1 = loadedImages[st.tileSheet1];
+      // 2. 고속 오프스크린 캐시 배경 일괄 렌더링 (단 1회의 GPU 블릿으로 300회 이상의 개별 호출 렉 완전 해소)
+      var bgCanvas = getBgCacheCanvas(st, isAbstractMode);
+      if (bgCanvas) {
+        ctx.drawImage(bgCanvas, 0, 0);
+      }
 
-      if (state.currentStageIdx === 2) {
-        var clockWall = loadedImages['tile_clock_wall'];
-        if (clockWall && clockWall.complete) {
-          for (var cwx = 0; cwx < st.worldW; cwx += 128) {
-            for (var cwy = 36; cwy < st.worldH - 50; cwy += 128) {
-              ctx.drawImage(clockWall, cwx, cwy, 128, 128);
-            }
+      // 3. 실시간 동적 배경 효과 렌더링
+      var bHazY = st.worldH - 46;
+      if (state.currentStageIdx === 0) {
+        var fireImg = loadedImages[(Math.floor(state.player.animTick / 9) % 2 === 0) ? 'spr_fire_f1' : 'spr_fire_f2'];
+        if (fireImg && fireImg.complete) {
+          for (var fx = 12; fx < st.worldW; fx += 78) {
+            ctx.drawImage(fireImg, fx, bHazY - 16, 40, 56);
           }
         }
+      } else if (state.currentStageIdx === 2) {
         var gearImg = loadedImages['spr_gear_large'];
         if (gearImg && gearImg.complete) {
           for (var gxBg = 160; gxBg < st.worldW; gxBg += 280) {
@@ -4328,179 +4644,19 @@
             ctx.drawImage(gearImg, -75, -75, 150, 150);
             ctx.restore();
           }
-        }
-        if (bgTile0 && bgTile0.complete && bgTile1 && bgTile1.complete) {
-          for (var cmx = 20; cmx < st.worldW; cmx += 256) {
-            ctx.drawImage(bgTile0, cmx, 60, 128, 128);
-            ctx.drawImage(bgTile1, cmx + 128, 60, 128, 128);
-            ctx.drawImage(bgTile0, cmx, 240, 128, 128);
-            ctx.drawImage(bgTile1, cmx + 128, 240, 128, 128);
-          }
-        }
-      } else {
-        for (var wx = 38; wx < st.worldW; wx += 128) {
-          ctx.fillStyle = st.themeBg[1];
-          ctx.fillRect(wx, 42, 82, st.worldH - 100);
-        }
-        if (bgTile0 && bgTile0.complete) {
-          for (var bx = 0; bx < st.worldW; bx += 128) {
-            for (var by = 38; by < st.worldH - 60; by += 260) {
-              ctx.drawImage(bgTile0, 0, 0, 128, 110, bx, by, 128, 130);
-              if (bgTile1 && bgTile1.complete) {
-                ctx.drawImage(bgTile1, 0, 0, 128, 110, bx, by + 130, 128, 130);
-              }
-            }
-          }
-        }
-      }
-
-      // MAP 1, MAP 2 전용 고딕 장식 기둥 렌더링
-      if (st.id === 'T01' || st.id === 'T02') {
-        var pillarImg = loadedImages['spr_pillar'];
-        if (pillarImg && pillarImg.complete) {
-          for (var px = 20; px < st.worldW; px += 260) {
-            ctx.drawImage(pillarImg, px, 130, 50, st.worldH - 180);
-          }
-        }
-      }
-      ctx.restore();
-
-      // 3. Bottom Hazard Textures & Instant Death Pit
-      ctx.save();
-      var bHazY = st.worldH - 46;
-      if (state.currentStageIdx === 0) {
-        var hazLava = loadedImages['tile_haz_lava'];
-        if (hazLava && hazLava.complete) {
-          for (var lx = 0; lx < st.worldW; lx += 128) {
-            ctx.drawImage(hazLava, 0, 48, 128, 64, lx, bHazY, 128, 46);
-          }
-        }
-        var fireImg = loadedImages[(Math.floor(state.player.animTick / 9) % 2 === 0) ? 'spr_fire_f1' : 'spr_fire_f2'];
-        if (fireImg && fireImg.complete) {
-          for (var fx = 12; fx < st.worldW; fx += 78) {
-            ctx.drawImage(fireImg, fx, bHazY - 16, 40, 56);
-          }
-        }
-      } else if (state.currentStageIdx === 1) {
-        var hazIce = loadedImages['tile_haz_glacier'];
-        if (hazIce && hazIce.complete) {
-          for (var ix = 0; ix < st.worldW; ix += 128) {
-            ctx.drawImage(hazIce, 0, 64, 128, 64, ix, bHazY, 128, 44);
-          }
-        }
-        var spkIce = loadedImages['tile_spikes_ice'];
-        if (spkIce && spkIce.complete) {
-          for (var sx = 0; sx < st.worldW; sx += 64) {
-            ctx.drawImage(spkIce, sx, bHazY - 2, 64, 20);
-          }
-        }
-      } else if (state.currentStageIdx === 2) {
-        var gearPit = loadedImages['spr_gear_large'];
-        if (gearPit && gearPit.complete) {
           for (var gx = 30; gx < st.worldW; gx += 115) {
             ctx.save();
             ctx.translate(gx, bHazY + 20);
             ctx.rotate(state.player.animTick * 0.025 * (gx % 230 === 0 ? 1 : -1));
-            ctx.drawImage(gearPit, -40, -40, 80, 80);
+            ctx.drawImage(gearImg, -40, -40, 80, 80);
             ctx.restore();
           }
         }
-        var spkSteel = loadedImages['tile_spikes_steel'];
-        if (spkSteel && spkSteel.complete) {
-          for (var stx = 0; stx < st.worldW; stx += 64) {
-            ctx.drawImage(spkSteel, stx, bHazY - 2, 64, 22);
-          }
-        }
-      } else {
-        // MAP 4 HARD MODE: Impregnable Dark Gothic Castle & Cursed Instant Death Abyss Pit
-        // 1. Deep abyss chasm background glow
-        var pitGrad = ctx.createLinearGradient(0, bHazY - 40, 0, st.worldH);
-        pitGrad.addColorStop(0, 'rgba(10, 2, 6, 0.1)');
-        pitGrad.addColorStop(0.4, 'rgba(74, 8, 18, 0.85)');
-        pitGrad.addColorStop(1, 'rgba(183, 28, 28, 0.95)');
-        ctx.fillStyle = pitGrad;
-        ctx.fillRect(0, bHazY - 30, st.worldW, 76);
-
-        // 2. Weathered Dark Obsidian Stone Floor Foundation
-        var platCastle = loadedImages['tile_plat_castle'];
-        if (platCastle && platCastle.complete) {
-          for (var cx = 0; cx < st.worldW; cx += 96) {
-            ctx.drawImage(platCastle, cx, bHazY - 6, 96, 32);
-          }
-        }
-
-        // 3. [정통 창월의 십자가 즉사 가시] Dual-Layer Staggered DOS Needles/Spikes (지저명부/시계탑 정통 붉은 가시)
-        var spkDos = loadedImages['tile_spikes_dos'];
-        if (spkDos && spkDos.complete) {
-          // Depth shadow layer (staggered offset)
-          ctx.save();
-          ctx.globalAlpha = 0.65;
-          for (var ssx = 8; ssx < st.worldW; ssx += 64) {
-            ctx.drawImage(spkDos, ssx, bHazY - 38, 64, 32);
-          }
-          ctx.restore();
-          // Front lethal spike layer
-          for (var bsx = 0; bsx < st.worldW; bsx += 64) {
-            ctx.drawImage(spkDos, bsx, bHazY - 32, 64, 32);
-          }
-        } else {
-          var spkSteel = loadedImages['tile_spikes_steel'];
-          var spkBlood = loadedImages['tile_spikes_blood'];
-          if (spkSteel && spkSteel.complete) {
-            ctx.save();
-            ctx.globalAlpha = 0.55;
-            for (var ssx = 32; ssx < st.worldW; ssx += 64) {
-              ctx.drawImage(spkSteel, ssx, bHazY - 32, 64, 26);
-            }
-            ctx.restore();
-          }
-          if (spkBlood && spkBlood.complete) {
-            for (var bsx = 0; bsx < st.worldW; bsx += 64) {
-              ctx.drawImage(spkBlood, bsx, bHazY - 24, 64, 24);
-            }
-          }
-        }
-
-        // 4. Impaled Skull & Bone Relics along the Trench
-        var skullImg = loadedImages['spr_dest_skull'];
-        if (skullImg && skullImg.complete) {
-          for (var skx = 70; skx < st.worldW; skx += 160) {
-            ctx.drawImage(skullImg, skx, bHazY - 20, 24, 24);
-          }
-        }
-
-        // 5. Rising Cursed Blood Miasma Wave
+      } else if (state.currentStageIdx === 3) {
+        // MAP 4: Rising Cursed Blood Miasma Wave
         var miasmaWave = Math.sin(state.player.animTick * 0.08) * 4;
         ctx.fillStyle = 'rgba(255, 23, 68, 0.18)';
         ctx.fillRect(0, bHazY - 18 + miasmaWave, st.worldW, 14);
-
-        // 6. Draw Menacing Gothic Warning Emblems
-        if (st.instantHazards) {
-          st.instantHazards.forEach(function(ih) {
-            ctx.save();
-            if (ih.r) {
-              var radGlow = ctx.createRadialGradient(ih.x, ih.y, 4, ih.x, ih.y, ih.r);
-              radGlow.addColorStop(0, 'rgba(255, 23, 68, 0.45)');
-              radGlow.addColorStop(1, 'rgba(183, 28, 28, 0.15)');
-              ctx.fillStyle = radGlow;
-              ctx.strokeStyle = '#ff1744';
-              ctx.lineWidth = 2.5;
-              ctx.beginPath();
-              ctx.arc(ih.x, ih.y, ih.r, 0, Math.PI * 2);
-              ctx.fill();
-              ctx.stroke();
-            } else {
-              ctx.strokeStyle = '#ff1744';
-              ctx.lineWidth = 2;
-              ctx.strokeRect(ih.x, ih.y, ih.w, ih.h);
-            }
-            ctx.font = 'bold 12px "Noto Serif KR", "Nanum Myeongjo", serif';
-            ctx.fillStyle = '#ff8a80';
-            ctx.textAlign = 'center';
-            ctx.fillText(ih.name, ih.x + (ih.w ? ih.w * 0.5 : 0), (ih.y ? ih.y - 12 : 40));
-            ctx.restore();
-          });
-        }
       }
 
       // [맵별 고유 특색 장애물 렌더링: 각 스테이지 고유의 물리 위험 요소 - 정통 캐슬바니아 스프라이트 렌더링]
@@ -4622,7 +4778,6 @@
           ctx.restore();
         });
       }
-      ctx.restore();
 
       // 4. Draw Graph Edges (추상화 비계 설정: 기본 탐색 시 정답 파란선 미노출, 통과 경로 초록 하이라이트, 70% 가지치기 또는 힌트 시에만 최적선 해금)
       var statsForGuide = getRemovableNoiseStats ? getRemovableNoiseStats() : { removed: 0, total: 1 };
@@ -4839,6 +4994,30 @@
               ctx.restore();
               ctx.drawImage(spSpr, -48, -58, 96, 115);
             }
+          } else if (nz.actionState === 'cast_sickles') {
+            // [정통 캐슬바니아 사신 데스: 손 벌려 전방 회전 소형 낫 소환 마법 영창 모션 [104번 정품 프레임]]
+            var cSpr = loadedImages['spr_death_cast'];
+            if (cSpr && cSpr.complete) {
+              ctx.save();
+              ctx.globalAlpha = 0.45;
+              ctx.drawImage(cSpr, -55 - (nz.vx * 0.8), -44 - (nz.vy * 0.8), 111, 88);
+              ctx.restore();
+              ctx.drawImage(cSpr, -55, -44, 111, 88);
+            }
+            // 벌린 손끝 마법 기운
+            var handLocalX = -46;
+            var handLocalY = -6;
+            ctx.save();
+            var pulse = 0.5 + Math.sin(state.player.animTick * 0.22) * 0.35;
+            var radMag = ctx.createRadialGradient(handLocalX, handLocalY, 2, handLocalX, handLocalY, 18);
+            radMag.addColorStop(0, 'rgba(243, 229, 245, ' + (pulse * 0.95) + ')');
+            radMag.addColorStop(0.5, 'rgba(224, 64, 251, ' + (pulse * 0.65) + ')');
+            radMag.addColorStop(1, 'rgba(123, 31, 162, 0)');
+            ctx.fillStyle = radMag;
+            ctx.beginPath();
+            ctx.arc(handLocalX, handLocalY, 18, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
           } else if (nz.actionState === 'teleport' && nz.actionTimer < 20 && nz.actionTimer > 10) {
             // 순간이동 중 소멸 상태
           } else {
@@ -5020,7 +5199,7 @@
             var frameNum = (Math.floor(state.player.animTick / 3) + (hp.animTick || 0)) % 4 + 1;
             var sickleSpr = loadedImages['spr_death_sickle' + frameNum];
             if (sickleSpr && sickleSpr.complete) {
-              ctx.drawImage(sickleSpr, -20, -20, 40, 40);
+              ctx.drawImage(sickleSpr, -12, -12, 24, 24);
             } else {
               ctx.fillStyle = '#80deea';
               ctx.beginPath();
@@ -6401,6 +6580,20 @@
       if (lp) lp.classList.add('hidden');
       var gv = document.getElementById('gameAppView');
       if (gv) gv.classList.remove('hidden');
+    }
+    if (urlParams.get('wide') === '1') {
+      state.wideOverview = true;
+    }
+    if (urlParams.get('testDeathCast') === '1' && state.currentStageIdx === 3) {
+      setTimeout(function() {
+        var d = STAGES[3].noises.find(function(n){ return n.id === 'n01'; });
+        if (d) {
+          d.x = state.player.x + 180;
+          d.y = state.player.y - 20;
+          d.actionState = 'cast_sickles';
+          d.actionTimer = 55;
+        }
+      }, 100);
     }
     if (urlParams.get('testGate') === '1') {
       var cr = document.getElementById('copyrightScreenView');
