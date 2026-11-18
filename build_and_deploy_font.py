@@ -219,11 +219,11 @@ check_grid = [
 char_to_grid['✓'] = [[b == 1 for b in r] for r in check_grid]
 char_to_grid['✅'] = [[b == 1 for b in r] for r in check_grid]
 
-# Build TrueType Font
+# Build TrueType Font with comfortable inter-glyph spacing
 PIXEL_SIZE = 100
 UPM = 1200
-ASCENT = 1000
-DESCENT = -200
+ASCENT = 1050
+DESCENT = -250
 
 def compile_ttf(output_path):
     fb = FontBuilder(UPM, isTTF=True)
@@ -247,12 +247,12 @@ def compile_ttf(output_path):
     # Empty notdef
     pen = TTGlyphPen(None)
     glyphs['.notdef'] = pen.glyph()
-    metrics['.notdef'] = (600, 0)
+    metrics['.notdef'] = (650, 0)
 
-    # Space
+    # Space: comfortable word gap
     pen = TTGlyphPen(None)
     glyphs['space'] = pen.glyph()
-    metrics['space'] = (500, 0)
+    metrics['space'] = (600, 0)
 
     for ch in sorted_chars:
         if ch == ' ': continue
@@ -265,7 +265,7 @@ def compile_ttf(output_path):
         if not used_cols:
             pen = TTGlyphPen(None)
             glyphs[gname] = pen.glyph()
-            adv = 500 if is_ascii else 1200
+            adv = 600 if is_ascii else 1320
             metrics[gname] = (adv, 0)
             continue
 
@@ -274,21 +274,27 @@ def compile_ttf(output_path):
         w_pix = max_c - min_c + 1
 
         if is_ascii:
-            # Shift glyph so min_c starts at 1
+            # Shift glyph so min_c starts at 1 (100 units left bearing)
             col_shift = min_c - 1 if min_c > 0 else 0
-            if ch in 'il1!|:;,.':
+            if ch in 'il!|:;,.':
                 col_shift = min_c - 1 if min_c > 1 else 0
-                adv = max(400, (w_pix + 2) * PIXEL_SIZE)
+                adv = max(480, (w_pix + 3) * PIXEL_SIZE)
             elif ch in '[](){}':
                 col_shift = min_c - 1 if min_c > 0 else 0
-                adv = 500
+                adv = 620
             elif ch in 'mwMW@%#':
-                adv = max(700, (w_pix + 1) * PIXEL_SIZE)
+                adv = max(800, (w_pix + 2) * PIXEL_SIZE)
+            elif ch in '0123456789':
+                # Uniform tabular digits with generous breathing room
+                adv = 720
             else:
-                adv = 600
+                adv = 700
+            x_pad = 20
         else:
+            # Hangul and fullwidth symbols: add 1.2px extra advance width + 40 units left pad
             col_shift = 0
-            adv = 1200
+            adv = 1320
+            x_pad = 40
 
         pen = TTGlyphPen(None)
         for r in range(12):
@@ -303,8 +309,8 @@ def compile_ttf(output_path):
                         c += 1
                     c_end = c - 1
 
-                    x_left = (c_start - col_shift) * PIXEL_SIZE
-                    x_right = (c_end + 1 - col_shift) * PIXEL_SIZE
+                    x_left = (c_start - col_shift) * PIXEL_SIZE + x_pad
+                    x_right = (c_end + 1 - col_shift) * PIXEL_SIZE + x_pad
 
                     pen.moveTo((x_left, y_bottom))
                     pen.lineTo((x_right, y_bottom))
@@ -315,21 +321,21 @@ def compile_ttf(output_path):
                     c += 1
 
         glyphs[gname] = pen.glyph()
-        lsb = min((c - col_shift) * PIXEL_SIZE for c in used_cols)
+        lsb = min((c - col_shift) * PIXEL_SIZE + x_pad for c in used_cols)
         metrics[gname] = (adv, lsb)
 
     fb.setupGlyf(glyphs)
     fb.setupHorizontalMetrics(metrics)
-    fb.setupHorizontalHeader(ascent=ASCENT, descent=DESCENT)
+    fb.setupHorizontalHeader(ascent=ASCENT, descent=DESCENT, lineGap=200)
     fb.setupNameTable({
         'familyName': 'CastlevaniaKorean',
         'styleName': 'Regular',
         'uniqueFontIdentifier': 'CastlevaniaKorean-Regular',
         'fullName': 'CastlevaniaKorean Regular',
         'psName': 'CastlevaniaKorean-Regular',
-        'version': 'Version 1.0'
+        'version': 'Version 1.1'
     })
-    fb.setupOS2(sTypoAscender=ASCENT, sTypoDescender=DESCENT, sTypoLineGap=0,
+    fb.setupOS2(sTypoAscender=ASCENT, sTypoDescender=DESCENT, sTypoLineGap=200,
                  usWinAscent=ASCENT, usWinDescent=-DESCENT,
                  sxHeight=600, sCapHeight=800)
     fb.setupPost()
