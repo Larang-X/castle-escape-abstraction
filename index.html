@@ -88,9 +88,10 @@
       outline: 1px solid rgba(197, 160, 89, 0.35);
       outline-offset: -5px;
       border-radius: 8px;
-      max-width: 680px;
+      max-width: 560px;
       width: 100%;
-      padding: 32px 28px;
+      padding: 28px 24px;
+      box-sizing: border-box;
       box-shadow: 0 0 70px rgba(0, 0, 0, 0.98), 0 0 40px rgba(110, 20, 24, 0.35), inset 0 0 45px rgba(0, 0, 0, 0.85);
       text-align: center;
       position: relative;
@@ -123,7 +124,9 @@
       font-size: 13px;
       color: #e2dbd0;
       margin-bottom: 16px;
-      line-height: 1.5;
+      line-height: 1.6;
+      word-break: keep-all;
+      text-align: center;
     }
 
     .prologue-card {
@@ -132,8 +135,10 @@
       border-left: 4px solid #c5a059;
       border-radius: 8px;
       padding: 14px 18px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       text-align: left;
+      box-sizing: border-box;
+      width: 100%;
       box-shadow: 0 4px 18px rgba(0, 0, 0, 0.7);
     }
     .prologue-title {
@@ -147,9 +152,12 @@
       letter-spacing: 0.03em;
     }
     .prologue-desc {
-      font-size: 12.5px;
+      font-size: 13px;
       color: #e2dbd0;
-      line-height: 1.65;
+      line-height: 1.7;
+      text-align: justify;
+      word-break: keep-all;
+      margin: 0;
     }
 
     /* Simplified, Unified Control Mode Card */
@@ -919,23 +927,23 @@
       top: 0;
       width: 50.5vw;
       height: 100vh;
-      background: linear-gradient(135deg, #160c18 0%, #0a040e 50%, #1a0f20 100%);
-      box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.95);
+      background: linear-gradient(135deg, #180d1a 0%, #0c0510 50%, #1e1122 100%);
+      box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.98);
       border: 3px solid #3d2345;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.95s cubic-bezier(0.77, 0, 0.175, 1);
+      transition: transform 2.4s cubic-bezier(0.4, 0, 0.2, 1);
       will-change: transform;
     }
     .gate-door-left {
       left: 0;
-      border-right: 5px solid #d4af37;
+      border-right: 6px solid #d4af37;
       transform: translateX(0);
     }
     .gate-door-right {
       right: 0;
-      border-left: 5px solid #d4af37;
+      border-left: 6px solid #d4af37;
       transform: translateX(0);
     }
     .gate-overlay.opening .gate-door-left {
@@ -947,16 +955,27 @@
     .gate-door::before {
       content: '';
       position: absolute;
-      inset: 20px;
+      inset: 22px;
       border: 2px solid rgba(212, 175, 55, 0.35);
-      background-image: repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.04) 0px, rgba(212, 175, 55, 0.04) 15px, transparent 15px, transparent 30px),
-                        repeating-linear-gradient(-45deg, rgba(212, 175, 55, 0.04) 0px, rgba(212, 175, 55, 0.04) 15px, transparent 15px, transparent 30px);
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 110px, rgba(212, 175, 55, 0.12) 110px, rgba(212, 175, 55, 0.12) 113px),
+        repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.03) 0px, rgba(212, 175, 55, 0.03) 15px, transparent 15px, transparent 30px),
+        repeating-linear-gradient(-45deg, rgba(212, 175, 55, 0.03) 0px, rgba(212, 175, 55, 0.03) 15px, transparent 15px, transparent 30px);
+      box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.85);
       pointer-events: none;
     }
-    .gate-ornament {
-      font-size: 54px;
-      filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.7));
+    .gate-bat-ornament {
+      width: 210px;
+      height: 210px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 8px 30px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 25px rgba(212, 175, 55, 0.45));
       z-index: 2;
+    }
+    .gate-bat-svg {
+      width: 100%;
+      height: 100%;
     }
     .gate-center-emblem {
       position: absolute;
@@ -968,11 +987,11 @@
       flex-direction: column;
       align-items: center;
       pointer-events: none;
-      transition: opacity 0.5s ease, transform 0.6s ease;
+      transition: opacity 0.8s ease, transform 0.9s ease;
     }
     .gate-overlay.opening .gate-center-emblem {
       opacity: 0;
-      transform: translate(-50%, -50%) scale(1.2);
+      transform: translate(-50%, -50%) scale(1.15);
     }
     .gate-crest-circle {
       width: 84px;
@@ -1260,10 +1279,115 @@
 
   <div id="gateTransitionOverlay" class="gate-overlay hidden">
     <div class="gate-door gate-door-left">
-      <div class="gate-ornament">🦇</div>
+      <div class="gate-bat-ornament" title="고성 미궁 성문 좌측 박쥐 문장">
+        <svg viewBox="0 0 200 200" class="gate-bat-svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="gateGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fff2a8"/>
+              <stop offset="30%" stop-color="#d4af37"/>
+              <stop offset="70%" stop-color="#8a5a1e"/>
+              <stop offset="100%" stop-color="#4a300d"/>
+            </linearGradient>
+            <linearGradient id="gateMetalRim" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#4a3622"/>
+              <stop offset="50%" stop-color="#c5a059"/>
+              <stop offset="100%" stop-color="#241910"/>
+            </linearGradient>
+            <radialGradient id="gateRubyGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ff5252"/>
+              <stop offset="100%" stop-color="#8a0000"/>
+            </radialGradient>
+            <filter id="gateDropGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.9"/>
+              <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#d4af37" flood-opacity="0.35"/>
+            </filter>
+          </defs>
+          <g filter="url(#gateDropGlow)">
+            <circle cx="100" cy="100" r="92" fill="#140a16" stroke="url(#gateMetalRim)" stroke-width="5"/>
+            <circle cx="100" cy="100" r="84" fill="none" stroke="url(#gateGoldGrad)" stroke-width="1.5" stroke-dasharray="6,4"/>
+            <circle cx="100" cy="100" r="76" fill="#1c1020" stroke="#3d281a" stroke-width="2"/>
+            <circle cx="100" cy="12" r="3.5" fill="url(#gateGoldGrad)"/>
+            <circle cx="100" cy="188" r="3.5" fill="url(#gateGoldGrad)"/>
+            <circle cx="12" cy="100" r="3.5" fill="url(#gateGoldGrad)"/>
+            <circle cx="188" cy="100" r="3.5" fill="url(#gateGoldGrad)"/>
+            <circle cx="38" cy="38" r="3" fill="url(#gateGoldGrad)"/>
+            <circle cx="162" cy="38" r="3" fill="url(#gateGoldGrad)"/>
+            <circle cx="38" cy="162" r="3" fill="url(#gateGoldGrad)"/>
+            <circle cx="162" cy="162" r="3" fill="url(#gateGoldGrad)"/>
+            <path d="M 75 145 C 75 168, 125 168, 125 145 C 125 138, 118 138, 118 145 C 118 160, 82 160, 82 145 Z" fill="url(#gateGoldGrad)" stroke="#241910" stroke-width="1"/>
+            <circle cx="100" cy="144" r="5" fill="#3a2210" stroke="url(#gateGoldGrad)" stroke-width="1.5"/>
+            <path d="M 100 82 C 88 56, 58 42, 28 50 C 42 66, 44 80, 36 94 C 48 94, 58 106, 56 120 C 70 114, 82 118, 88 128 C 94 116, 98 98, 100 82 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.5"/>
+            <path d="M 88 78 Q 55 60 28 50" stroke="#4a300d" stroke-width="1.5" fill="none"/>
+            <path d="M 88 88 Q 58 84 36 94" stroke="#4a300d" stroke-width="1.5" fill="none"/>
+            <path d="M 90 98 Q 68 104 56 120" stroke="#4a300d" stroke-width="1.5" fill="none"/>
+            <path d="M 100 82 C 112 56, 142 42, 172 50 C 158 66, 156 80, 164 94 C 152 94, 142 106, 144 120 C 130 114, 118 118, 112 128 C 106 116, 102 98, 100 82 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.5"/>
+            <path d="M 112 78 Q 145 60 172 50" stroke="#4a300d" stroke-width="1.5" fill="none"/>
+            <path d="M 112 88 Q 142 84 164 94" stroke="#4a300d" stroke-width="1.5" fill="none"/>
+            <path d="M 110 98 Q 132 104 144 120" stroke="#4a300d" stroke-width="1.5" fill="none"/>
+            <polygon points="28,50 25,44 32,48" fill="#fff2a8"/>
+            <polygon points="172,50 175,44 168,48" fill="#fff2a8"/>
+            <path d="M 94 76 Q 88 96 92 118 L 100 134 L 108 118 Q 112 96 106 76 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.5"/>
+            <line x1="93" y1="88" x2="107" y2="88" stroke="#4a300d" stroke-width="1.2"/>
+            <line x1="93" y1="98" x2="107" y2="98" stroke="#4a300d" stroke-width="1.2"/>
+            <line x1="95" y1="108" x2="105" y2="108" stroke="#4a300d" stroke-width="1.2"/>
+            <path d="M 94 76 C 92 68, 86 52, 84 48 C 90 56, 96 66, 98 70 C 100 68, 100 68, 102 70 C 104 66, 110 56, 116 48 C 114 52, 108 68, 106 76 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.2"/>
+            <circle cx="100" cy="74" r="6" fill="url(#gateGoldGrad)"/>
+            <circle cx="97" cy="73" r="1.6" fill="url(#gateRubyGlow)"/>
+            <circle cx="103" cy="73" r="1.6" fill="url(#gateRubyGlow)"/>
+            <circle cx="97" cy="73" r="0.6" fill="#ffffff"/>
+            <circle cx="103" cy="73" r="0.6" fill="#ffffff"/>
+            <polygon points="98,77 97,80 99,78" fill="#fff"/>
+            <polygon points="102,77 103,80 101,78" fill="#fff"/>
+            <path d="M 92 130 Q 94 138 97 142" stroke="#fff2a8" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M 108 130 Q 106 138 103 142" stroke="#fff2a8" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
     </div>
     <div class="gate-door gate-door-right">
-      <div class="gate-ornament">⚔️</div>
+      <div class="gate-bat-ornament" title="고성 미궁 성문 우측 박쥐 문장">
+        <svg viewBox="0 0 200 200" class="gate-bat-svg" aria-hidden="true">
+          <g filter="url(#gateDropGlow)">
+            <circle cx="100" cy="100" r="92" fill="#140a16" stroke="url(#gateMetalRim)" stroke-width="5"/>
+            <circle cx="100" cy="100" r="84" fill="none" stroke="url(#gateGoldGrad)" stroke-width="1.5" stroke-dasharray="6,4"/>
+            <circle cx="100" cy="100" r="76" fill="#1c1020" stroke="#3d281a" stroke-width="2"/>
+            <circle cx="100" cy="12" r="3.5" fill="url(#gateGoldGrad)"/>
+            <circle cx="100" cy="188" r="3.5" fill="url(#gateGoldGrad)"/>
+            <circle cx="12" cy="100" r="3.5" fill="url(#gateGoldGrad)"/>
+            <circle cx="188" cy="100" r="3.5" fill="url(#gateGoldGrad)"/>
+            <circle cx="38" cy="38" r="3" fill="url(#gateGoldGrad)"/>
+            <circle cx="162" cy="38" r="3" fill="url(#gateGoldGrad)"/>
+            <circle cx="38" cy="162" r="3" fill="url(#gateGoldGrad)"/>
+            <circle cx="162" cy="162" r="3" fill="url(#gateGoldGrad)"/>
+            <path d="M 75 145 C 75 168, 125 168, 125 145 C 125 138, 118 138, 118 145 C 118 160, 82 160, 82 145 Z" fill="url(#gateGoldGrad)" stroke="#241910" stroke-width="1"/>
+            <circle cx="100" cy="144" r="5" fill="#3a2210" stroke="url(#gateGoldGrad)" stroke-width="1.5"/>
+            <path d="M 100 82 C 88 56, 58 42, 28 50 C 42 66, 44 80, 36 94 C 48 94, 58 106, 56 120 C 70 114, 82 118, 88 128 C 94 116, 98 98, 100 82 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.5"/>
+            <path d="M 88 78 Q 55 60 28 50" stroke="#4a300d" stroke-width="1.5" fill="none"/>
+            <path d="M 88 88 Q 58 84 36 94" stroke="#4a300d" stroke-width="1.5" fill="none"/>
+            <path d="M 90 98 Q 68 104 56 120" stroke="#4a300d" stroke-width="1.5" fill="none"/>
+            <path d="M 100 82 C 112 56, 142 42, 172 50 C 158 66, 156 80, 164 94 C 152 94, 142 106, 144 120 C 130 114, 118 118, 112 128 C 106 116, 102 98, 100 82 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.5"/>
+            <path d="M 112 78 Q 145 60 172 50" stroke="#4a300d" stroke-width="1.5" fill="none"/>
+            <path d="M 112 88 Q 142 84 164 94" stroke="#4a300d" stroke-width="1.5" fill="none"/>
+            <path d="M 110 98 Q 132 104 144 120" stroke="#4a300d" stroke-width="1.5" fill="none"/>
+            <polygon points="28,50 25,44 32,48" fill="#fff2a8"/>
+            <polygon points="172,50 175,44 168,48" fill="#fff2a8"/>
+            <path d="M 94 76 Q 88 96 92 118 L 100 134 L 108 118 Q 112 96 106 76 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.5"/>
+            <line x1="93" y1="88" x2="107" y2="88" stroke="#4a300d" stroke-width="1.2"/>
+            <line x1="93" y1="98" x2="107" y2="98" stroke="#4a300d" stroke-width="1.2"/>
+            <line x1="95" y1="108" x2="105" y2="108" stroke="#4a300d" stroke-width="1.2"/>
+            <path d="M 94 76 C 92 68, 86 52, 84 48 C 90 56, 96 66, 98 70 C 100 68, 100 68, 102 70 C 104 66, 110 56, 116 48 C 114 52, 108 68, 106 76 Z" fill="url(#gateGoldGrad)" stroke="#28170c" stroke-width="1.2"/>
+            <circle cx="100" cy="74" r="6" fill="url(#gateGoldGrad)"/>
+            <circle cx="97" cy="73" r="1.6" fill="url(#gateRubyGlow)"/>
+            <circle cx="103" cy="73" r="1.6" fill="url(#gateRubyGlow)"/>
+            <circle cx="97" cy="73" r="0.6" fill="#ffffff"/>
+            <circle cx="103" cy="73" r="0.6" fill="#ffffff"/>
+            <polygon points="98,77 97,80 99,78" fill="#fff"/>
+            <polygon points="102,77 103,80 101,78" fill="#fff"/>
+            <path d="M 92 130 Q 94 138 97 142" stroke="#fff2a8" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M 108 130 Q 106 138 103 142" stroke="#fff2a8" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
     </div>
     <div class="gate-center-emblem">
       <div class="gate-crest-circle">🏰</div>
@@ -1353,33 +1477,33 @@
         <p class="prologue-desc">
           서기 1999년, 붉은 달이 떠오른 날 밤 홀연히 나타난 고대 성채 미궁이 탈출로를 가로막았다.<br/>
           그곳에 갇혀버린 학생 탐험가! 과연 무사히 고성 미궁을 탈출할 수 있을까?<br/>
-          눈앞을 어지럽히는 현란한 장식과 위험한 미끼 함정을 걷어내고, 오직 탈출에 꼭 필요한 핵심 경로만 찾아내는 정보 교과의 <strong class="text-grad-gold">'추상화'</strong> 개념을 무기 삼아 고성 미궁을 탈출해보자!
+          눈앞을 어지럽히는 현란한 장식과 위험한 방해 요소(장애물, 몬스터)를 제거하고, 오직 탈출에 꼭 필요한 핵심 경로만 찾아내는 정보 교과의 <strong class="text-grad-gold">'추상화'</strong> 개념을 무기 삼아 고성 미궁을 탈출해보자!
         </p>
       </div>
 
       <!-- Compact Code Selector & Mode Chooser -->
-      <div style="display:flex; flex-direction:column; gap:12px; max-width:480px; margin:0 auto;">
-        <div style="text-align:left;">
+      <div style="display:flex; flex-direction:column; gap:12px; width:100%; box-sizing:border-box;">
+        <div style="text-align:left; width:100%; box-sizing:border-box;">
           <label style="display:block; font-size:12.5px; font-weight:800; margin-bottom:6px;">
             📋 <span class="text-grad-silver">학급 코드 선택 (S01 ~ S20)</span>
           </label>
-          <select id="studentCodeSelect" onchange="playButtonClickSfx();" onclick="playButtonClickSfx();" style="width:100%; background:rgba(18, 12, 22, 0.95); border:2px solid #5a4224; color:#e2dbd0; padding:10px 14px; border-radius:6px; font-size:15px; font-weight:800; cursor:pointer; outline:none; box-shadow:inset 0 2px 6px rgba(0,0,0,0.6);">
+          <select id="studentCodeSelect" onchange="playButtonClickSfx();" onclick="playButtonClickSfx();" style="width:100%; box-sizing:border-box; background:rgba(18, 12, 22, 0.95); border:2px solid #5a4224; color:#e2dbd0; padding:10px 14px; border-radius:6px; font-size:15px; font-weight:800; cursor:pointer; outline:none; box-shadow:inset 0 2px 6px rgba(0,0,0,0.6);">
           </select>
         </div>
 
-        <div style="text-align:left;">
+        <div style="text-align:left; width:100%; box-sizing:border-box;">
           <label style="display:block; font-size:12.5px; font-weight:800; margin-bottom:6px;">
             🎮 <span class="text-grad-silver">조작 모드 선택</span>
           </label>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <label id="modeCardWasd" class="login-mode-card active" onclick="playButtonClickSfx(); updateLoginModeUI('wasd');">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%; box-sizing:border-box;">
+            <label id="modeCardWasd" class="login-mode-card active" onclick="playButtonClickSfx(); updateLoginModeUI('wasd');" style="box-sizing:border-box;">
               <input type="radio" name="loginControlMode" value="wasd" checked style="margin-top:2px; accent-color:#c5a059;" />
               <span>
                 <strong id="modeTitleWasd" class="text-grad-gold" style="display:block; font-size:13px; margin-bottom:3px;">WASD 액션 모드</strong>
                 <span style="color:#e2dbd0; font-size:11.5px; opacity:0.85; line-height:1.4; display:block;">정통 컨트롤 도전 (키보드 조작)</span>
               </span>
             </label>
-            <label id="modeCardClick" class="login-mode-card" onclick="playButtonClickSfx(); updateLoginModeUI('click');">
+            <label id="modeCardClick" class="login-mode-card" onclick="playButtonClickSfx(); updateLoginModeUI('click');" style="box-sizing:border-box;">
               <input type="radio" name="loginControlMode" value="click" style="margin-top:2px; accent-color:#c5a059;" />
               <span>
                 <strong id="modeTitleClick" class="text-grad-silver" style="display:block; font-size:13px; margin-bottom:3px;">클릭 탐험 모드</strong>
@@ -1389,10 +1513,10 @@
           </div>
         </div>
 
-        <button class="btn btn-gold" style="font-size:16px; padding:13px 24px; justify-content:center; margin-top:8px; font-weight:900;" onpointerdown="playButtonClickSfx();" onclick="confirmStudentLogin()">
+        <button class="btn btn-gold" style="width:100%; box-sizing:border-box; font-size:16px; padding:13px 24px; justify-content:center; margin-top:8px; font-weight:900;" onpointerdown="playButtonClickSfx();" onclick="confirmStudentLogin()">
           🏰 <span class="text-grad-gold">고성 미궁 탈출 시작하기 ▸</span>
         </button>
-        <button type="button" class="btn" onclick="playButtonClickSfx(); resetSelectedStudentData()" style="font-size:12px; margin-top:6px; padding:7px 14px; justify-content:center; border:1px solid #423224; color:#a89f91; background:rgba(20,15,22,0.7);" title="선택한 학생의 진행 기록을 초기화하여 1단계부터 새로 시작합니다">
+        <button type="button" class="btn" onclick="playButtonClickSfx(); resetSelectedStudentData()" style="width:100%; box-sizing:border-box; font-size:12px; margin-top:6px; padding:8px 14px; justify-content:center; border:1px solid #423224; color:#a89f91; background:rgba(20,15,22,0.7);" title="선택한 학생의 진행 기록을 초기화하여 1단계부터 새로 시작합니다">
           ↺ 선택한 학생 진행 기록 초기화 (1단계부터 새로 시작)
         </button>
         <!-- Educational Non-profit Copyright & Statutory Legal Disclaimer -->
@@ -1794,54 +1918,58 @@
       } catch (e) {}
     }
 
-    // 2차: 거대 고성 성문 개방 묵직한 중저음 & 쇠사슬 래치 효과음 (절제된 웅장함)
+    // 거대 고성 성문 개방 묵직한 중저음 & 끼이이익 쇳소리 효과음
     function playGateOpeningSfx() {
       try {
         var ctx = getAudioCtx();
         if (ctx) {
           var now = ctx.currentTime;
 
-          // 거대 석조 성문 마찰 중저음 (60Hz -> 32Hz)
+          // 거대 석조 성문 마찰 중저음 (60Hz -> 30Hz)
           var rumbleOsc = ctx.createOscillator();
           var rumbleGain = ctx.createGain();
           rumbleOsc.type = 'triangle';
           rumbleOsc.frequency.setValueAtTime(60, now);
-          rumbleOsc.frequency.exponentialRampToValueAtTime(32, now + 0.9);
+          rumbleOsc.frequency.exponentialRampToValueAtTime(30, now + 2.4);
 
           var filter = ctx.createBiquadFilter();
           filter.type = 'lowpass';
-          filter.frequency.setValueAtTime(130, now);
-          filter.frequency.linearRampToValueAtTime(65, now + 0.9);
+          filter.frequency.setValueAtTime(140, now);
+          filter.frequency.linearRampToValueAtTime(55, now + 2.4);
 
-          rumbleGain.gain.setValueAtTime(0.20, now); // 부드럽고 묵직한 볼륨
-          rumbleGain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+          rumbleGain.gain.setValueAtTime(0.22, now);
+          rumbleGain.gain.exponentialRampToValueAtTime(0.001, now + 2.4);
 
           rumbleOsc.connect(filter);
           filter.connect(rumbleGain);
           rumbleGain.connect(ctx.destination);
           rumbleOsc.start(now);
-          rumbleOsc.stop(now + 0.9);
+          rumbleOsc.stop(now + 2.4);
 
-          // 부드러운 래치 쇳소리
+          // 무거운 청동 래치 분리음
           var latchOsc = ctx.createOscillator();
           var latchGain = ctx.createGain();
           latchOsc.type = 'sine';
-          latchOsc.frequency.setValueAtTime(420, now);
-          latchGain.gain.setValueAtTime(0.10, now);
-          latchGain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+          latchOsc.frequency.setValueAtTime(380, now);
+          latchGain.gain.setValueAtTime(0.12, now);
+          latchGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
           latchOsc.connect(latchGain);
           latchGain.connect(ctx.destination);
           latchOsc.start(now);
-          latchOsc.stop(now + 0.14);
+          latchOsc.stop(now + 0.22);
         }
       } catch (e) {}
 
-      // 오디오 에셋 절제된 음량으로 재생
+      // 오디오 에셋 (3.2초 길이의 authentic 끼이이익... 쇠문 열리는 효과음)
       var doorAudio = loadedAudios['aud_door'] || loadedAudios['aud_sfx_door'];
+      if (!doorAudio) {
+        doorAudio = new Audio('assets/audio/sfx_door.wav');
+        loadedAudios['aud_door'] = doorAudio;
+      }
       if (doorAudio) {
         try {
           doorAudio.currentTime = 0;
-          doorAudio.volume = 0.30; // 0.95 -> 0.30로 편안하게 조정
+          doorAudio.volume = 0.70;
           doorAudio.play().catch(function(){});
         } catch (e) {}
       }
@@ -1979,19 +2107,25 @@
     }
 
     function playLoginBgm() {
-      stopAllMusic();
       var a = loadedAudios['aud_bgm_login'];
       if (!a) {
         a = new Audio('assets/audio/bgm_login.mp3');
         loadedAudios['aud_bgm_login'] = a;
       }
+      // If login/copyright BGM is already actively playing, do not stop or restart it! Seamless continuity!
+      if (currentBgmAudio === a && !a.paused) {
+        return;
+      }
+      stopAllMusic();
       if (a) {
         currentBgmAudio = a;
         currentBgmAudio.loop = true;
         currentBgmAudio.volume = 0.50;
         currentBgmAudio.onended = function() {
-          var loginView = document.getElementById('loginPageView');
-          if (loginView && !loginView.classList.contains('hidden')) {
+          var cr = document.getElementById('copyrightScreenView');
+          var lp = document.getElementById('loginPageView');
+          var isLoginOrCopyright = (cr && !cr.classList.contains('hidden')) || (lp && !lp.classList.contains('hidden'));
+          if (isLoginOrCopyright) {
             this.currentTime = 0;
             this.play().catch(function(){});
           }
@@ -2000,8 +2134,10 @@
         if (p !== undefined) {
           p.catch(function() {
             function resumeLoginOnGesture() {
-              var loginView = document.getElementById('loginPageView');
-              if (loginView && !loginView.classList.contains('hidden') && currentBgmAudio) {
+              var cr = document.getElementById('copyrightScreenView');
+              var lp = document.getElementById('loginPageView');
+              var isLoginOrCopyright = (cr && !cr.classList.contains('hidden')) || (lp && !lp.classList.contains('hidden'));
+              if (isLoginOrCopyright && currentBgmAudio) {
                 currentBgmAudio.play().catch(function(){});
               }
               window.removeEventListener('pointerdown', resumeLoginOnGesture);
@@ -5841,7 +5977,6 @@
 
     function confirmStudentLogin() {
       playButtonClickSfx();
-      playGateOpeningSfx();
       var sel = document.getElementById('studentCodeSelect');
       var code = sel.value;
       var num = parseInt(code.replace('S', ''), 10);
@@ -5865,17 +6000,23 @@
       var cachedVal = localStorage.getItem('valmanway_unlocked_' + code);
       state.unlockedValmanway = (cachedVal === 'true');
 
-      // 1. Play Castle Gate Opening sound & trigger heavy gate transition
-      playSfx('door', 0.95);
+      // 1. Show closed Castle Gate overlay so user can admire the majestic closed gate & bat crests
       var gateOverlay = document.getElementById('gateTransitionOverlay');
       if (gateOverlay) {
         gateOverlay.classList.remove('hidden');
         gateOverlay.classList.remove('opening');
         void gateOverlay.offsetWidth;
-        gateOverlay.classList.add('opening');
       }
 
-      // 2. Mid-transition (420ms): switch view, start stage 1 & loop Chronicles theme
+      // 2. After 700ms inspection pause: play authentic heavy iron gate creaking SFX and trigger slow-motion door opening (2.4s)
+      setTimeout(function() {
+        playGateOpeningSfx();
+        if (gateOverlay) {
+          gateOverlay.classList.add('opening');
+        }
+      }, 700);
+
+      // 3. Mid-swing transition (1800ms): doors have parted, switch view to game screen, start stage 1 & Chronicles theme
       setTimeout(function() {
         stopAllMusic();
         state.currentStageIdx = 0;
@@ -5886,15 +6027,15 @@
         loadStageWorksheetUI();
         updateControlModeUI();
         if (bgmEnabled) playStageBgm();
-      }, 420);
+      }, 1800);
 
-      // 3. Complete transition (1100ms): hide overlay
+      // 4. Complete transition (3200ms): doors have fully slid off-screen, safely hide gate overlay
       setTimeout(function() {
         if (gateOverlay) {
           gateOverlay.classList.add('hidden');
           gateOverlay.classList.remove('opening');
         }
-      }, 1100);
+      }, 3200);
     }
 
             function openPedagogyModal() {
