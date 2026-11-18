@@ -4174,7 +4174,22 @@
         ctx.restore();
       }
 
-      // (발판 하부 작은 기둥 제거: 통일성을 위해 배경 대형 아치 기둥만 유지)
+      // MAP 1, MAP 2 전용 제단 발판 하부 기둥 받침대
+      if ((st.id === 'T01' || st.id === 'T02') && plat.style === 'altar') {
+        var pilImg = loadedImages['spr_pillar'];
+        if (pilImg && pilImg.complete) {
+          var maxPillarY = plat.y + plat.h + 90;
+          if (plat.y + plat.h > st.worldH - 120) {
+            maxPillarY = st.worldH - 35;
+          }
+          var pillarH = Math.max(24, Math.min(130, maxPillarY - (plat.y + plat.h)));
+          ctx.save();
+          ctx.globalAlpha *= 0.60;
+          ctx.drawImage(pilImg, plat.x + 10, plat.y + plat.h, 32, pillarH);
+          ctx.drawImage(pilImg, plat.x + plat.w - 42, plat.y + plat.h, 32, pillarH);
+          ctx.restore();
+        }
+      }
 
       // Draw stepped geometry for 'stair'
       if (plat.style === 'stair') {
@@ -4354,7 +4369,15 @@
         }
       }
 
-      // (맵 전역 작은 기둥 렌더링 제거: 통일성 있는 고딕 건축미 유지를 위해 대형 아치 기둥만 표시)
+      // MAP 1, MAP 2 전용 고딕 장식 기둥 렌더링
+      if (st.id === 'T01' || st.id === 'T02') {
+        var pillarImg = loadedImages['spr_pillar'];
+        if (pillarImg && pillarImg.complete) {
+          for (var px = 20; px < st.worldW; px += 260) {
+            ctx.drawImage(pillarImg, px, 130, 50, st.worldH - 180);
+          }
+        }
+      }
       ctx.restore();
 
       // 3. Bottom Hazard Textures & Instant Death Pit
