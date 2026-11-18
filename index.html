@@ -1938,39 +1938,10 @@
       }
     }
 
-    // 1차: 고딕 글리프 선택/버튼 클릭 효과음 (선명한 어택 + 신비로운 공명 벨)
+    // 1차: 버튼 클릭 효과음 (사용자 업로드 버튼 사운드로 완전 통일)
+    var _lastBtnClickTime = 0;
     function playSynthGothicClick() {
-      try {
-        var ctx = getAudioCtx();
-        if (!ctx) return;
-        var now = ctx.currentTime;
-
-        // 귀에 편안하고 은은한 고딕 룬 클릭 어택 (640Hz -> 280Hz 사인파)
-        var osc1 = ctx.createOscillator();
-        var gain1 = ctx.createGain();
-        osc1.type = 'sine';
-        osc1.frequency.setValueAtTime(640, now);
-        osc1.frequency.exponentialRampToValueAtTime(280, now + 0.08);
-        gain1.gain.setValueAtTime(0.18, now); // 편안하고 부드러운 낮은 볼륨
-        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-        osc1.connect(gain1);
-        gain1.connect(ctx.destination);
-        osc1.start(now);
-        osc1.stop(now + 0.08);
-
-        // 은은한 공명 잔향 (960Hz -> 480Hz)
-        var osc2 = ctx.createOscillator();
-        var gain2 = ctx.createGain();
-        osc2.type = 'sine';
-        osc2.frequency.setValueAtTime(960, now);
-        osc2.frequency.exponentialRampToValueAtTime(480, now + 0.18);
-        gain2.gain.setValueAtTime(0.10, now);
-        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-        osc2.connect(gain2);
-        gain2.connect(ctx.destination);
-        osc2.start(now);
-        osc2.stop(now + 0.18);
-      } catch (e) {}
+      // 합성음 제거 (업로드된 버튼 클릭 오디오만 단독 재생)
     }
 
     // 거대 고성 성문 개방 효과음 (사용자 지정 오디오 에셋 단독 재생)
@@ -1990,16 +1961,40 @@
     }
 
     function playButtonClickSfx() {
-      playSynthGothicClick();
+      var now = Date.now();
+      if (now - _lastBtnClickTime < 45) return;
+      _lastBtnClickTime = now;
       var a = loadedAudios['aud_glyph'] || loadedAudios['aud_sfx_glyph'];
+      if (!a) {
+        a = new Audio('assets/audio/sfx_glyph.wav');
+        loadedAudios['aud_glyph'] = a;
+      }
       if (a) {
         try {
           a.currentTime = 0;
-          a.volume = 0.22; // 0.95 -> 0.22로 편안하게 조정
-          a.play().catch(function(){});
+          a.volume = 0.78;
+          var p = a.play();
+          if (p !== undefined) {
+            p.catch(function() {
+              try {
+                var c = a.cloneNode();
+                c.volume = 0.78;
+                c.play().catch(function(){});
+              } catch(e){}
+            });
+          }
         } catch(e){}
       }
     }
+
+    // 페이지 내 모든 버튼 클릭 시 통일된 버튼 효과음 자동 재생
+    document.addEventListener('click', function(e) {
+      if (!e || !e.target || !e.target.closest) return;
+      var clickable = e.target.closest('button, .btn, .key-pill, .stage-tab, .login-mode-card, .stage-hint-toggle-btn');
+      if (clickable) {
+        playButtonClickSfx();
+      }
+    }, true);
 
     function initAssets() {
       Object.keys(ASSETS).forEach(function(k) {
@@ -2060,20 +2055,21 @@
     }
 
     function playSfx(name, vol) {
-      if (name === 'glyph' || name === 'click') {
-        playSynthGothicClick();
+      if (name === 'glyph' || name === 'sfx_glyph' || name === 'click') {
+        playButtonClickSfx();
+        return;
       }
       var a = loadedAudios['aud_' + name] || loadedAudios['aud_sfx_' + name];
       if (!a) return;
       try {
         a.currentTime = 0;
-        a.volume = vol !== undefined ? vol : 0.70;
+        a.volume = vol !== undefined ? vol : 0.78;
         var p = a.play();
         if (p !== undefined) {
           p.catch(function() {
             try {
               var clone = a.cloneNode();
-              clone.volume = vol !== undefined ? vol : 0.70;
+              clone.volume = vol !== undefined ? vol : 0.78;
               clone.play().catch(function(){});
             } catch(e){}
           });
@@ -2083,21 +2079,23 @@
 
     function playWeaponAttackSfx(wpnKey) {
       try {
-        var a = null;
-        if (wpnKey === 'valmanway' || state.unlockedValmanway) {
-          // Valmanway 클리어 특전: 4연타 진공 회오리 칼바람 폭풍음 (Castlevania SWAR[0])
-          a = loadedAudios['aud_sfx_wpn_valmanway'] || loadedAudios['aud_sfx_sword'];
-        } else {
-          // [사용자 요청 반영] MAP 4의 묵직한 대검 베기 사운드를 MAP 1~3까지 전 맵에 동일하게 통일 적용!
-          a = loadedAudios['aud_sfx_wpn_greatsword'] || loadedAudios['aud_sfx_sword'] || loadedAudios['aud_sfx_slash'];
-        }
+        var a = loadedAudios['aud_sfx_sword'] || loadedAudios['aud_sfx_wpn_greatsword'] || loadedAudios['aud_sfx_slash'];
         if (a) {
-          var c = a.cloneNode();
-          c.volume = 0.68;
-          c.play().catch(function(){});
+          a.currentTime = 0;
+          a.volume = 0.82;
+          var p = a.play();
+          if (p !== undefined) {
+            p.catch(function() {
+              try {
+                var c = a.cloneNode();
+                c.volume = 0.82;
+                c.play().catch(function(){});
+              } catch(e){}
+            });
+          }
         }
       } catch (e) {
-        playSfx('sfx_slash', 0.55);
+        playSfx('sfx_sword', 0.82);
       }
     }
 
@@ -2839,7 +2837,7 @@
       p.onGround = false;
       var knockDir = (srcX !== undefined && srcX > p.x + 16) ? -1 : 1;
       p.x = Math.max(15, Math.min(maxW - 45, p.x + knockDir * 26));
-      playSfx('sfx_hit', 0.65);
+      playSfx('sfx_hit', 0.85);
       spawnParticles(p.x + 16, p.y + 20, '#ff1744', 18);
     }
 
@@ -2858,7 +2856,7 @@
       });
 
       if (nz.immortal) {
-        playSfx('sfx_sword', 0.6);
+        playWeaponAttackSfx();
         spawnParticles(cx, cy, '#ff1744', 18);
         nz.vx = -nz.vx;
         state.floatingTexts.push({
@@ -2873,7 +2871,7 @@
 
       if (nz.hp && nz.hp > 1) {
         nz.hp--;
-        playSfx('sfx_hit', 0.85);
+        playWeaponAttackSfx();
         spawnParticles(cx, cy, '#ff1744', 28);
         state.floatingTexts.push({
           x: cx,
@@ -2887,7 +2885,7 @@
 
       nz.hit = true;
       nz.discoveredPruned = true;
-      playSfx('sfx_dispel', 0.55);
+      playWeaponAttackSfx();
       spawnParticles(cx, cy, nz.type === 'monster' ? '#ffd740' : '#00e5ff', 24);
       state.floatingTexts.push({
         x: cx,
@@ -2939,7 +2937,6 @@
           var d = Math.hypot(cx - (p.x + 16), cy - (p.y + 20));
           if (cx >= reachX - 30 && cx <= reachX + reachW + 30 && Math.abs(cy - (p.y + 20)) < 115) {
             if (nz.immortal) {
-              playSfx('sfx_sword', 0.65);
               nz.x += p.facing * (isValmanway ? 65 : 42);
               spawnParticles(cx, cy, isValmanway ? '#00e676' : '#ff1744', 24);
               state.floatingTexts.push({
@@ -2952,7 +2949,6 @@
             } else if (nz.hp && nz.hp > 1) {
               nz.hp--;
               hitAny = true;
-              playSfx('sfx_hit', 0.85);
               spawnParticles(cx, cy, '#ff1744', 28);
               state.floatingTexts.push({
                 x: cx,
@@ -2967,7 +2963,6 @@
               nz.discoveredPruned = true;
               hitAny = true;
               spawnParticles(cx, cy, isValmanway ? '#00e676' : (nz.type === 'monster' ? '#ffd740' : '#00e5ff'), 36);
-              playSfx(isValmanway ? 'sfx_dispel' : 'sfx_hit', 0.75);
               state.floatingTexts.push({
                 x: cx,
                 y: cy - 12,
@@ -2996,7 +2991,6 @@
             if (hp.x >= reachX - 30 && hp.x <= reachX + reachW + 30 && Math.abs(hp.y - (p.y + 20)) < 95) {
               state.hazardProjectiles.splice(pi, 1);
               spawnParticles(hp.x, hp.y, isValmanway ? '#00e676' : '#80deea', 18);
-              playSfx('sfx_sword', 0.6);
               state.floatingTexts.push({
                 x: hp.x,
                 y: hp.y - 14,
@@ -3009,7 +3003,6 @@
             if (hp.x >= reachX - 30 && hp.x <= reachX + reachW + 30 && Math.abs(hp.y - (p.y + 20)) < 85) {
               state.hazardProjectiles.splice(pi, 1);
               spawnParticles(hp.x, hp.y, isValmanway ? '#00e676' : '#ba68c8', 16);
-              playSfx('sfx_sword', 0.6);
               state.floatingTexts.push({
                 x: hp.x,
                 y: hp.y - 14,
@@ -3022,7 +3015,6 @@
             if (hp.x >= reachX - 30 && hp.x <= reachX + reachW + 30 && Math.abs(hp.y - (p.y + 20)) < 85) {
               state.hazardProjectiles.splice(pi, 1);
               spawnParticles(hp.x, hp.y, isValmanway ? '#00e676' : '#ea80fc', 18);
-              playSfx('sfx_sword', 0.6);
               state.floatingTexts.push({
                 x: hp.x,
                 y: hp.y - 14,
@@ -3036,7 +3028,6 @@
       }
 
       if (hitAny) {
-        playSfx('sfx_dispel', 0.6);
         updateNoiseProgressUI();
       }
     }
@@ -3140,7 +3131,7 @@
 
     function selectStage(idx) {
       if (!isStageUnlocked(idx)) {
-        playSfx('sfx_hit', 0.5);
+        playButtonClickSfx();
         alert('🔒 잠긴 스테이지입니다!\n먼저 [MAP ' + idx + ']의 탈출구에 도달하여 클리어해야 다음 스테이지가 해금됩니다.');
         return;
       }
@@ -3611,7 +3602,7 @@
             return (e.from === currentId && e.to === nd.id) || (e.to === currentId && e.from === nd.id);
           });
           if (!edge) {
-            playSfx('hit', 0.85);
+            playButtonClickSfx();
             state.floatingTexts.push({
               x: state.player.x + 16,
               y: state.player.y - 20,
@@ -4166,7 +4157,6 @@
                 nz.actionTimer = 12; // 2배속 전조 모션 (약 0.2초)
                 nz.savedVx = nz.vx;
                 nz.vx = 0;
-                playSfx('cast', 0.65);
                 state.floatingTexts.push({
                   x: nz.x + nz.w * 0.5,
                   y: nz.y - 18,
@@ -4183,7 +4173,6 @@
               // 2단계: 맹렬한 전방 내리치기 (atk2)
               nz.actionState = 'slash';
               nz.actionTimer = 7; // 2배속 내리베기 (약 0.12초)
-              playSfx('slash', 0.95);
               // 전방 근접 타격 판정
               var meleeReachX = nz.facingDir < 0 ? nz.x - 38 : nz.x + nz.w;
               var meleeW = 50;
@@ -4201,7 +4190,6 @@
               nz.actionState = 'impact';
               nz.actionTimer = 8; // 2배속 충격 홀드 (약 0.13초)
               state.screenShake = 7;
-              playSfx('hit', 0.85);
               spawnParticles(nz.facingDir < 0 ? nz.x : nz.x + nz.w, nz.y + nz.h - 4, '#ba68c8', 16);
             }
           } else if (nz.actionState === 'impact') {
@@ -4356,7 +4344,7 @@
               // 최단 경로가 아니면 문이 절대 열리지 않고 봉인 경고 피드백
               if (!state.doorLockFeedbackTimer || state.doorLockFeedbackTimer <= 0) {
                 state.doorLockFeedbackTimer = 85;
-                playSfx('hit', 0.85);
+                playSfx('sfx_dispel', 0.65);
                 spawnParticles(nd.x, nd.y - 16, '#ff5252', 24);
                 state.floatingTexts.push({
                   x: nd.x,
