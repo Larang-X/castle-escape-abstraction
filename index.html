@@ -1426,7 +1426,7 @@
       filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 14px rgba(255, 245, 200, 0.55));
       z-index: 2;
     }
-    .cert-erinys-sprite.erinys-right-mirror {
+    .cert-erinys-sprite.erinys-left-mirror {
       transform: scaleX(-1);
     }
     .cert-erinys-caption {
@@ -1473,17 +1473,18 @@
 
     .cert-recipient-banner {
       margin: 18px 0 14px;
-      padding: 12px 18px;
+      padding: 14px 20px;
       background: linear-gradient(90deg, rgba(20, 14, 28, 0.6) 0%, rgba(46, 34, 18, 0.85) 50%, rgba(20, 14, 28, 0.6) 100%);
       border: 1px solid #8c6d32;
       border-left: 4px solid #ffd740;
       border-right: 4px solid #ffd740;
       border-radius: 6px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
+      justify-content: center;
+      text-align: center;
+      gap: 8px;
     }
     .cert-section-title {
       font-size: 13.5px;
@@ -1522,9 +1523,10 @@
       padding-top: 14px;
       border-top: 1px solid rgba(212, 175, 55, 0.35);
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
+      justify-content: center;
+      text-align: center;
       gap: 12px;
     }
     .cert-wax-seal {
@@ -1675,10 +1677,10 @@
       <!-- MAP Selector Tabs -->
       <div style="display:flex; gap:6px; margin-bottom:12px; background:rgba(15, 12, 18, 0.7); padding:6px; border-radius:6px; border:1px solid #3e4a56; flex-wrap:wrap; align-items:center;">
         <span style="font-size:12px; font-weight:bold; color:#ffd54f; margin-right:4px;">🗺️ 평가 대상 맵:</span>
-        <button id="diagStageBtn0" class="btn btn-sm btn-gold" onclick="switchDiagnosticStage(0)" style="font-size:12px; font-weight:bold;">🌋 MAP 1 (용암성당)</button>
-        <button id="diagStageBtn1" class="btn btn-sm" onclick="switchDiagnosticStage(1)" style="font-size:12px; font-weight:bold;">❄️ MAP 2 (설원동굴)</button>
-        <button id="diagStageBtn2" class="btn btn-sm" onclick="switchDiagnosticStage(2)" style="font-size:12px; font-weight:bold;">⚙️ MAP 3 (시계탑)</button>
-        <button id="diagStageBtn3" class="btn btn-sm" onclick="switchDiagnosticStage(3)" style="font-size:12px; font-weight:bold;">👑 MAP 4 (심연탈출)</button>
+        <button id="diagStageBtn0" class="btn btn-sm btn-gold" onclick="switchDiagnosticStage(0)" style="font-size:12px; font-weight:bold;">🌋 MAP 1 (용암 지하성당)</button>
+        <button id="diagStageBtn1" class="btn btn-sm" onclick="switchDiagnosticStage(1)" style="font-size:12px; font-weight:bold;">❄️ MAP 2 (빙하 수로 미궁)</button>
+        <button id="diagStageBtn2" class="btn btn-sm" onclick="switchDiagnosticStage(2)" style="font-size:12px; font-weight:bold;">⚙️ MAP 3 (기계 시계탑)</button>
+        <button id="diagStageBtn3" class="btn btn-sm" onclick="switchDiagnosticStage(3)" style="font-size:12px; font-weight:bold;">👑 MAP 4 (심연 최종 탈출)</button>
       </div>
 
       <!-- Category Tabs -->
@@ -2305,7 +2307,7 @@
             <!-- Top Ornate Header with Left & Right Angelic Erinys (Dawn of Sorrow) -->
             <div class="cert-header-stage">
               <div class="cert-erinys-pedestal">
-                <img id="certErinysLeft" class="cert-erinys-sprite" alt="Erinys Left Guardian" src="" />
+                <img id="certErinysLeft" class="cert-erinys-sprite erinys-left-mirror" alt="Erinys Left Guardian" src="" />
                 <span class="cert-erinys-caption">✦ ERINYS GUARDIAN ✦</span>
               </div>
 
@@ -2321,20 +2323,20 @@
               </div>
 
               <div class="cert-erinys-pedestal">
-                <img id="certErinysRight" class="cert-erinys-sprite erinys-right-mirror" alt="Erinys Right Guardian" src="" />
+                <img id="certErinysRight" class="cert-erinys-sprite" alt="Erinys Right Guardian" src="" />
                 <span class="cert-erinys-caption">✦ ERINYS GUARDIAN ✦</span>
               </div>
             </div>
 
             <!-- Recipient & Cloud Sync Info -->
             <div class="cert-recipient-banner">
-              <div>
+              <div style="text-align:center;">
                 <div style="font-size:11.5px; color:#ffe082; font-weight:700;">🎓 수료 학생 및 마스터 칭호</div>
-                <div id="certStudentNameLine" style="font-size:18px; font-weight:900; color:#ffffff; margin-top:2px;">
+                <div id="certStudentNameLine" style="font-size:18px; font-weight:900; color:#ffffff; margin-top:3px;">
                   학생코드 S01 (민트) — <span class="text-grad-gold">[고성 미궁 최단경로 추상화 그랜드 마스터]</span>
                 </div>
               </div>
-              <div style="text-align:right;">
+              <div style="text-align:center;">
                 <div id="certCloudSyncBadge" style="font-size:11.5px; color:#80deea; font-weight:800;">
                   ☁️ 구글 시트 실시간 연동 확인 완료
                 </div>
@@ -2373,7 +2375,7 @@
 
             <!-- Official Seal & Footer -->
             <div class="cert-footer-seal">
-              <div style="font-size:12px; color:#d7ccc8; line-height:1.6;">
+              <div style="font-size:12px; color:#d7ccc8; line-height:1.65; text-align:center;">
                 위 학생은 복잡한 고성 미궁의 불필요한 방해물과 우회로를 <strong>추상화(가지치기)</strong>하여 핵심 노선도를 구조화하고,<br/>
                 <strong>MAP 1부터 MAP 4(심연 최종 탈출)까지 모든 최단 경로 알고리즘</strong>을 성공적으로 설계·검증하였기에 이 수료증을 수여합니다.
               </div>
@@ -2384,8 +2386,8 @@
             </div>
 
             <!-- Modal Action Buttons (Hidden in PDF Print) -->
-            <div class="cert-no-print" style="margin-top:18px; padding-top:14px; border-top:1px solid rgba(212,175,55,0.25); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <div class="cert-no-print" style="margin-top:18px; padding-top:14px; border-top:1px solid rgba(212,175,55,0.25); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:10px;">
+              <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
                 <button type="button" class="btn btn-silver btn-sm" onclick="playButtonClickSfx(); syncCertificateFromGoogleSheet()" id="certCloudRefreshBtn">
                   ☁️ <span class="text-grad-silver">구글 시트 최신 제출·피드백 다시 불러오기</span>
                 </button>
@@ -2393,7 +2395,7 @@
                   👁️ 심사위원·교사용 전체 클리어 수료증 미리보기 전환
                 </button>
               </div>
-              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
                 <button type="button" class="btn btn-gold" onclick="playButtonClickSfx(); printCertificatePdf()" style="font-size:13.5px; padding:9px 20px; font-weight:900;">
                   🖨️ <span class="text-grad-gold">수료증 &amp; 성취 리포트 PDF 인쇄 / 저장</span>
                 </button>
@@ -2960,7 +2962,7 @@
           { from: 'B', to: 'C', cost: '4분(외곽종탑로)', minutes: 4, optimal: false, labelDy: -16 },
           { from: 'C', to: 'G', cost: '5분(분쇄가시통로)', minutes: 5, optimal: false, labelDy: -16 },
           { from: 'B', to: 'D', cost: '2분', minutes: 2, optimal: true, labelDy: 16 },
-          { from: 'D', to: 'X', cost: '3분(막다른얼음감옥)', minutes: 3, optimal: false, deadEnd: true, labelDy: 16 },
+          { from: 'D', to: 'X', cost: '3분(막다른태엽창고)', minutes: 3, optimal: false, deadEnd: true, labelDy: 16 },
           { from: 'D', to: 'F', cost: '2분', minutes: 2, optimal: true, labelDy: -14 },
           { from: 'F', to: 'G', cost: '2분(중앙태엽승강기)', minutes: 2, optimal: true, labelDy: -16 },
           { from: 'G', to: 'H', cost: '1분', minutes: 1, optimal: true, labelDy: -16 }
@@ -3096,9 +3098,9 @@
           { x: 1530, y: 845, w: 120, h: 22, core: true, style: 'stair', tag: '심연 대교 비탈' },
           { x: 1650, y: 845, w: 180, h: 24, core: true, style: 'core', nodeId: 'F', tag: '대교 입구' },
           { x: 1890, y: 845, w: 180, h: 24, core: true, style: 'core', nodeId: 'G', tag: '심연 대교' },
-          { x: 2040, y: 855, w: 170, h: 26, core: true, style: 'altar', tag: '⚔️대성문 수문장 다리' },
-          { x: 2190, y: 790, w: 80, h: 24, core: true, style: 'stair', tag: '성문 진입 계단' },
-          { x: 2260, y: 710, w: 140, h: 28, core: true, style: 'altar', nodeId: 'Z', tag: '심연 탈출 대성문' },
+          { x: 2040, y: 855, w: 170, h: 26, core: true, style: 'altar', tag: '⚔️심연대성문 수문장 다리' },
+          { x: 2190, y: 790, w: 80, h: 24, core: true, style: 'stair', tag: '심연대성문 진입 계단' },
+          { x: 2260, y: 710, w: 140, h: 28, core: true, style: 'altar', nodeId: 'Z', tag: '심연대성문' },
           // Upper Level East Gatehouse Battlement (출구 중상단 감시 망루 - Y: 320~360, X: 1980~2320)
           { x: 1980, y: 340, w: 260, h: 26, core: false, style: 'altar', tag: '⚔️심연 수문장 감시 망루' },
           { x: 1860, y: 375, w: 105, h: 22, core: false, style: 'stair', tag: '망루 연결 계단' },
@@ -3167,7 +3169,7 @@
           { id: 't02', name: '⚠️ 심연 감옥 철창 차단벽 함정', shortTag: '⚠️철창함정', type: 'trap', dmg: 25, sprite: 'spr_shutter', sprite2: 'spr_shutter', x: 605, y: 829, w: 32, h: 56, hit: false },
           { id: 't03', name: '⚠️ 상층 폐쇄 철문 차단 함정', shortTag: '⚠️폐쇄철문', type: 'trap', dmg: 25, sprite: 'spr_shutter', sprite2: 'spr_shutter', x: 1845, y: 230, w: 32, h: 56, hit: false },
           { id: 'n09', name: '심연 세이렌 로렐라이', shortTag: '🧜심연로렐라이', type: 'monster', dmg: 32, sprite: 'spr_lorelei_f1', sprite2: 'spr_lorelei_f2', x: 140, y: 455, w: 58, h: 58, origX: 140, origY: 455, vx: 1.4, vy: -0.8, origVx: 1.4, origVy: -0.8, moveMode: 'territoryRoam', minX: 80, maxX: 225, minY: 430, maxY: 510, hit: false },
-          // 10. [심연 수문장] 파이널 가드 - 대성문 앞 수문장 · 5회 타격 격파 · 정통 도끼창 다단계 참격 액션
+          // 10. [심연 수문장] 파이널 가드 - 심연대성문 앞 수문장 · 5회 타격 격파 · 정통 도끼창 다단계 참격 액션
           { id: 'n10', name: '심연 수문장 파이널 가드', shortTag: '⚔️파이널가드 [수문장]', type: 'monster', hp: 5, maxHp: 5, dmg: 35, sprite: 'spr_finalknight_f1', sprite2: 'spr_finalknight_f2', x: 2070, y: 769, origX: 2070, origY: 769, w: 112, h: 86, moveMode: 'patrol', minX: 2045, maxX: 2160, vx: 1.0, origVx: 1.0, origVy: 0, hit: false, actionState: 'patrol', attackCooldown: 20, facingDir: -1 }
         ]
       }
@@ -3654,7 +3656,7 @@
       }
     }
     // === Angelic Erinys (Dawn of Sorrow NDS_UNPACK) Frames & Master Certificate Logic ===
-    var ERINYS_ANGEL_FRAMES = ["data:image/png;base64,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", "data:image/png;base64,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", "data:image/png;base64,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", "data:image/png;base64,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", "data:image/png;base64,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", "data:image/png;base64,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"];
+    var ERINYS_ANGEL_FRAMES = ["data:image/png;base64,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", "data:image/png;base64,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", "data:image/png;base64,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", "data:image/png;base64,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", "data:image/png;base64,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", "data:image/png;base64,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"];
     var erinysAnimFrameIdx = 0;
     var erinysAnimSequence = [0, 1, 2, 3, 4, 5, 4, 3, 2, 1];
     var certDemoPreviewMode = false;
@@ -3861,17 +3863,17 @@
       }
 
       var defaultFeedbacks = {
-        'T01': '불필요한 우회로(E)와 막다른 길(C)을 완벽히 분별하여 6분 최단 노선도로 추상화함',
-        'T02': '빙하 우회로(C)와 얼음감옥(X)을 배제하고 수정승강기 경유 7분 최단 경로를 도출함',
-        'T03': '서쪽 종탑 지연로와 태엽창고를 가지치기하고 중앙태엽승강기 8분 최단 경로를 설계함',
-        'T04': '만티코어 역송 함정(W)과 폐쇄철문(X2)을 소거하고 대성문 8분 최적 탈출해를 검증함'
+        'T01': '불필요한 용암우회로(E)와 막다른 보물방(C)을 완벽히 분별하여 6분 최단 노선도로 추상화함',
+        'T02': '예티동굴(C) 우회로와 얼음감옥(X)을 배제하고 수정승강기(E) 경유 7분 최단 경로를 도출함',
+        'T03': '서쪽종탑(C) 지연로와 태엽창고(X)를 가지치기하고 중앙태엽승강기(F) 경유 8분 최단 경로를 설계함',
+        'T04': '만티코어다리(M)➔함정마법진(W) 역송 함정과 폐쇄철문(X2)을 소거하고 심연대성문(Z) 8분 최적 탈출해를 검증함'
       };
 
       var compactOptimalRoutes = {
         'T01': 'A.입구제단 ➔ B.청동계단 ➔ D.지하성당다리 ➔ F.흑요석대교 ➔ G.지하봉인문 (1+2+2+1 = 최단 6분)',
-        'T02': 'A.빙하절벽입구 ➔ B.수로갈림길 ➔ D.수정수로 ➔ E.수정승강기 ➔ F.수정복도 ➔ G.얼음성문 (1+2+2+1+1 = 최단 7분)',
-        'T03': 'A.지하태엽실 ➔ B.제1기어실 ➔ D.제2기어교차로 ➔ E.동쪽태엽교 ➔ F.중앙태엽승강기 ➔ G.상층시계판 ➔ H.시계탑정상 (총 8분)',
-        'T04': 'A.성탑옥상 ➔ B.사신의회랑 ➔ C.승강장 ➔ D.지하묘지 ➔ E.지하제단 ➔ F.심연전초기지 ➔ G.심연대교 ➔ Z.대성문 (총 8분)'
+        'T02': 'A.빙하절벽입구 ➔ B.수로갈림길 ➔ D.수정수로 ➔ E.수정승강기 ➔ F.수정복도 ➔ G.얼음성문 (1+2+1+1+2 = 최단 7분)',
+        'T03': 'A.지하태엽실 ➔ B.제1기어교차로 ➔ D.제2기어교차로 ➔ F.중앙태엽승강기 ➔ G.상층시계판 ➔ H.시계탑정상 (1+2+2+2+1 = 최단 8분)',
+        'T04': 'A.첨탑옥좌 ➔ B.서쪽복도 ➔ C.승강장 ➔ D.고문실갈림길 ➔ E.중앙수로 ➔ F.대교입구 ➔ G.심연대교 ➔ Z.심연대성문 (1+2+1+1+1+1+1 = 최단 8분)'
       };
 
       var tbody = document.getElementById('certStageTableBody');
@@ -6769,10 +6771,10 @@
 
       var clearMins = (state.routeMinutes && state.routeMinutes > 0) ? state.routeMinutes : st.targetMinutes;
       var defaultFeedbacks = {
-        'T01': '불필요한 우회로(E)와 막다른 길(C)을 완벽히 분별하여 6분 노선도처럼 단순하게 추상화했습니다. 탁월합니다!',
-        'T02': '빙하 우회로(C)와 얼음감옥(X)을 배제하고 수정승강기를 핵심 거점으로 정확히 추출했습니다. 우수합니다!',
-        'T03': '느린 서쪽 종탑 우회로와 막다른 태엽창고를 배제하고 중앙태엽승강기 경유 8분 최단 경로를 도출했습니다. 우수합니다!',
-        'T04': '아주 큰 심연 맵에서 함정 마법진(W)을 소거하고 대성문 8분 최단 탈출 경로를 완벽히 도출했습니다. 탁월합니다!'
+        'T01': '불필요한 용암우회로(E)와 막다른 보물방(C)을 완벽히 분별하여 6분 노선도처럼 단순하게 추상화했습니다. 탁월합니다!',
+        'T02': '예티동굴(C) 우회로와 얼음감옥(X)을 배제하고 수정승강기(E)를 핵심 거점으로 정확히 추출했습니다. 우수합니다!',
+        'T03': '느린 서쪽종탑(C) 우회로와 막다른 태엽창고(X)를 배제하고 중앙태엽승강기(F) 경유 8분 최단 경로를 도출했습니다. 우수합니다!',
+        'T04': '아주 큰 심연 맵에서 함정마법진(W)과 폐쇄철문(X2)을 소거하고 심연대성문(Z) 8분 최단 탈출 경로를 완벽히 도출했습니다. 탁월합니다!'
       };
 
       var payload = {
@@ -7127,7 +7129,7 @@
             wrongExplanation: "정답은 ①번: 가지치기는 검토해야 할 후보 경로를 줄여 문제 해결 시간을 단축시키는 핵심 추상화 기법입니다."
           },
           q2: {
-            text: "Q2. 청록색 최적 경로 [A➔B➔D➔F➔G]가 가장 빠르다는 것을 바르게 증명한 설명은 무엇일까요?",
+            text: "Q2. 청록색 최적 경로 [A.입구제단➔B.청동계단➔D.지하성당다리➔F.흑요석대교➔G.지하봉인문]이 가장 빠르다는 것을 바르게 증명한 설명은 무엇일까요?",
             options: [
               { val: "A", text: "① 1분 + 2분 + 2분 + 1분 = 총 6분이 걸려, 용암 우회로(총 10분)보다 4분이 단축되기 때문이다." },
               { val: "B", text: "② 청록색 안내선이 화면에서 가장 눈에 잘 띄기 때문이다." },
@@ -7142,9 +7144,9 @@
       {
         mapId: "T02",
         mapNum: "MAP 2",
-        title: "설원 얼음동굴",
+        title: "빙하 수로 미궁",
         pre: {
-          desc: "설원 동굴 탐색에 앞서 지연 우회로와 가중치 합산에 대한 사전 이해도를 점검합니다. 틀려도 괜찮아요!",
+          desc: "빙하 수로 미궁 탐색에 앞서 지연 우회로와 가중치 합산에 대한 사전 이해도를 점검합니다. 틀려도 괜찮아요!",
           q1: {
             text: "Q1. 컴퓨터 알고리즘에서 여러 갈래 경로 중 탈출구가 없는 막다른 길이나 지연로를 사전에 배제하는 기법을 무엇이라 할까요?",
             options: [
@@ -7157,11 +7159,11 @@
             wrongExplanation: "정답은 ①번: 막다른 길이나 불필요한 지연로를 사전에 배제하는 기법은 가지치기입니다."
           },
           q2: {
-            text: "Q2. MAP 2처럼 빙판길과 갈림길이 섞여 있을 때 최적 경로를 판단하는 가장 올바른 기준은 무엇일까요?",
+            text: "Q2. MAP 2처럼 수로 갈림길과 우회로가 섞여 있을 때 최적 경로를 판단하는 가장 올바른 기준은 무엇일까요?",
             options: [
               { val: "A", text: "① 지도에서 가장 넓어 보이는 길을 고른다." },
               { val: "B", text: "② 각 구간의 소요 시간(가중치)을 더해 합산 시간이 가장 적게 걸리는 길을 선택한다." },
-              { val: "C", text: "③ 얼음 보물상자가 있는 쪽으로 먼저 이동한다." }
+              { val: "C", text: "③ 얼음감옥 보물상자가 있는 쪽으로 먼저 이동한다." }
             ],
             ans: "B",
             correctExplanation: "각 구간의 가중치(분)를 정확히 합산하여 총 소요 시간이 최소가 되는 경로를 찾는 것이 최적 알고리즘 설계입니다. [9정03-01]",
@@ -7169,41 +7171,41 @@
           }
         },
         post: {
-          desc: "설원 얼음동굴에서 학습한 다중 지연로 소거와 최적 경로 검증을 확인합니다.",
+          desc: "빙하 수로 미궁에서 학습한 다중 지연로 소거와 최적 경로 검증을 확인합니다.",
           q1: {
-            text: "Q1. MAP 2에서 막다른 얼음빙벽(C, 미믹)과 얼음빙판 우회로(E)를 탈출로에서 배제해야 하는 핵심 이유는 무엇일까요?",
+            text: "Q1. MAP 2에서 지연 우회로인 예티동굴(C)과 막다른 길인 얼음감옥(X, 미믹)을 탈출로에서 배제해야 하는 핵심 이유는 무엇일까요?",
             options: [
-              { val: "A", text: "① C는 탈출구가 없는 막다른 길이고, E는 4분이 걸려 직행로(D 2분)보다 2분이 지연되기 때문이다." },
+              { val: "A", text: "① X.얼음감옥은 탈출구가 없는 막다른 길이고, C.예티동굴은 9분(5분+4분)이 걸려 핵심 경로(D.수정수로➔E.수정승강기)보다 지연되기 때문이다." },
               { val: "B", text: "② 얼음 몬스터가 100마리 이상 출현하기 때문이다." },
               { val: "C", text: "③ 얼음 바닥이라서 신발이 젖기 때문이다." }
             ],
             ans: "A",
-            correctExplanation: "C는 막다른 길, E는 4분이 걸리는 지연 우회로이므로 2분 직행로(D)를 위해 반드시 배제해야 합니다. [9정03-02]",
-            wrongExplanation: "정답은 ①번: 배제 이유는 막다른 방과 시간 지연(4분 vs 2분)이라는 논리적 근거에 기반해야 합니다."
+            correctExplanation: "X.얼음감옥은 막다른 길, C.예티동굴은 시간이 크게 지연되는 우회로이므로 핵심 경로(D.수정수로➔E.수정승강기)를 위해 반드시 배제해야 합니다. [9정03-02]",
+            wrongExplanation: "정답은 ①번: 배제 이유는 막다른 방(X.얼음감옥)과 시간 지연(C.예티동굴)이라는 논리적 근거에 기반해야 합니다."
           },
           q2: {
-            text: "Q2. MAP 2의 최적 탈출 경로 [A➔B➔D➔F➔G]의 총 소요 시간과 그 계산식이 올바르게 짝지어진 것은?",
+            text: "Q2. MAP 2의 최적 탈출 경로 [A.빙하절벽입구➔B.수로갈림길➔D.수정수로➔E.수정승강기➔F.수정복도➔G.얼음성문]의 총 소요 시간과 계산식이 올바르게 짝지어진 것은?",
             options: [
-              { val: "A", text: "① 1분 + 2분 + 2분 + 1분 + 1분 = 총 7분" },
-              { val: "B", text: "② 1분 + 2분 + 4분 + 1분 = 총 8분" },
+              { val: "A", text: "① 1분 + 2분 + 1분 + 1분 + 2분 = 총 7분" },
+              { val: "B", text: "② 1분 + 5분 + 4분 + 2분 = 총 12분" },
               { val: "C", text: "③ 2분 + 2분 + 2분 + 2분 = 총 8분" }
             ],
             ans: "A",
-            correctExplanation: "구간별 소요 시간을 합산하면 A(1)+B(2)+D(2)+F(1)+G(1) = 총 7분이 정확히 도출됩니다. [9정03-01]",
-            wrongExplanation: "정답은 ①번: 각 핵심 구간의 시간을 더하면 1+2+2+1+1 = 총 7분입니다."
+            correctExplanation: "구간별 소요 시간을 합산하면 (A➔B 1분) + (B➔D 2분) + (D➔E 1분) + (E➔F 1분) + (F➔G 2분) = 총 7분이 정확히 도출됩니다. [9정03-01]",
+            wrongExplanation: "정답은 ①번: 각 핵심 구간의 시간을 더하면 1+2+1+1+2 = 총 7분입니다."
           }
         }
       },
       {
         mapId: "T03",
         mapNum: "MAP 3",
-        title: "시계탑 기관",
+        title: "기계 시계탑",
         pre: {
-          desc: "수직 이동과 복잡한 톱니 기믹 속에서 문제 상태를 구조화하는 능력을 점검합니다. 틀려도 괜찮아요!",
+          desc: "기계 시계탑의 수직 이동과 복잡한 톱니 기믹 속에서 문제 상태를 구조화하는 능력을 점검합니다. 틀려도 괜찮아요!",
           q1: {
-            text: "Q1. 시계탑처럼 수많은 기어와 태엽이 얽힌 복잡한 환경에서 최단 탈출 알고리즘을 설계하기 위해 가장 먼저 필요한 과정은?",
+            text: "Q1. 기계 시계탑처럼 수많은 기어와 태엽이 얽힌 복잡한 환경에서 최단 탈출 알고리즘을 설계하기 위해 가장 먼저 필요한 과정은?",
             options: [
-              { val: "A", text: "① 문제 상태를 출발점, 핵심 거점, 소요 시간, 탈출구로 단순화하여 구조화한다." },
+              { val: "A", text: "① 문제 상태를 출발점(A.지하태엽실), 핵심 거점, 소요 시간, 탈출구(H.시계탑정상)로 단순화하여 구조화한다." },
               { val: "B", text: "② 모든 톱니바퀴의 회전 속도를 똑같이 맞춘다." },
               { val: "C", text: "③ 몬스터를 전부 쓰러뜨릴 때까지 제자리에 서 있는다." }
             ],
@@ -7224,28 +7226,28 @@
           }
         },
         post: {
-          desc: "시계탑 옥상 탈출에서 적용한 분쇄 함정 소거와 합산 식 도출을 확인합니다.",
+          desc: "기계 시계탑 정상 탈출에서 적용한 지연 우회로 소거와 합산 식 도출을 확인합니다.",
           q1: {
-            text: "Q1. MAP 3 시계탑에서 태엽창고(C, 미믹)와 거대 톱니 우회로(E)를 가지치기해야 하는 이유로 알맞은 것은?",
+            text: "Q1. MAP 3 기계 시계탑에서 지연 우회로인 서쪽종탑(C)과 막다른 길인 태엽창고(X, 미믹)를 가지치기해야 하는 이유로 알맞은 것은?",
             options: [
-              { val: "A", text: "① C는 막다른 방이고, E는 4분이 걸려 핵심 교각(D 2분)보다 비효율적이므로" },
+              { val: "A", text: "① X.태엽창고는 막다른 방이고, C.서쪽종탑 우회로는 9분(4분+5분)이 걸려 중앙태엽승강기(F) 경유 경로보다 비효율적이므로" },
               { val: "B", text: "② 톱니바퀴 소리가 너무 시끄러워서" },
-              { val: "C", text: "③ 시계탑 꼭대기에 문이 닫혀 있어서" }
+              { val: "C", text: "③ 시계탑 정상에 문이 닫혀 있어서" }
             ],
             ans: "A",
-            correctExplanation: "태엽창고(C)는 출구가 없는 막다른 방이며, 톱니 우회로(E)는 직행(2분) 대비 2분이 낭비되는 비효율적 경로입니다. [9정03-02]",
-            wrongExplanation: "정답은 ①번: 가지치기의 정당성은 막다른 구조와 시간 낭비(4분 vs 2분)에서 비롯됩니다."
+            correctExplanation: "태엽창고(X)는 출구가 없는 막다른 방이며, 서쪽종탑(C) 우회로는 핵심 경로 대비 시간이 크게 낭비되는 비효율적 경로입니다. [9정03-02]",
+            wrongExplanation: "정답은 ①번: 가지치기의 정당성은 막다른 구조(X.태엽창고)와 시간 낭비(C.서쪽종탑)에서 비롯됩니다."
           },
           q2: {
-            text: "Q2. 시계탑 최적 탈출 경로 [A➔B➔D➔F➔G (총 7분)]이 최선의 알고리즘임을 어떻게 검증할 수 있을까요?",
+            text: "Q2. 기계 시계탑 최적 탈출 경로 [A.지하태엽실➔B.제1기어교차로➔D.제2기어교차로➔F.중앙태엽승강기➔G.상층시계판➔H.시계탑정상 (총 8분)]을 어떻게 검증할 수 있을까요?",
             options: [
-              { val: "A", text: "① 합산 식(1+2+2+1+1=7분)을 통해 우회로를 이용하는 경로(총 9분)보다 2분 빠름을 수학적으로 비교한다." },
+              { val: "A", text: "① 합산 식(1+2+2+2+1=8분)을 통해 서쪽종탑(C)을 경유하는 우회 경로(총 11분)보다 3분 빠름을 수학적으로 비교한다." },
               { val: "B", text: "② 시계 바늘이 정각 12시를 가리키는지 확인한다." },
               { val: "C", text: "③ 엑스아머 몬스터를 모두 쓰러뜨렸는지 확인한다." }
             ],
             ans: "A",
-            correctExplanation: "수학적 합산 식을 통해 대안 경로(9분)와 비교하여 최소 시간(7분)임을 증명하는 것이 최적해 검증입니다. [9정03-02]",
-            wrongExplanation: "정답은 ①번: 최적 알고리즘 검증은 소요 시간 합산 식의 수치적 비교로 이루어집니다."
+            correctExplanation: "수학적 합산 식(1+2+2+2+1=8분)을 통해 대안 경로와 비교하여 최소 시간(8분)임을 증명하는 것이 최적해 검증입니다. [9정03-02]",
+            wrongExplanation: "정답은 ①번: 최적 알고리즘 검증은 소요 시간 합산 식(총 8분)의 수치적 비교로 이루어집니다."
           }
         }
       },
@@ -7269,7 +7271,7 @@
           q2: {
             text: "Q2. 상층과 지하 심연으로 나뉜 다층 복합 미궁에서 문제를 해결하는 올바른 추상화 과정은?",
             options: [
-              { val: "A", text: "① 층간을 잇는 핵심 이동 수단(승강기)과 통행 불가 구역을 파악하여 구조화한다." },
+              { val: "A", text: "① 층간을 잇는 핵심 이동 수단(C.승강장 수직 승강기)과 통행 불가 구역(X2.폐쇄철문)을 파악하여 구조화한다." },
               { val: "B", text: "② 모든 몬스터의 체력과 공격력을 전부 암기한다." },
               { val: "C", text: "③ 승강기를 타지 않고 즉사 구역으로 뛰어내린다." }
             ],
@@ -7279,28 +7281,28 @@
           }
         },
         post: {
-          desc: "만티코어다리 유인 함정 소거와 최종 8분 최적 탈출 경로 도출을 확인합니다.",
+          desc: "만티코어다리 유인 함정 소거와 심연대성문(Z) 8분 최적 탈출 경로 도출을 확인합니다.",
           q1: {
-            text: "Q1. MAP 4에서 [만티코어다리 ➔ 함정마법진] 경로는 언뜻 7분으로 보여 유혹적이지만, 왜 반드시 가지치기해야 할까요?",
+            text: "Q1. MAP 4에서 [M.만티코어다리 ➔ W.함정마법진] 경로는 언뜻 7분으로 보여 유혹적이지만, 왜 반드시 가지치기해야 할까요?",
             options: [
-              { val: "A", text: "① 함정마법진(W)을 밟는 순간 상층 서쪽복도로 강제 역송되어 탈출이 실패하기 때문이다." },
+              { val: "A", text: "① 함정마법진(W)을 밟는 순간 상층 서쪽복도(B)로 강제 역송되어 탈출이 실패하기 때문이다." },
               { val: "B", text: "② 만티코어가 나타나 길을 가로막기 때문이다." },
               { val: "C", text: "③ 다리 발판의 색깔이 마음에 들지 않기 때문이다." }
             ],
             ans: "A",
-            correctExplanation: "외견상 7분으로 보이지만 실제로는 상층으로 강제 역송되는 치명적 함정이므로 탐색 트리에서 소거해야 합니다. [9정03-02]",
-            wrongExplanation: "정답은 ①번: 만티코어다리에서 이어지는 함정마법진은 시간을 낭비시키는 역송 함정이므로 반드시 배제해야 합니다."
+            correctExplanation: "외견상 7분으로 보이지만 실제로는 상층 서쪽복도(B)로 강제 역송되는 치명적 함정이므로 탐색 트리에서 소거해야 합니다. [9정03-02]",
+            wrongExplanation: "정답은 ①번: 만티코어다리(M)에서 이어지는 함정마법진(W)은 시간을 낭비시키는 역송 함정이므로 반드시 배제해야 합니다."
           },
           q2: {
-            text: "Q2. MAP 4의 심연 최종 탈출 최적 경로 [A➔B➔C➔D➔E➔F➔G➔Z (총 8분)]에 대한 올바른 설명은?",
+            text: "Q2. MAP 4의 심연 최종 탈출 최적 경로 [A.첨탑옥좌➔B.서쪽복도➔C.승강장➔D.고문실갈림길➔E.중앙수로➔F.대교입구➔G.심연대교➔Z.심연대성문 (총 8분)]에 대한 올바른 설명은?",
             options: [
-              { val: "A", text: "① 상층 폐쇄철문(X2)과 만티코어 함정(M➔W)을 배제하고, 승강기(C)로 하강하여 심연대교로 탈출하는 유일한 최단 경로입니다." },
+              { val: "A", text: "① 상층 폐쇄철문(X2)과 만티코어다리 함정(M➔W)을 배제하고, 승강장(C) 승강기로 하강하여 심연대교(G)를 거쳐 심연대성문(Z)으로 탈출하는 유일한 최단 경로입니다." },
               { val: "B", text: "② 상층 폐쇄철문(X2)을 글리프 검으로 부수고 나가는 경로입니다." },
               { val: "C", text: "③ 심연 가시 즉사 구역으로 떨어져서 부활하는 편법 경로입니다." }
             ],
             ans: "A",
-            correctExplanation: "폐쇄철문과 역송 함정을 모두 가지치기하고 승강기와 심연대교를 거치는 8분 합산 경로가 유일한 최적해입니다. [9정03-01, 9정03-02]",
-            wrongExplanation: "정답은 ①번: 불가능한 길과 함정을 배제한 후 승강기를 타는 8분 경로가 유일한 정답입니다."
+            correctExplanation: "폐쇄철문(X2)과 역송 함정(M➔W)을 모두 가지치기하고 승강장(C)과 심연대교(G)를 거쳐 심연대성문(Z)에 도달하는 8분 합산 경로가 유일한 최적해입니다. [9정03-01, 9정03-02]",
+            wrongExplanation: "정답은 ①번: 불가능한 길과 함정을 배제한 후 승강장(C) 승강기를 타는 8분 경로가 유일한 정답입니다."
           }
         }
       }
