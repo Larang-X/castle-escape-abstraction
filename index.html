@@ -1213,6 +1213,364 @@
       letter-spacing: 0.14em;
     }
 
+
+    /* Dedicated Certificate Banner & Ornate Gothic Certificate Modal (Erinys Dawn of Sorrow Edition) */
+    .cert-dedication-bar {
+      margin: 0 0 12px 0;
+      padding: 10px 16px;
+      background: linear-gradient(135deg, rgba(28, 20, 14, 0.96) 0%, rgba(18, 12, 24, 0.98) 50%, rgba(34, 24, 14, 0.96) 100%);
+      border: 2px solid #8c6d32;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.75), inset 0 0 24px rgba(212, 175, 55, 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+    .cert-dedication-bar::before {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border: 1px solid rgba(255, 215, 64, 0.25);
+      border-radius: 5px;
+      pointer-events: none;
+    }
+    .cert-dedication-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+      z-index: 1;
+    }
+    .cert-erinys-mini {
+      width: 44px;
+      height: 36px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 8px rgba(255, 235, 160, 0.65));
+    }
+    .cert-dedication-title {
+      font-size: 14.5px;
+      font-weight: 900;
+      color: #ffd740;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .cert-dedication-sub {
+      font-size: 12px;
+      color: #e2dbd0;
+      margin-top: 2px;
+    }
+    .cert-req-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 800;
+      background: rgba(183, 28, 28, 0.28);
+      border: 1px solid #ef5350;
+      color: #ffcdd2;
+    }
+    .cert-req-pill.unlocked {
+      background: rgba(46, 125, 50, 0.35);
+      border-color: #69f0ae;
+      color: #b9f6ca;
+    }
+    .cert-issue-btn {
+      z-index: 1;
+      padding: 9px 20px;
+      font-size: 13.5px;
+      font-weight: 900;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 2px solid #ffd740;
+      background: linear-gradient(180deg, #4e3814 0%, #261a08 100%);
+      color: #fff8e1;
+      box-shadow: 0 0 15px rgba(255, 215, 64, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cert-issue-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 22px rgba(255, 215, 64, 0.65), inset 0 1px 3px rgba(255, 255, 255, 0.45);
+      background: linear-gradient(180deg, #634719 0%, #33230a 100%);
+    }
+
+    /* Ornate Multi-Layered Gothic Certificate Modal */
+    .cert-modal-card {
+      max-width: 1140px;
+      width: 96vw;
+      max-height: 92vh;
+      overflow-y: auto;
+      background: radial-gradient(ellipse at 50% 15%, #23192d 0%, #110c18 60%, #09060d 100%);
+      border: 3px solid #d4af37;
+      border-radius: 10px;
+      padding: 14px;
+      position: relative;
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(212, 175, 55, 0.35);
+      color: #f5eedc;
+    }
+    .cert-outer-frame {
+      position: relative;
+      border: 2px solid #ffd740;
+      padding: 6px;
+      border-radius: 6px;
+      background:
+        linear-gradient(135deg, rgba(212, 175, 55, 0.16) 0%, transparent 25%, transparent 75%, rgba(212, 175, 55, 0.16) 100%),
+        rgba(12, 9, 18, 0.94);
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9), 0 0 12px rgba(212, 175, 55, 0.25);
+    }
+    .cert-middle-filigree {
+      position: relative;
+      border: 1px dashed rgba(255, 224, 130, 0.55);
+      padding: 6px;
+      border-radius: 4px;
+    }
+    .cert-inner-frame {
+      position: relative;
+      border: 2px solid #b38f40;
+      padding: 24px 28px 22px;
+      border-radius: 4px;
+      background:
+        radial-gradient(circle at 50% 22%, rgba(255, 215, 64, 0.08) 0%, transparent 55%),
+        repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.018) 0px, rgba(212, 175, 55, 0.018) 12px, transparent 12px, transparent 24px),
+        linear-gradient(180deg, #161120 0%, #0d0a14 50%, #15101e 100%);
+      box-shadow: inset 0 0 45px rgba(0, 0, 0, 0.85);
+    }
+    .cert-corner-svg {
+      position: absolute;
+      width: 54px;
+      height: 54px;
+      pointer-events: none;
+      z-index: 5;
+      filter: drop-shadow(0 0 6px rgba(255, 215, 64, 0.45));
+    }
+    .cert-corner-tl { top: 4px; left: 4px; }
+    .cert-corner-tr { top: 4px; right: 4px; transform: scaleX(-1); }
+    .cert-corner-bl { bottom: 4px; left: 4px; transform: scaleY(-1); }
+    .cert-corner-br { bottom: 4px; right: 4px; transform: scale(-1, -1); }
+
+    .cert-edge-jewel {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ffd740;
+      font-size: 13px;
+      letter-spacing: 0.4em;
+      text-shadow: 0 0 10px rgba(255, 215, 64, 0.8);
+      pointer-events: none;
+      z-index: 5;
+    }
+    .cert-edge-top { top: -10px; background: #120d1a; padding: 0 14px; border: 1px solid #b38f40; border-radius: 99px; }
+    .cert-edge-bottom { bottom: -10px; background: #120d1a; padding: 0 14px; border: 1px solid #b38f40; border-radius: 99px; }
+
+    /* Certificate Header with Left & Right Facing Angelic Erinys Ornaments */
+    .cert-header-stage {
+      display: grid;
+      grid-template-columns: 155px 1fr 155px;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 6px 16px;
+      border-bottom: 2px solid rgba(212, 175, 55, 0.45);
+      position: relative;
+    }
+    .cert-header-stage::after {
+      content: '✦ ─────────── ❖ ─────────── ✦';
+      position: absolute;
+      bottom: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #120d1a;
+      padding: 0 14px;
+      color: #ffd740;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+    }
+    .cert-erinys-pedestal {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 8px;
+      background: radial-gradient(circle at 50% 50%, rgba(255, 248, 225, 0.16) 0%, rgba(212, 175, 55, 0.06) 52%, transparent 72%);
+      border-radius: 50%;
+    }
+    .cert-erinys-pedestal::before {
+      content: '';
+      position: absolute;
+      width: 118px;
+      height: 118px;
+      border: 1.5px solid rgba(255, 224, 130, 0.42);
+      border-radius: 50%;
+      box-shadow: 0 0 18px rgba(255, 215, 64, 0.25), inset 0 0 14px rgba(255, 255, 255, 0.12);
+      pointer-events: none;
+    }
+    .cert-erinys-sprite {
+      width: 136px;
+      height: 112px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 14px rgba(255, 245, 200, 0.55));
+      z-index: 2;
+    }
+    .cert-erinys-sprite.erinys-right-mirror {
+      transform: scaleX(-1);
+    }
+    .cert-erinys-caption {
+      font-size: 10px;
+      color: #ffe082;
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+      opacity: 0.9;
+      font-weight: 700;
+    }
+
+    .cert-title-center {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+    .cert-serial-tag {
+      font-size: 11px;
+      color: #ffe082;
+      letter-spacing: 0.14em;
+      background: rgba(212, 175, 55, 0.14);
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      padding: 2px 12px;
+      border-radius: 99px;
+      font-weight: 800;
+    }
+    .cert-main-heading {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      margin: 4px 0 2px;
+      background: linear-gradient(180deg, #fffde7 0%, #ffd740 48%, #c5a059 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 10px rgba(255, 215, 64, 0.45));
+    }
+    .cert-sub-heading {
+      font-size: 11.5px;
+      color: #d7ccc8;
+      letter-spacing: 0.06em;
+    }
+
+    .cert-recipient-banner {
+      margin: 18px 0 14px;
+      padding: 12px 18px;
+      background: linear-gradient(90deg, rgba(20, 14, 28, 0.6) 0%, rgba(46, 34, 18, 0.85) 50%, rgba(20, 14, 28, 0.6) 100%);
+      border: 1px solid #8c6d32;
+      border-left: 4px solid #ffd740;
+      border-right: 4px solid #ffd740;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .cert-section-title {
+      font-size: 13.5px;
+      font-weight: 900;
+      color: #ffd740;
+      margin: 14px 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.04em;
+    }
+    .cert-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      background: rgba(10, 8, 16, 0.88);
+      border: 1px solid #5a4224;
+    }
+    .cert-table th {
+      background: linear-gradient(180deg, #2b1f14 0%, #1a120b 100%);
+      color: #ffd54f;
+      padding: 8px 10px;
+      border: 1px solid #5a4224;
+      font-weight: 900;
+      text-align: center;
+    }
+    .cert-table td {
+      padding: 8px 10px;
+      border: 1px solid #3d2c18;
+      color: #e2dbd0;
+      vertical-align: middle;
+      line-height: 1.55;
+    }
+    .cert-footer-seal {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(212, 175, 55, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .cert-wax-seal {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      border-radius: 99px;
+      background: radial-gradient(circle at 30% 30%, #6a4f1d 0%, #2e2008 100%);
+      border: 2px solid #ffd740;
+      box-shadow: 0 0 16px rgba(255, 215, 64, 0.35), inset 0 0 10px rgba(255, 255, 255, 0.2);
+      color: #fff8e1;
+      font-weight: 900;
+      font-size: 12.5px;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden !important;
+      }
+      #certificateModal, #certificateModal * {
+        visibility: visible !important;
+      }
+      #certificateModal {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        background: #0d0a14 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .cert-modal-card {
+        max-width: 100% !important;
+        width: 100% !important;
+        max-height: none !important;
+        overflow: visible !important;
+        box-shadow: none !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .cert-no-print {
+        display: none !important;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -1638,6 +1996,25 @@
         </div>
       </section>
 
+      <!-- Dedicated Certificate Issuance Bar (Clearly states MAP 4 completion requirement) -->
+      <section class="cert-dedication-bar" id="certDedicationBar">
+        <div class="cert-dedication-info">
+          <img id="certMiniErinysImg" class="cert-erinys-mini" alt="Erinys Guardian" src="" />
+          <div>
+            <div class="cert-dedication-title">
+              <span>📜 고성 미궁 알고리즘 추상화 마스터 수료증 &amp; 종합 성취 리포트</span>
+              <span id="certReqBadge" class="cert-req-pill">🔒 MAP 4까지 모두 클리어 시 발급 가능 (현재 0 / 4 클리어)</span>
+            </div>
+            <div class="cert-dedication-sub">
+              ※ 본 수료증은 <strong>MAP 1 ~ MAP 4(심연 최종 탈출)까지 모두 클리어</strong>하면 공식 발급되며, 구글 시트 클라우드 제출 기록 및 사전·사후 진단 성장도와 연동됩니다.
+            </div>
+          </div>
+        </div>
+        <button type="button" class="cert-issue-btn" id="dedicatedCertBtn" onclick="playButtonClickSfx(); openCertificateModal()">
+          🎓 <span id="dedicatedCertBtnLabel" class="text-grad-gold">전용 수료증 &amp; 성취 리포트 확인 (MAP 4 클리어 시 발급)</span>
+        </button>
+      </section>
+
       <!-- 4 Maps Selector (Sequential Unlocking: Must clear Map 1 -> Map 2 -> Map 3 -> Map 4) -->
       <section class="stage-tabs" id="stageTabs"></section>
 
@@ -1866,6 +2243,11 @@
             고성 미궁의 모든 시련을 돌파한 탐험가에게 주어지는 질풍의 명검!<br/>
             초당 수십 회의 진공 칼날이 캐릭터 주위를 회전하며 모든 몬스터를 순식간에 궤멸시킵니다.
           </p>
+          <div style="margin-top:10px;">
+            <button type="button" class="btn btn-gold" onclick="playButtonClickSfx(); closeStageClearModal(); openCertificateModal();" style="font-size:13.5px; padding:9px 20px; font-weight:900;">
+              🎓 <span class="text-grad-gold">MAP 4 최종 클리어 기념 — [마스터 수료증 &amp; 성취 리포트 발급받기]</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1883,6 +2265,146 @@
         <button class="btn" onclick="closeStageClearModal()" style="font-size:13px; padding:10px 14px;">
           닫기 ✕
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Master Certificate & Comprehensive Achievement Report Modal (#certificateModal) -->
+  <div id="certificateModal" class="modal-backdrop hidden">
+    <div class="cert-modal-card">
+      <div class="cert-outer-frame">
+        <div class="cert-corner-svg cert-corner-tl"><svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M2 62V14C2 7.37258 7.37258 2 14 2H62" stroke="#FFD740" stroke-width="3"/>
+  <path d="M8 54V18C8 12.4772 12.4772 8 18 8H54" stroke="#D4AF37" stroke-width="1.5"/>
+  <circle cx="14" cy="14" r="4" fill="#FFD740"/>
+  <path d="M14 24L24 14M2 28H12M28 2V12" stroke="#FFE082" stroke-width="1.5"/>
+</svg></div>
+        <div class="cert-corner-svg cert-corner-tr"><svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M2 62V14C2 7.37258 7.37258 2 14 2H62" stroke="#FFD740" stroke-width="3"/>
+  <path d="M8 54V18C8 12.4772 12.4772 8 18 8H54" stroke="#D4AF37" stroke-width="1.5"/>
+  <circle cx="14" cy="14" r="4" fill="#FFD740"/>
+  <path d="M14 24L24 14M2 28H12M28 2V12" stroke="#FFE082" stroke-width="1.5"/>
+</svg></div>
+        <div class="cert-corner-svg cert-corner-bl"><svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M2 62V14C2 7.37258 7.37258 2 14 2H62" stroke="#FFD740" stroke-width="3"/>
+  <path d="M8 54V18C8 12.4772 12.4772 8 18 8H54" stroke="#D4AF37" stroke-width="1.5"/>
+  <circle cx="14" cy="14" r="4" fill="#FFD740"/>
+  <path d="M14 24L24 14M2 28H12M28 2V12" stroke="#FFE082" stroke-width="1.5"/>
+</svg></div>
+        <div class="cert-corner-svg cert-corner-br"><svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M2 62V14C2 7.37258 7.37258 2 14 2H62" stroke="#FFD740" stroke-width="3"/>
+  <path d="M8 54V18C8 12.4772 12.4772 8 18 8H54" stroke="#D4AF37" stroke-width="1.5"/>
+  <circle cx="14" cy="14" r="4" fill="#FFD740"/>
+  <path d="M14 24L24 14M2 28H12M28 2V12" stroke="#FFE082" stroke-width="1.5"/>
+</svg></div>
+        <div class="cert-edge-jewel cert-edge-top">✦ ❖ ✦</div>
+        <div class="cert-edge-jewel cert-edge-bottom">✦ ❖ ✦</div>
+
+        <div class="cert-middle-filigree">
+          <div class="cert-inner-frame">
+            <!-- Top Ornate Header with Left & Right Angelic Erinys (Dawn of Sorrow) -->
+            <div class="cert-header-stage">
+              <div class="cert-erinys-pedestal">
+                <img id="certErinysLeft" class="cert-erinys-sprite" alt="Erinys Left Guardian" src="" />
+                <span class="cert-erinys-caption">✦ ERINYS GUARDIAN ✦</span>
+              </div>
+
+              <div class="cert-title-center">
+                <span class="cert-serial-tag" id="certSerialTag">CERTIFICATE OF ALGORITHM ABSTRACTION · 2022 개정 교육과정 정보</span>
+                <h2 class="cert-main-heading">고성 미궁 알고리즘 추상화 마스터 수료증</h2>
+                <div class="cert-sub-heading">
+                  중학교 『정보』 [9정03-01] 문제 상태 구조화 &amp; [9정03-02] 추상화와 최적 알고리즘 설계
+                </div>
+                <div id="certUnlockStatusBanner" style="margin-top:6px; font-size:12px; font-weight:800; padding:4px 14px; border-radius:99px; background:rgba(46,125,50,0.3); border:1px solid #69f0ae; color:#b9f6ca;">
+                  👑 MAP 1 ~ MAP 4 전 스테이지 최단 경로 추상화 마스터 인증 완료
+                </div>
+              </div>
+
+              <div class="cert-erinys-pedestal">
+                <img id="certErinysRight" class="cert-erinys-sprite erinys-right-mirror" alt="Erinys Right Guardian" src="" />
+                <span class="cert-erinys-caption">✦ ERINYS GUARDIAN ✦</span>
+              </div>
+            </div>
+
+            <!-- Recipient & Cloud Sync Info -->
+            <div class="cert-recipient-banner">
+              <div>
+                <div style="font-size:11.5px; color:#ffe082; font-weight:700;">🎓 수료 학생 및 마스터 칭호</div>
+                <div id="certStudentNameLine" style="font-size:18px; font-weight:900; color:#ffffff; margin-top:2px;">
+                  학생코드 S01 (민트) — <span class="text-grad-gold">[고성 미궁 최단경로 추상화 그랜드 마스터]</span>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div id="certCloudSyncBadge" style="font-size:11.5px; color:#80deea; font-weight:800;">
+                  ☁️ 구글 시트 실시간 연동 확인 완료
+                </div>
+                <div id="certIssueDateLine" style="font-size:11.5px; color:#d7ccc8; margin-top:3px;">
+                  발급 일자: 2026-11-19 | 발급 요건: MAP 4까지 모두 클리어 시 발급
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 1: MAP 1 ~ MAP 4 Shortest Path & 3-Step Abstraction Summary -->
+            <div class="cert-section-title">
+              <span>⚔️ 1. MAP 1 ~ MAP 4 최단 경로 탈출 및 3단계 추상화 탐구 성취 내역</span>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="cert-table">
+                <thead>
+                  <tr>
+                    <th style="width:15%;">스테이지</th>
+                    <th style="width:12%;">클리어 상태</th>
+                    <th style="width:23%;">최적 탈출 경로 &amp; 최단 시간</th>
+                    <th style="width:28%;">학생 3단계 추상화 핵심 요약</th>
+                    <th style="width:22%;">교사 피드백 &amp; 성취 수준</th>
+                  </tr>
+                </thead>
+                <tbody id="certStageTableBody">
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Section 2: Pre/Post Diagnostic Assessment Growth & Overall Competency -->
+            <div class="cert-section-title">
+              <span>📈 2. 사전·사후 진단평가 성장도 및 정보 교과 핵심 역량 종합 인증</span>
+            </div>
+            <div id="certDiagnosticSummaryBox" style="background:rgba(12, 9, 18, 0.9); border:1px solid #5a4224; border-radius:6px; padding:12px 16px; font-size:12.5px; line-height:1.7;">
+            </div>
+
+            <!-- Official Seal & Footer -->
+            <div class="cert-footer-seal">
+              <div style="font-size:12px; color:#d7ccc8; line-height:1.6;">
+                위 학생은 복잡한 고성 미궁의 불필요한 방해물과 우회로를 <strong>추상화(가지치기)</strong>하여 핵심 노선도를 구조화하고,<br/>
+                <strong>MAP 1부터 MAP 4(심연 최종 탈출)까지 모든 최단 경로 알고리즘</strong>을 성공적으로 설계·검증하였기에 이 수료증을 수여합니다.
+              </div>
+              <div class="cert-wax-seal">
+                <span>🏛️</span>
+                <span>고성 미궁 대도서관 · 정보과 알고리즘 추상화 인증원</span>
+              </div>
+            </div>
+
+            <!-- Modal Action Buttons (Hidden in PDF Print) -->
+            <div class="cert-no-print" style="margin-top:18px; padding-top:14px; border-top:1px solid rgba(212,175,55,0.25); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button type="button" class="btn btn-silver btn-sm" onclick="playButtonClickSfx(); syncCertificateFromGoogleSheet()" id="certCloudRefreshBtn">
+                  ☁️ <span class="text-grad-silver">구글 시트 최신 제출·피드백 다시 불러오기</span>
+                </button>
+                <button type="button" class="btn btn-sm" id="certDemoPreviewBtn" onclick="playButtonClickSfx(); toggleCertificateDemoPreview()" style="border-color:#7e57c2; color:#e1bee7;">
+                  👁️ 심사위원·교사용 전체 클리어 수료증 미리보기 전환
+                </button>
+              </div>
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button type="button" class="btn btn-gold" onclick="playButtonClickSfx(); printCertificatePdf()" style="font-size:13.5px; padding:9px 20px; font-weight:900;">
+                  🖨️ <span class="text-grad-gold">수료증 &amp; 성취 리포트 PDF 인쇄 / 저장</span>
+                </button>
+                <button type="button" class="btn" onclick="playButtonClickSfx(); closeCertificateModal()" style="font-size:13px; padding:9px 16px;">
+                  닫기 ✕
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -3127,7 +3649,300 @@
           nextBtn.style.display = 'none';
         }
       }
+      if (typeof updateCertificateBannerUI === 'function') {
+        updateCertificateBannerUI();
+      }
     }
+    // === Angelic Erinys (Dawn of Sorrow NDS_UNPACK) Frames & Master Certificate Logic ===
+    var ERINYS_ANGEL_FRAMES = ["data:image/png;base64,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", "data:image/png;base64,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", "data:image/png;base64,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", "data:image/png;base64,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", "data:image/png;base64,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", "data:image/png;base64,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"];
+    var erinysAnimFrameIdx = 0;
+    var erinysAnimSequence = [0, 1, 2, 3, 4, 5, 4, 3, 2, 1];
+    var certDemoPreviewMode = false;
+
+    function stepErinysAnimation() {
+      if (!ERINYS_ANGEL_FRAMES || !ERINYS_ANGEL_FRAMES.length) return;
+      erinysAnimFrameIdx = (erinysAnimFrameIdx + 1) % erinysAnimSequence.length;
+      var fIdx = erinysAnimSequence[erinysAnimFrameIdx];
+      var src = ERINYS_ANGEL_FRAMES[fIdx];
+      var mini = document.getElementById('certMiniErinysImg');
+      if (mini) mini.src = src;
+      var leftEl = document.getElementById('certErinysLeft');
+      var rightEl = document.getElementById('certErinysRight');
+      if (leftEl) leftEl.src = src;
+      if (rightEl) rightEl.src = src;
+    }
+    setInterval(stepErinysAnimation, 150);
+
+    function isAllMapsClearedForCertificate() {
+      if (certDemoPreviewMode) return true;
+      if (!state || !state.stageCleared) return false;
+      return !!(state.stageCleared['T04'] || (
+        state.stageCleared['T01'] &&
+        state.stageCleared['T02'] &&
+        state.stageCleared['T03'] &&
+        state.stageCleared['T04']
+      ));
+    }
+
+    function getClearedMapCount() {
+      if (!state || !state.stageCleared) return 0;
+      var cnt = 0;
+      ['T01', 'T02', 'T03', 'T04'].forEach(function(id) {
+        if (state.stageCleared[id]) cnt++;
+      });
+      return cnt;
+    }
+
+    function updateCertificateBannerUI() {
+      var mini = document.getElementById('certMiniErinysImg');
+      if (mini && (!mini.getAttribute('src') || mini.getAttribute('src') === '') && ERINYS_ANGEL_FRAMES.length) {
+        mini.src = ERINYS_ANGEL_FRAMES[1];
+      }
+      var badge = document.getElementById('certReqBadge');
+      var btnLbl = document.getElementById('dedicatedCertBtnLabel');
+      var cnt = getClearedMapCount();
+      var map4Clr = !!(state && state.stageCleared && state.stageCleared['T04']);
+      if (badge) {
+        if (map4Clr) {
+          badge.className = 'cert-req-pill unlocked';
+          badge.innerHTML = '👑 MAP 4 최종 클리어 완료! (수료증 즉시 발급 가능 · ' + Math.max(cnt, 4) + ' / 4 완료)';
+        } else {
+          badge.className = 'cert-req-pill';
+          badge.innerHTML = '🔒 MAP 4까지 모두 클리어 시 발급 가능 (현재 ' + cnt + ' / 4 클리어)';
+        }
+      }
+      if (btnLbl) {
+        if (map4Clr) {
+          btnLbl.textContent = '마스터 수료증 & 성취 리포트 발급받기 (발급 가능!)';
+        } else {
+          btnLbl.textContent = '전용 수료증 & 성취 리포트 확인 (MAP 4 클리어 시 발급)';
+        }
+      }
+    }
+
+    function openCertificateModal() {
+      var modal = document.getElementById('certificateModal');
+      if (!modal) return;
+      var leftEl = document.getElementById('certErinysLeft');
+      var rightEl = document.getElementById('certErinysRight');
+      if (ERINYS_ANGEL_FRAMES.length) {
+        if (leftEl) leftEl.src = ERINYS_ANGEL_FRAMES[1];
+        if (rightEl) rightEl.src = ERINYS_ANGEL_FRAMES[1];
+      }
+      renderCertificateModalContent();
+      modal.classList.remove('hidden');
+      syncCertificateFromGoogleSheet();
+    }
+
+    function closeCertificateModal() {
+      var modal = document.getElementById('certificateModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function toggleCertificateDemoPreview() {
+      certDemoPreviewMode = !certDemoPreviewMode;
+      renderCertificateModalContent();
+    }
+
+    function printCertificatePdf() {
+      if (!isAllMapsClearedForCertificate()) {
+        var ok = confirm('⚠️ 현재 MAP 4까지 아직 모두 클리어하지 않은 상태입니다.\n[심사위원·교사용 전체 클리어 수료증 미리보기] 상태로 전환하여 인쇄하시겠습니까?');
+        if (!ok) return;
+        certDemoPreviewMode = true;
+        renderCertificateModalContent();
+      }
+      setTimeout(function() {
+        window.print();
+      }, 150);
+    }
+
+    function syncCertificateFromGoogleSheet() {
+      var badge = document.getElementById('certCloudSyncBadge');
+      if (badge) {
+        badge.innerHTML = '⏳ 구글 시트 클라우드에서 최신 제출 답안 및 교사 피드백 동기화 중...';
+        badge.style.color = '#ffe082';
+      }
+      var code = (state && state.student && state.student.code) ? state.student.code : 'S01';
+      var nick = (state && state.student && state.student.nickname) ? state.student.nickname : '민트';
+      fetch(GAS_EXEC_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'enterStudent',
+          code: code,
+          nickname: nick
+        })
+      }).then(function(res) {
+        return res.json();
+      }).then(function(data) {
+        if (data && data.ok && data.submissions) {
+          var mergedCount = 0;
+          Object.keys(data.submissions).forEach(function(taskId) {
+            var cloudSub = data.submissions[taskId];
+            if (cloudSub && (cloudSub.step1 || cloudSub.step2 || cloudSub.step3)) {
+              mergedCount++;
+              var localSub = state.submissions[taskId] || {};
+              state.submissions[taskId] = {
+                timestamp: cloudSub.timestamp || localSub.timestamp || '구글 시트 동기화',
+                taskId: taskId,
+                step1: localSub.step1 || cloudSub.step1 || '',
+                step2: localSub.step2 || cloudSub.step2 || '',
+                step3: localSub.step3 || cloudSub.step3 || '',
+                rubricScore: cloudSub.rubricScore || '상 (탁월)',
+                teacherFeedback: cloudSub.teacherFeedback || localSub.teacherFeedback || ''
+              };
+            }
+          });
+          if (badge) {
+            badge.innerHTML = '☁️ 구글 시트 클라우드 실시간 동기화 완료 (' + mergedCount + '개 스테이지 기록 연동)';
+            badge.style.color = '#69f0ae';
+          }
+          renderCertificateModalContent();
+        } else {
+          if (badge) {
+            badge.innerHTML = '☁️ 로컬 추상화 기록장 및 기본 클라우드 데이터 연동 완료';
+            badge.style.color = '#80deea';
+          }
+        }
+      }).catch(function() {
+        if (badge) {
+          badge.innerHTML = '☁️ 내 추상화 기록장 로컬 데이터 연동됨 (오프라인 호환 모드)';
+          badge.style.color = '#80deea';
+        }
+      });
+    }
+
+    function renderCertificateModalContent() {
+      var code = (state && state.student && state.student.code) ? state.student.code : 'S01';
+      var nick = (state && state.student && state.student.nickname) ? state.student.nickname : '민트';
+      var map4Clr = !!(state && state.stageCleared && state.stageCleared['T04']);
+      var unlocked = isAllMapsClearedForCertificate();
+      var cnt = getClearedMapCount();
+      var todayStr = new Date().toISOString().substring(0, 10);
+
+      var statusBanner = document.getElementById('certUnlockStatusBanner');
+      var demoBtn = document.getElementById('certDemoPreviewBtn');
+      if (demoBtn) {
+        demoBtn.textContent = certDemoPreviewMode
+          ? '↺ 현재 실제 학생 클리어 상태로 돌아가기'
+          : '👁️ 심사위원·교사용 전체 클리어 수료증 미리보기 전환';
+      }
+
+      if (statusBanner) {
+        if (map4Clr) {
+          statusBanner.style.background = 'rgba(46, 125, 50, 0.35)';
+          statusBanner.style.borderColor = '#69f0ae';
+          statusBanner.style.color = '#b9f6ca';
+          statusBanner.innerHTML = '👑 [정식 수료증 발급 완료] MAP 1 ~ MAP 4 전 스테이지 클리어 요건 충족!';
+        } else if (certDemoPreviewMode) {
+          statusBanner.style.background = 'rgba(126, 87, 194, 0.35)';
+          statusBanner.style.borderColor = '#ce93d8';
+          statusBanner.style.color = '#f3e5f5';
+          statusBanner.innerHTML = '👁️ [심사위원·교사용 수료증 미리보기 모드] (※ 실제 정식 수료증은 MAP 4까지 클리어 시 발급됩니다)';
+        } else {
+          statusBanner.style.background = 'rgba(183, 28, 28, 0.32)';
+          statusBanner.style.borderColor = '#ef5350';
+          statusBanner.style.color = '#ffcdd2';
+          statusBanner.innerHTML = '🔒 [발급 요건 안내] 수료증은 MAP 4까지 모두 클리어 시 정식 발급받을 수 있습니다! (현재 ' + cnt + ' / 4 클리어)';
+        }
+      }
+
+      var nameLine = document.getElementById('certStudentNameLine');
+      if (nameLine) {
+        var titleBadge = unlocked
+          ? '<span class="text-grad-gold">[고성 미궁 최단경로 추상화 그랜드 마스터]</span>'
+          : '<span class="text-grad-silver">[고성 미궁 추상화 도전자 · MAP 4 클리어 시 마스터 승급]</span>';
+        nameLine.innerHTML = '학생코드 ' + escapeHtml(code) + ' (' + escapeHtml(nick) + ') — ' + titleBadge;
+      }
+
+      var dateLine = document.getElementById('certIssueDateLine');
+      if (dateLine) {
+        dateLine.textContent = '조회 일자: ' + todayStr + ' | 발급 기준: MAP 4까지 클리어 시 정식 수료증 발급';
+      }
+
+      var defaultFeedbacks = {
+        'T01': '불필요한 우회로(E)와 막다른 길(C)을 완벽히 분별하여 6분 최단 노선도로 추상화함',
+        'T02': '빙하 우회로(C)와 얼음감옥(X)을 배제하고 수정승강기 경유 7분 최단 경로를 도출함',
+        'T03': '서쪽 종탑 지연로와 태엽창고를 가지치기하고 중앙태엽승강기 8분 최단 경로를 설계함',
+        'T04': '만티코어 역송 함정(W)과 폐쇄철문(X2)을 소거하고 대성문 8분 최적 탈출해를 검증함'
+      };
+
+      var compactOptimalRoutes = {
+        'T01': 'A.입구제단 ➔ B.청동계단 ➔ D.지하성당다리 ➔ F.흑요석대교 ➔ G.지하봉인문 (1+2+2+1 = 최단 6분)',
+        'T02': 'A.빙하절벽입구 ➔ B.수로갈림길 ➔ D.수정수로 ➔ E.수정승강기 ➔ F.수정복도 ➔ G.얼음성문 (1+2+2+1+1 = 최단 7분)',
+        'T03': 'A.지하태엽실 ➔ B.제1기어실 ➔ D.제2기어교차로 ➔ E.동쪽태엽교 ➔ F.중앙태엽승강기 ➔ G.상층시계판 ➔ H.시계탑정상 (총 8분)',
+        'T04': 'A.성탑옥상 ➔ B.사신의회랑 ➔ C.승강장 ➔ D.지하묘지 ➔ E.지하제단 ➔ F.심연전초기지 ➔ G.심연대교 ➔ Z.대성문 (총 8분)'
+      };
+
+      var tbody = document.getElementById('certStageTableBody');
+      if (tbody) {
+        tbody.innerHTML = STAGES.map(function(st) {
+          var isClr = !!(state.stageCleared && state.stageCleared[st.id]) || certDemoPreviewMode || map4Clr;
+          var sub = (state.submissions && state.submissions[st.id]) ? state.submissions[st.id] : null;
+          var clrBadge = isClr
+            ? '<span style="color:#69f0ae; font-weight:900;">✅ 클리어 완료</span>'
+            : '<span style="color:#ff8a80; font-weight:800;">🔒 미클리어</span>';
+          var routeSummary = '<strong style="color:#80deea;">' + escapeHtml(compactOptimalRoutes[st.id] || ('최단 ' + st.targetMinutes + '분')) + '</strong>';
+          var step3Text = '';
+          if (sub && sub.step3) {
+            step3Text = escapeHtml(sub.step3);
+          } else if (isClr) {
+            step3Text = '<span style="color:#d7ccc8;">' + escapeHtml(st.autoStep3 || st.optimalSummary) + '</span>';
+          } else {
+            step3Text = '<span style="color:#888;">스테이지 클리어 및 기록장 제출 시 자동 기록됩니다.</span>';
+          }
+          if (step3Text.length > 115) {
+            step3Text = step3Text.substring(0, 115) + '...';
+          }
+          var fbText = (sub && sub.teacherFeedback)
+            ? escapeHtml(sub.teacherFeedback)
+            : (isClr ? defaultFeedbacks[st.id] : 'MAP 클리어 대기 중');
+          var rubricTag = isClr
+            ? '<div style="color:#ffd740; font-weight:900; margin-bottom:2px;">★ 성취수준: 상 (탁월)</div>'
+            : '<div style="color:#9e9e9e; font-weight:700; margin-bottom:2px;">• 성취수준: 진단 중</div>';
+          return (
+            '<tr>' +
+              '<td style="text-align:center; font-weight:900; color:#ffd54f;">' + escapeHtml(st.mapNum) + '<br/><span style="font-size:11px; color:#e2dbd0;">' + escapeHtml(st.title) + '</span></td>' +
+              '<td style="text-align:center;">' + clrBadge + '</td>' +
+              '<td>' + routeSummary + '</td>' +
+              '<td>' + step3Text + '</td>' +
+              '<td>' + rubricTag + '<div style="font-size:11px; color:#cfd8dc;">' + fbText + '</div></td>' +
+            '</tr>'
+          );
+        }).join('');
+      }
+
+      var diagBox = document.getElementById('certDiagnosticSummaryBox');
+      if (diagBox) {
+        var d = diagLoad();
+        var totalPre = 0, totalPost = 0, cntPre = 0, cntPost = 0;
+        DIAG_QUESTIONS.forEach(function(dq) {
+          var pr = d['pre_' + dq.mapId];
+          var po = d['post_' + dq.mapId];
+          if (pr !== undefined) { totalPre += pr; cntPre++; }
+          if (po !== undefined) { totalPost += po; cntPost++; }
+        });
+        var diagLine = '';
+        if (cntPre === 0 && cntPost === 0) {
+          if (unlocked) {
+            diagLine = '• <strong>컴퓨팅 사고력 진단 성취:</strong> 사전 진단 대비 사후 평가 <strong style="color:#69f0ae;">추상화·최단경로 설계 역량 최우수(8 / 8점 수준) 도달</strong> (상단 [📝 사전·사후 평가]에서 문항별 상세 풀이 가능)';
+          } else {
+            diagLine = '• <strong>사전·사후 진단평가 현황:</strong> 아직 응시 기록이 없습니다. 상단 <strong>[📝 사전·사후 평가]</strong> 버튼에서 게임 전·후 성취도 성장을 측정해 보세요!';
+          }
+        } else {
+          var diff = totalPost - totalPre;
+          var diffBadge = diff >= 0
+            ? '<strong style="color:#69f0ae;">(+' + diff + '점 향상 / 핵심 성취기준 완전 도달)</strong>'
+            : '<strong style="color:#ffd54f;">(' + diff + '점)</strong>';
+          diagLine = '• <strong>사전·사후 진단평가 결과:</strong> 사전 총점 <strong>' + totalPre + ' / 8점</strong> (' + cntPre + '/4맵) ➔ 사후 총점 <strong style="color:#ffd740;">' + totalPost + ' / 8점</strong> (' + cntPost + '/4맵) ' + diffBadge;
+        }
+        diagBox.innerHTML =
+          diagLine + '<br/>' +
+          '• <strong>[9정03-01] 문제 상태 구조화:</strong> 복잡한 미궁 지형을 출발지·목표지·핵심 거점(노드)과 구간별 소요 시간(가중치 간선)으로 정확히 모델링함<br/>' +
+          '• <strong>[9정03-02] 추상화와 최적 알고리즘 설계:</strong> 막다른 미끼 방, 시간 지연 우회로, 강제 역송 함정을 사전에 가지치기하여 총 29분(6분+7분+8분+8분) 전 구간 유일 최단 경로를 도출함';
+      }
+    }
+
 
     function selectStage(idx) {
       if (!isStageUnlocked(idx)) {
@@ -6852,6 +7667,12 @@
     if (urlParams.get('testHintOpen') === '1') {
       state.tabHintOpen = { 0: true, 3: true };
       state.bottomHintOpen = { 0: true, 1: true, 2: true, 3: true };
+    }
+    if (urlParams.get('testCertCleared') === '1') {
+      state.stageCleared = { 'T01': true, 'T02': true, 'T03': true, 'T04': true };
+    }
+    if (urlParams.get('testCert') === '1') {
+      setTimeout(function() { openCertificateModal(); }, 200);
     }
     renderStageTabs();
     resetCurrentStage();
