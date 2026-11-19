@@ -2370,25 +2370,72 @@
       }
     }
 
+    // [신규 전자음] 경쾌하고 세련된 칩튠/크리스탈 전자 버튼 클릭 효과음 (Web Audio API 실시간 합성 + 오디오 에셋 폴백)
     function playButtonClickSfx() {
       var now = Date.now();
-      if (now - _lastBtnClickTime < 45) return;
+      if (now - _lastBtnClickTime < 40) return;
       _lastBtnClickTime = now;
-      var a = loadedAudios['aud_glyph'] || loadedAudios['aud_sfx_glyph'];
+
+      // 1. Web Audio API를 활용한 즉각 반응성(0ms 지연) 신스 전자음
+      try {
+        var ctx = getAudioCtx();
+        if (ctx) {
+          var t = ctx.currentTime;
+          
+          // 메인 전자 칩튠 오실레이터 (따뜻하고 선명한 삼각파 2단 도약)
+          var osc1 = ctx.createOscillator();
+          var gain1 = ctx.createGain();
+          osc1.type = 'triangle';
+          osc1.frequency.setValueAtTime(1174.66, t); // D6
+          osc1.frequency.setValueAtTime(1567.98, t + 0.022); // G6
+          osc1.frequency.linearRampToValueAtTime(1760.0, t + 0.065); // A6 미세 상승
+
+          gain1.gain.setValueAtTime(0.001, t);
+          gain1.gain.linearRampToValueAtTime(0.24, t + 0.003);
+          gain1.gain.exponentialRampToValueAtTime(0.0001, t + 0.068);
+
+          // 맑고 투명한 크리스탈 배음 오실레이터 (사인파 1옥타브 배음)
+          var osc2 = ctx.createOscillator();
+          var gain2 = ctx.createGain();
+          osc2.type = 'sine';
+          osc2.frequency.setValueAtTime(2349.32, t);
+          osc2.frequency.setValueAtTime(3135.96, t + 0.022);
+
+          gain2.gain.setValueAtTime(0.001, t);
+          gain2.gain.linearRampToValueAtTime(0.09, t + 0.002);
+          gain2.gain.exponentialRampToValueAtTime(0.0001, t + 0.055);
+
+          osc1.connect(gain1);
+          osc2.connect(gain2);
+          gain1.connect(ctx.destination);
+          gain2.connect(ctx.destination);
+
+          osc1.start(t);
+          osc2.start(t);
+          osc1.stop(t + 0.07);
+          osc2.stop(t + 0.06);
+          return;
+        }
+      } catch (err) {
+        // Web Audio 실패 시 아래의 오디오 파일 폴백으로 진행
+      }
+
+      // 2. 오디오 파일 폴백 (assets/audio/sfx_electronic_click.wav / sfx_glyph.wav)
+      var a = loadedAudios['aud_electronic_click'] || loadedAudios['aud_glyph'] || loadedAudios['aud_sfx_glyph'];
       if (!a) {
-        a = new Audio('assets/audio/sfx_glyph.wav');
-        loadedAudios['aud_glyph'] = a;
+        a = new Audio('assets/audio/sfx_electronic_click.wav');
+        loadedAudios['aud_electronic_click'] = a;
       }
       if (a) {
         try {
           a.currentTime = 0;
-          a.volume = 0.78;
+          a.volume = 0.75;
           var p = a.play();
           if (p !== undefined) {
             p.catch(function() {
               try {
                 var c = a.cloneNode();
-                c.volume = 0.78;
+                c.volume = 0.75;
                 c.play().catch(function(){});
               } catch(e){}
             });
@@ -2448,6 +2495,9 @@
       }
       if (!loadedAudios['aud_sfx_glyph']) {
         loadedAudios['aud_sfx_glyph'] = loadedAudios['aud_glyph'];
+      }
+      if (!loadedAudios['aud_electronic_click']) {
+        loadedAudios['aud_electronic_click'] = new Audio('assets/audio/sfx_electronic_click.wav');
       }
     }
     initAssets();
