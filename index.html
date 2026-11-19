@@ -228,11 +228,12 @@
     .top-bar {
       background: linear-gradient(180deg, #17111b 0%, #0a080d 100%);
       border-bottom: 2px solid #5a4224;
-      padding: 10px 20px;
+      padding: 12px 20px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
+      justify-content: center;
+      text-align: center;
       gap: 10px;
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.95), 0 1px 0 rgba(142, 28, 28, 0.45);
       position: sticky;
@@ -242,7 +243,10 @@
     .brand-box {
       display: flex;
       align-items: center;
+      justify-content: center;
+      text-align: center;
       gap: 12px;
+      width: 100%;
     }
     .brand-crest {
       width: 38px;
@@ -260,25 +264,29 @@
       box-shadow: 0 0 10px rgba(168, 132, 56, 0.35);
     }
     .brand-title {
-      font-family: 'CastlevaniaKorean', 'CastlevaniaPoR', 'Galmuri11', 'NeoDunggeunmo', 'CastlevaniaPoR', 'Cinzel', 'Galmuri11', serif;
-      font-size: 19px;
+      font-family: 'CastlevaniaKorean', 'CastlevaniaPoR', 'Galmuri11', 'NeoDunggeunmo', 'Cinzel', serif;
+      font-size: 20px;
       font-weight: 900;
-      background: linear-gradient(180deg, #fff3d1 0%, #e5c378 60%, #9e7a32 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 0.05em;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+      color: var(--gold-bright);
+      text-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+      letter-spacing: 0.5px;
+      text-align: center;
     }
     .brand-sub {
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--text-muted);
+      margin-top: 3px;
+      font-family: 'Galmuri11', 'NeoDunggeunmo', sans-serif;
+      text-align: center;
     }
 
     .header-controls {
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
       flex-wrap: wrap;
+      gap: 10px;
+      width: 100%;
     }
     .btn-cluster {
       display: inline-flex;
@@ -599,10 +607,12 @@
     }
     .screen-header {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
+      text-align: center;
+      gap: 18px;
       margin-bottom: 8px;
-      padding: 4px 8px;
+      padding: 6px 12px;
       border-left: 3px solid var(--gold);
       font-family: 'CastlevaniaKorean', 'CastlevaniaPoR', 'Galmuri11', 'NeoDunggeunmo', 'CastlevaniaPoR', 'Cinzel', 'Galmuri11', serif;
       font-size: 14.5px;
@@ -771,8 +781,14 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      align-items: center;
+      text-align: center;
       gap: 8px;
       font-size: 12px;
+    }
+    .route-analyzer-card > div {
+      width: 100%;
+      text-align: center;
     }
 
     /* Grimoire (Worksheet + AI Tutor) */
@@ -799,12 +815,26 @@
       color: var(--gold-bright);
       margin-bottom: 14px;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
+      text-align: center;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 12px;
       letter-spacing: 0.045em;
       line-height: 1.5;
+    }
+    .grimoire-tutor-guide-text {
+      font-size: 12px;
+      color: #ffdd88;
+      background: rgba(20, 15, 25, 0.75);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      border-radius: 4px;
+      padding: 5px 12px;
+      display: inline-flex;
+      align-items: center;
+      font-weight: 500;
+      letter-spacing: -0.2px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
     .step-card {
       background: rgba(9, 11, 15, 0.85);
@@ -2003,8 +2033,8 @@
         <div class="grimoire-panel">
           <div class="grimoire-title">
             <span id="grimoireHeaderTitle">📜 추상화 학습 기록장 — 스테이지 탐구 답안</span>
-            <div style="display:flex; gap:6px;">
-              <button class="btn btn-silver" onclick="autoFillFromGameplay()">✨ <span class="text-grad-silver">방금 플레이한 추상화 결과로 1·2·3단계 자동 채우기</span></button>
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center;">
+              <span class="grimoire-tutor-guide-text">💡 1단계~3단계 답 작성이 어려운 학생은 대도서관 사서 AI 코칭 튜터의 도움을 받아 봅시다.</span>
               <button class="btn btn-gold" onclick="submitGrimoireAnswer()">💾 <span class="text-grad-gold">최종 답안 제출 (구글 시트 저장)</span></button>
             </div>
           </div>
@@ -7171,7 +7201,7 @@
       var s3 = document.getElementById('ansStep3').value.trim();
 
       if (!s1 || !s2 || !s3) {
-        alert('1단계~3단계 답안을 모두 작성하거나 [자동 채우기] 버튼을 눌러 완성해 주세요!');
+        alert('1단계~3단계 답안을 모두 작성해 주세요! 작성이 어려운 경우 우측 [대도서관 사서 AI 코칭 튜터]의 도움을 받아보세요.');
         return;
       }
 
