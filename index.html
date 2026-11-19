@@ -4974,16 +4974,16 @@
               nz.vx = -Math.abs(nz.vx);
             }
 
-            // 플레이어가 탈출구/심연대교 인접 구역(dist < 560)에 진입하면 공격 준비
+            // 플레이어가 원거리 사거리 내(dist < 900)에 진입하면 공격 준비
             nz.attackTimer = (nz.attackTimer || 70) - 1;
-            if (distToP < 560 && nz.attackTimer <= 0) {
+            if (distToP < 900 && nz.attackTimer <= 0) {
               nz.facingDir = dirToP;
               nz.actionState = 'charge';
               nz.actionTimer = 48; // NDS 원작 6단계 전조 (약 0.8초)
               state.floatingTexts.push({
                 x: nz.x + nz.w * 0.5,
                 y: nz.y - 20,
-                text: '🔥 심연의 마수: 지옥 화염 브레스 영창!',
+                text: '🔥 심연의 마수: 지옥 화염구 영창!',
                 color: '#ff5722',
                 life: 30
               });
@@ -4999,45 +4999,37 @@
             }
             if (nz.actionTimer <= 0) {
               nz.actionState = 'fire';
-              nz.actionTimer = 50; // 약 0.83초간 맹렬한 하향 화염 폭포 방출
-              state.screenShake = 8;
+              nz.actionTimer = 38; // 약 0.63초간 포효 및 원거리 화염구 발사
+              state.screenShake = 6;
               playWeaponAttackSfx();
 
-              // NDS 원작 거대 화염구(Fireball) 대각선 투사체 사출!
+              // NDS 원작 지옥 화염구(Fireball) 원거리 투사체 사출 (거리 제한 없이 맵 끝까지 비행!)
               if (!state.hazardProjectiles) state.hazardProjectiles = [];
-              var spd = nz.facingDir * 4.0;
+              var startX = nz.x + nz.w * 0.5 + nz.facingDir * 36;
+              var startY = (nz.y + nz.h) - 95;
+              var targetX = p.x + 16;
+              var targetY = p.y + 20;
+              var dx = targetX - startX;
+              var dy = targetY - startY;
+              var dist = Math.hypot(dx, dy) || 1;
+              var fbSpd = 4.4;
               state.hazardProjectiles.push({
                 type: 'dracula_fireball',
-                x: nz.x + nz.w * 0.5 + nz.facingDir * 36,
-                y: (nz.y + nz.h) - 95,
-                vx: spd,
-                vy: Math.max(-1.0, Math.min(3.5, (p.y - ((nz.y + nz.h) - 95)) * 0.012 + 1.2)),
+                x: startX,
+                y: startY,
+                vx: (dx / dist) * fbSpd,
+                vy: (dy / dist) * fbSpd,
                 r: 18,
                 dmg: 25,
                 name: '심연의 마수 지옥 화염구',
                 animTick: 0,
-                life: 180
+                life: 99999
               });
             }
           } else if (nz.actionState === 'fire') {
-            // 3. NDS 원작 하향 화염 폭포 브레스 스트림 및 바닥 화염 피해 판정
+            // 3. NDS 원작 원거리 화염구 발사 후 포효 여운 (일렬 공격 삭제, 순수 원거리 공격만 유지)
             nz.facingDir = dirToP;
             nz.actionTimer--;
-            var footY = nz.y + nz.h;
-            var mouthX = nz.x + nz.w * 0.5 + nz.facingDir * 32;
-            var mouthY = footY - 105;
-            var floorDeepY = 855; // 심연 대교 및 성문 바닥까지 시원하게 닿는 화염 폭포
-
-            var inStreamX = (p.x + 28 > mouthX - 38 && p.x < mouthX + 38);
-            var inStreamY = (p.y + 32 > mouthY && p.y < floorDeepY + 16);
-            var inFloorBurst = (Math.abs((p.x + 16) - mouthX) < 70 && Math.abs((p.y + 36) - footY) < 36);
-
-            if ((inStreamX && inStreamY) || inFloorBurst) {
-              if (p.invulnTimer === 0) {
-                damagePlayer(35, '심연의 마수 지옥 화염 폭포 브레스 피격', nz.x + nz.w * 0.5);
-              }
-            }
-
             if (nz.actionTimer <= 0) {
               nz.actionState = 'recovery';
               nz.actionTimer = 24; // NDS 원작 복귀 모션 (약 0.4초)
@@ -5047,7 +5039,7 @@
             nz.actionTimer--;
             if (nz.actionTimer <= 0) {
               nz.actionState = 'patrol';
-              nz.attackTimer = 80 + Math.floor(Math.random() * 35);
+              nz.attackTimer = 85 + Math.floor(Math.random() * 35);
             }
           }
         }
@@ -5144,7 +5136,7 @@
         }
       });
 
-      // Update hazard projectiles (수문장 참격파 및 사신의 회전 소형 낫 등)
+      // Update hazard projectiles (사신의 회전 소형 낫 및 심연의 마수 장거리 지옥 화염구 등)
       if (state.hazardProjectiles && state.hazardProjectiles.length > 0) {
         for (var hpIdx = state.hazardProjectiles.length - 1; hpIdx >= 0; hpIdx--) {
           var hp = state.hazardProjectiles[hpIdx];
@@ -5166,15 +5158,29 @@
             if (state.player.animTick % 4 === 0) {
               spawnParticles(hp.x, hp.y, '#ce93d8', 1);
             }
+          } else if (hp.type === 'dracula_fireball') {
+            // 화염구 비행 궤적 파티클 연출 (황금/주홍 지옥 불꽃 꼬리)
+            if (state.player.animTick % 2 === 0) {
+              spawnParticles(hp.x, hp.y, (state.player.animTick % 4 === 0) ? '#ffeb3b' : '#ff5722', 2);
+            }
+            // 거리 제한 없이 맵 전체를 가로질러 비행 — 맵 경계를 완전히 벗어났을 때만 안전 소거
+            if (hp.x < -300 || hp.x > 3200 || hp.y < -300 || hp.y > 1500) {
+              hp.life = 0;
+            }
           }
+
           hp.x += hp.vx;
           hp.y += (hp.vy || 0);
-          hp.life--;
+
+          if (hp.type !== 'dracula_fireball') {
+            hp.life--;
+          }
+
           if (p.invulnTimer === 0 && !state.gameOver) {
             var pDist = Math.hypot((p.x + 16) - hp.x, (p.y + 20) - hp.y);
             if (pDist < (hp.r || 14) + 15) {
               damagePlayer(hp.dmg, hp.name, hp.x);
-              spawnParticles(hp.x, hp.y, '#ba68c8', 18);
+              spawnParticles(hp.x, hp.y, (hp.type === 'dracula_fireball') ? '#ff5722' : '#ba68c8', 20);
               hp.life = 0;
             }
           }
@@ -6275,61 +6281,22 @@
             ctx.drawImage(spr, bo[0], bo[1], bo[2], bo[3]);
             ctx.restore();
 
-            // NDS 원작 웅장한 하향 화염 폭포 브레스 스트림 연출!
-            // 마수의 입에서 아래쪽 탈출로 및 성문 앞 바닥(y: 840)까지 쏟아져 내리는 거대한 화염 폭포!
+            // 화염구 발사 시 입가 발광 섬광 효과 (일렬 세로 스트림은 어색하여 완전 삭제, 순수 원거리 공격만 유지)
             if (nz.actionState === 'fire') {
               ctx.save();
               var mouthX = orgX + fDir * 32;
               var mouthY = footY - 105;
-              var floorDeepY = 850; // 아래쪽 심연 대교 바닥까지 시원하게 이어지는 화염 폭포
-
-              var streamIdx = (Math.floor(state.player.animTick / 3) % 6);
-              var streamSpr = loadedImages['spr_dracula_stream' + streamIdx];
-
-              if (streamSpr && streamSpr.complete) {
-                var colW = 34;
-                var colX = mouthX - colW * 0.5;
-                // 세로로 쏟아지는 수직 화염 기둥 스트림 타일링
-                for (var sy = mouthY; sy < floorDeepY; sy += 56) {
-                  var drawH = Math.min(64, floorDeepY - sy);
-                  ctx.drawImage(streamSpr, 0, 0, 16, drawH, colX, sy, colW, drawH);
-                  // 양옆 풍성한 화염 번짐 효과
-                  ctx.drawImage(streamSpr, 0, 0, 16, drawH, colX - 8, sy + 6, colW * 0.65, drawH * 0.9);
-                  ctx.drawImage(streamSpr, 0, 0, 16, drawH, colX + colW * 0.42, sy + 6, colW * 0.65, drawH * 0.9);
-                }
-              } else {
-                var fg = ctx.createLinearGradient(mouthX, mouthY, mouthX, floorDeepY);
-                fg.addColorStop(0, '#ffffff');
-                fg.addColorStop(0.2, '#fff176');
-                fg.addColorStop(0.6, '#ff9800');
-                fg.addColorStop(1, '#d50000');
-                ctx.fillStyle = fg;
-                ctx.fillRect(mouthX - 16, mouthY, 32, floorDeepY - mouthY);
-              }
 
               // 마수 입가의 화염 발화구 오라
-              var mg = ctx.createRadialGradient(mouthX, mouthY, 2, mouthX, mouthY, 24);
+              var mg = ctx.createRadialGradient(mouthX, mouthY, 2, mouthX, mouthY, 26);
               mg.addColorStop(0, '#ffffff');
-              mg.addColorStop(0.4, '#fff9c4');
-              mg.addColorStop(0.8, '#ff5722');
+              mg.addColorStop(0.35, '#fff9c4');
+              mg.addColorStop(0.75, '#ff5722');
               mg.addColorStop(1, 'rgba(255, 87, 34, 0)');
               ctx.fillStyle = mg;
               ctx.beginPath();
-              ctx.arc(mouthX, mouthY, 24, 0, Math.PI * 2);
+              ctx.arc(mouthX, mouthY, 26, 0, Math.PI * 2);
               ctx.fill();
-
-              // 하단 발판 지면 화염 버스트 (망루 발판 상면)
-              var burstRad = 36 + (state.player.animTick % 6) * 2;
-              var bg = ctx.createRadialGradient(mouthX, footY, 4, mouthX, footY, burstRad);
-              bg.addColorStop(0, '#ffffff');
-              bg.addColorStop(0.3, '#ffeb3b');
-              bg.addColorStop(0.7, '#ff5722');
-              bg.addColorStop(1, 'rgba(213, 0, 0, 0)');
-              ctx.fillStyle = bg;
-              ctx.beginPath();
-              ctx.ellipse(mouthX, footY - 2, burstRad, 14, 0, 0, Math.PI * 2);
-              ctx.fill();
-
               ctx.restore();
             }
           } else {
@@ -6496,6 +6463,18 @@
             // [창월의 십자가 Julius Mode 심연의 마수 NDS 정통 회전 화염구(spr_dracula_orb0~3) 렌더링]
             var fbIdx = Math.floor(state.player.animTick / 4) % 4;
             var fbSpr = loadedImages['spr_dracula_orb' + fbIdx] || loadedImages['spr_dracula_orb0'];
+
+            // 화염구 주변 역동적인 불꽃 발광 오라
+            var og = ctx.createRadialGradient(0, 0, 4, 0, 0, 24);
+            og.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+            og.addColorStop(0.35, 'rgba(255, 235, 59, 0.65)');
+            og.addColorStop(0.7, 'rgba(255, 87, 34, 0.35)');
+            og.addColorStop(1, 'rgba(213, 0, 0, 0)');
+            ctx.fillStyle = og;
+            ctx.beginPath();
+            ctx.arc(0, 0, 24, 0, Math.PI * 2);
+            ctx.fill();
+
             if (fbSpr && fbSpr.complete) {
               ctx.drawImage(fbSpr, -20, -20, 40, 40);
             } else {
@@ -7852,6 +7831,9 @@
     var stageParam = urlParams.get('stage');
     if (stageParam !== null) {
       state.currentStageIdx = Math.max(0, Math.min(3, parseInt(stageParam, 10) || 0));
+      resetCurrentStage();
+      renderStageTabs();
+      loadStageWorksheetUI(state.currentStageIdx);
     }
     if (urlParams.get('autostart') === '1') {
       var cr = document.getElementById('copyrightScreenView');
